@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import spring.backend.core.exception.DomainException;
+import spring.backend.core.exception.error.BaseErrorCode;
 
 @Getter
 public class ErrorResponse extends BaseResponse {
@@ -28,5 +29,13 @@ public class ErrorResponse extends BaseResponse {
     this.statusCode = statusCode;
     this.code = exception.getCode();
     this.message = exception.getMessage();
+  }
+
+  @Builder(builderClassName = "CreateSwaggerErrorResponse", builderMethodName = "createSwaggerErrorResponse")
+  public ErrorResponse(BaseErrorCode baseErrorCode) {
+    super(false, LocalDateTime.now());
+    this.statusCode = baseErrorCode.getHttpStatus().value();
+    this.code = baseErrorCode.name();
+    this.message = baseErrorCode.getMessage();
   }
 }

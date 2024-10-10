@@ -1,0 +1,22 @@
+name: Cnergy Backend CD
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: NCP 서버 접속 및 배포
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.NCP_HOST }}
+          username: ${{ secrets.NCP_USERNAME }}
+          password: ${{ secrets.NCP_PASSWORD }}
+          port: ${{ secrets.NCP_PORT }}
+          script: |
+            sudo chmod +x ./deploy.sh
+            export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
+            ./deploy.sh

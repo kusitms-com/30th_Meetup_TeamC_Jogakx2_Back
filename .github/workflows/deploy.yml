@@ -1,9 +1,7 @@
-name: Cnergy Backend CI
+name: Cnergy Backend CI/CD
 
 on:
-  workflow_dispatch:
-  pull_request:
-    types: [opened, reopened, synchronize]
+  push:
     branches: [dev]
 
 jobs:
@@ -60,13 +58,6 @@ jobs:
           username: ${{ secrets.NCP_ACCESS_KEY }}
           password: ${{ secrets.NCP_SECRET_KEY }}
 
-      - name: 도커 이미지 태그 생성
-        run: |
-          # github.ref_name에서 슬래시를 대시로 변환
-          IMAGE_TAG=$(echo "${{ github.ref_name }}-${{ github.run_number }}" | sed 's/\//-/g')
-          echo "IMAGE_TAG=$IMAGE_TAG" > image_tag.txt
-          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-
       - name: 도커 이미지 빌드 후 푸시
         if: success()
         uses: docker/build-push-action@v6
@@ -74,10 +65,10 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/cnergy-backend:${{ env.IMAGE_TAG }}
+          tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/cnergy-backend:${{ github.sha }}
           platforms: linux/amd64,linux/arm64
 
-      - name: NCP 접속 후 이미지 다운로드
+      - name: NCP 접속 후 이미지 다운로드 및 배포
         if: success()
         uses: appleboy/ssh-action@master
         with:
@@ -86,4 +77,8 @@ jobs:
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
           script: |
-            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/cnergy-backend:${{ env.IMAGE_TAG }}
+            docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/cnergy-backend:${{ github.sha }}
+            sudo chmod +x ./deploy.sh
+            export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
+            export GITHUB_SHA=${{ github.sha }}  # GITHUB_SHA 변수를 deploy.sh에 전달
+            ./deploy.sh

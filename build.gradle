@@ -52,6 +52,9 @@ dependencies {
 
 	// WebSocket (for real-time communication)
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// Swagger-UI
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 }
 
 tasks.named('test') {

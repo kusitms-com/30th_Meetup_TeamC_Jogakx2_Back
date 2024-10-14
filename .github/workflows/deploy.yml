@@ -80,5 +80,5 @@ jobs:
             docker pull ${{ secrets.NCP_CONTAINER_REGISTRY }}/cnergy-backend:${{ github.sha }}
             sudo chmod +x ./deploy.sh
             export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
-            export GITHUB_SHA=${{ github.sha }}  # GITHUB_SHA 변수를 deploy.sh에 전달
+            export GITHUB_SHA=${{ github.sha }}
             ./deploy.sh

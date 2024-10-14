@@ -10,7 +10,9 @@ import spring.backend.member.infrastructure.mapper.MemberMapper;
 import spring.backend.member.infrastructure.persistence.jpa.entity.MemberJpaEntity;
 import spring.backend.member.infrastructure.persistence.jpa.repository.MemberJpaRepository;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -45,5 +47,14 @@ public class MemberRepositoryImpl implements MemberRepository {
             return null;
         }
         return memberMapper.toDomainEntity(memberJpaEntity);
+    }
+
+    @Override
+    public List<Member> findAllByEmail(String email) {
+        List<MemberJpaEntity> memberJpaEntities = memberJpaRepository.findAllByEmail(email);
+        if (memberJpaEntities == null || memberJpaEntities.isEmpty()) {
+            return null;
+        }
+        return memberJpaEntities.stream().map(memberMapper::toDomainEntity).collect(Collectors.toList());
     }
 }

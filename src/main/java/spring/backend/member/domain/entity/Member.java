@@ -45,4 +45,17 @@ public class Member {
     public boolean isSameProvider(Provider otherProvider) {
         return this.provider.equals(otherProvider);
     }
+
+    public boolean isMember() {
+        return Role.MEMBER.equals(this.role);
+    }
+
+    public static Member createGuestMember(Provider provider, String email, String nickname) {
+        return Member.builder()
+                .provider(provider)
+                .role(Role.GUEST)
+                .email(email)
+                .nickname(nickname)
+                .build();
+    }
 }

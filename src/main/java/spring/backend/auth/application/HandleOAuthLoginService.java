@@ -12,6 +12,7 @@ import spring.backend.auth.infrastructure.OAuthRestClientFactory;
 import spring.backend.member.application.CreateMemberWithOAuthService;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Provider;
+import spring.backend.member.domain.value.Role;
 import spring.backend.member.dto.request.CreateMemberWithOAuthRequest;
 
 @Service
@@ -41,17 +42,13 @@ public class HandleOAuthLoginService {
             throw AuthenticationErrorCode.RESOURCE_SERVER_UNAVAILABLE.toException();
         }
 
-        CreateMemberWithOAuthRequest createMemberWithOAuthRequest = CreateMemberWithOAuthRequest.builder()
-                .provider(provider)
-                .email(oAuthResourceResponse.getEmail())
-                .nickname(oAuthResourceResponse.getName())
-                .build();
+        CreateMemberWithOAuthRequest createMemberWithOAuthRequest = CreateMemberWithOAuthRequest.builder().provider(provider).email(oAuthResourceResponse.getEmail()).nickname(oAuthResourceResponse.getName()).build();
 
         Member member = createMemberWithOAuthService.createMemberWithOAuth(createMemberWithOAuthRequest);
 
         /**
          * todo: 사용자 정보를 가지고 AccessToken, RefreshToken을 생성한다.
          */
-        return null;
+        return new LoginResponse(AccessTokenProviderService.accessTokenProvider(member), RefreshTokenProviderService.refreshTokenProvider(member), Role.GUEST);
     }
 }

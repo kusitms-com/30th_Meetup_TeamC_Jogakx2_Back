@@ -23,6 +23,8 @@ public class RefreshTokenProviderService {
                 Instant.now().plus(14, ChronoUnit.DAYS)
         );
 
+        System.out.println("secret key : " + SECRET_KEY);
+
         // RefreshToken 생성
         return Jwts.builder()
                 .subject(member.getEmail()) // 추후 변경 가능

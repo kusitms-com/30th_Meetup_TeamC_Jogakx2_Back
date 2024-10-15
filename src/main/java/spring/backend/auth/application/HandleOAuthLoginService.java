@@ -13,7 +13,7 @@ import spring.backend.member.application.CreateMemberWithOAuthService;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Provider;
 import spring.backend.member.dto.request.CreateMemberWithOAuthRequest;
-import spring.backend.util.application.JwtService;
+import spring.backend.core.application.JwtService;
 
 @Service
 @RequiredArgsConstructor

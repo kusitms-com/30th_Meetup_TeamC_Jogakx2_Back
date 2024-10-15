@@ -17,12 +17,10 @@ public class AccessTokenProviderService {
     private static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
 
     public static String accessTokenProvider(Member member) {
-        // 기한 설정 , 지금부터 1일
         Date expiryDate = Date.from(
                 Instant.now().plus(1, ChronoUnit.DAYS)
         );
 
-        // AccessToken 생성
         return Jwts.builder()
                 .subject(member.getEmail()) // 추후 변경 가능
                 .claim("type", Type.ACCESS.getType())

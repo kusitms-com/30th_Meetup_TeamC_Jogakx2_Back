@@ -25,8 +25,7 @@ public class CreateMemberWithOAuthService {
         List<Member> members = memberRepository.findAllByEmail(request.getEmail());
         if (members == null || members.isEmpty()) {
             Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail(), request.getNickname());
-            memberRepository.save(newMember);
-            Member savedMember = memberRepository.findByEmail(request.getEmail());
+            Member savedMember = memberRepository.save(newMember);
 
             if (savedMember == null) {
                 log.error("[CreateMemberWithOAuthService] member could not be saved");
@@ -51,9 +50,7 @@ public class CreateMemberWithOAuthService {
                 .findFirst()
                 .orElseGet(() -> {
                     Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail(), request.getNickname());
-                    memberRepository.save(newMember);
-
-                    Member savedMember = memberRepository.findByEmail(request.getEmail());
+                    Member savedMember = memberRepository.save(newMember);
 
                     if (savedMember == null) {
                         log.error("[CreateMemberWithOAuthService] member could not be saved");

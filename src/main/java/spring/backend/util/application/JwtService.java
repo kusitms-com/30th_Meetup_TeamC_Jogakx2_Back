@@ -47,10 +47,10 @@ public class JwtService {
                 Instant.now().plus(expiration, ChronoUnit.HOURS)
         );
         return Jwts.builder()
-                .subject(email)
                 .claims(
                         Map.of(
-                                "id", id.toString(),
+                                "memberId", id.toString(),
+                                "email", email,
                                 "type", type.getType()
                         )
                 )

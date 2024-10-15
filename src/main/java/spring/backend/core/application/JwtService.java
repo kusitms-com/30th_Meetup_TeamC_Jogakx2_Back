@@ -38,15 +38,33 @@ public class JwtService {
     }
 
     public String provideAccessToken(Member member) {
-        return provideToken(member.getEmail(), member.getId(), Type.ACCESS, ACCESS_EXPIRATION);
+        return provideToken(
+                member.getEmail(),
+                member.getId(),
+                Type.ACCESS,
+                ACCESS_EXPIRATION
+        );
     }
 
     public String provideRefreshToken(Member member) {
-        return provideToken(member.getEmail(), member.getId(), Type.REFRESH, REFRESH_EXPIRATION);
+        return provideToken(
+                member.getEmail(),
+                member.getId(),
+                Type.REFRESH,
+                REFRESH_EXPIRATION
+        );
     }
 
     private String provideToken(String email, UUID id, Type type, long expiration) {
         Date expiryDate = Date.from(Instant.now().plus(expiration, ChronoUnit.DAYS));
-        return Jwts.builder().claims(Map.of("memberId", id.toString(), "email", email, "type", type.getType())).issuedAt(new Date()).expiration(expiryDate).signWith(SECRET_KEY).compact();
+        return Jwts.builder()
+                .claims(Map.of(
+                        "memberId", id.toString(),
+                        "email", email,
+                        "type", type.getType()))
+                .issuedAt(new Date())
+                .expiration(expiryDate)
+                .signWith(SECRET_KEY)
+                .compact();
     }
 }

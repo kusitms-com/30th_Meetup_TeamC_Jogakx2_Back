@@ -44,7 +44,11 @@ public class HandleOAuthLoginService {
             throw AuthenticationErrorCode.RESOURCE_SERVER_UNAVAILABLE.toException();
         }
 
-        CreateMemberWithOAuthRequest createMemberWithOAuthRequest = CreateMemberWithOAuthRequest.builder().provider(provider).email(oAuthResourceResponse.getEmail()).nickname(oAuthResourceResponse.getName()).build();
+        CreateMemberWithOAuthRequest createMemberWithOAuthRequest = CreateMemberWithOAuthRequest.builder()
+                .provider(provider)
+                .email(oAuthResourceResponse.getEmail())
+                .nickname(oAuthResourceResponse.getName())
+                .build();
 
         Member member = createMemberWithOAuthService.createMemberWithOAuth(createMemberWithOAuthRequest);
 

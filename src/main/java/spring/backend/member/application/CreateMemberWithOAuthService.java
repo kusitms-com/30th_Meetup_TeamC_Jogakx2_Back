@@ -26,7 +26,14 @@ public class CreateMemberWithOAuthService {
         if (members == null || members.isEmpty()) {
             Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail(), request.getNickname());
             memberRepository.save(newMember);
-            return newMember;
+            Member savedMember = memberRepository.findByEmail(request.getEmail());
+
+            if (savedMember == null) {
+                log.error("[CreateMemberWithOAuthService] member could not be saved");
+                throw MemberErrorCode.MEMBER_SAVE_FAILED.toException();
+            }
+
+            return savedMember;
         }
         Member existingMember = members.stream()
                 .filter(Member::isMember)
@@ -45,7 +52,15 @@ public class CreateMemberWithOAuthService {
                 .orElseGet(() -> {
                     Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail(), request.getNickname());
                     memberRepository.save(newMember);
-                    return newMember;
+
+                    Member savedMember = memberRepository.findByEmail(request.getEmail());
+
+                    if (savedMember == null) {
+                        log.error("[CreateMemberWithOAuthService] member could not be saved");
+                        throw MemberErrorCode.MEMBER_SAVE_FAILED.toException();
+                    }
+
+                    return savedMember;
                 });
     }
 }

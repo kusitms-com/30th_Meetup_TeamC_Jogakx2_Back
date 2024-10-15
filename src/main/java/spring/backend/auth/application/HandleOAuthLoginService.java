@@ -12,8 +12,8 @@ import spring.backend.auth.infrastructure.OAuthRestClientFactory;
 import spring.backend.member.application.CreateMemberWithOAuthService;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Provider;
-import spring.backend.member.domain.value.Role;
 import spring.backend.member.dto.request.CreateMemberWithOAuthRequest;
+import spring.backend.util.application.JwtService;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,8 @@ public class HandleOAuthLoginService {
     private final OAuthRestClientFactory oAuthRestClientFactory;
 
     private final CreateMemberWithOAuthService createMemberWithOAuthService;
+
+    private final JwtService jwtService;
 
     public LoginResponse handleOAuthLogin(String providerName, String code, String state) {
         if (providerName == null || providerName.isEmpty()) {
@@ -46,6 +48,7 @@ public class HandleOAuthLoginService {
 
         Member member = createMemberWithOAuthService.createMemberWithOAuth(createMemberWithOAuthRequest);
 
-        return new LoginResponse(AccessTokenProviderService.accessTokenProvider(member), RefreshTokenProviderService.refreshTokenProvider(member), member.getRole());
+        return new LoginResponse(jwtService.provideAccessToken(member), jwtService.provideRefreshToken(member), member.getRole());
+
     }
 }

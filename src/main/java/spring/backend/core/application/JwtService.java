@@ -1,4 +1,4 @@
-package spring.backend.util.application;
+package spring.backend.core.application;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -31,41 +31,22 @@ public class JwtService {
     private final long ACCESS_EXPIRATION;
     private final long REFRESH_EXPIRATION;
 
-    public JwtService(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.access-token-expiry}") long accessTokenExpiry,
-            @Value("${jwt.refresh-token-expiry}") long refreshTokenExpiry
-    ) {
+    public JwtService(@Value("${jwt.secret}") String secret, @Value("${jwt.access-token-expiry}") long accessTokenExpiry, @Value("${jwt.refresh-token-expiry}") long refreshTokenExpiry) {
         this.SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.ACCESS_EXPIRATION = accessTokenExpiry;
         this.REFRESH_EXPIRATION = refreshTokenExpiry;
     }
 
-
     public String provideAccessToken(Member member) {
         return provideToken(member.getEmail(), member.getId(), Type.ACCESS, ACCESS_EXPIRATION);
     }
-
 
     public String provideRefreshToken(Member member) {
         return provideToken(member.getEmail(), member.getId(), Type.REFRESH, REFRESH_EXPIRATION);
     }
 
     private String provideToken(String email, UUID id, Type type, long expiration) {
-        Date expiryDate = Date.from(
-                Instant.now().plus(expiration, ChronoUnit.DAYS)
-        );
-        return Jwts.builder()
-                .claims(
-                        Map.of(
-                                "memberId", id.toString(),
-                                "email", email,
-                                "type", type.getType()
-                        )
-                )
-                .issuedAt(new Date())
-                .expiration(expiryDate)
-                .signWith(SECRET_KEY)
-                .compact();
+        Date expiryDate = Date.from(Instant.now().plus(expiration, ChronoUnit.DAYS));
+        return Jwts.builder().claims(Map.of("memberId", id.toString(), "email", email, "type", type.getType())).issuedAt(new Date()).expiration(expiryDate).signWith(SECRET_KEY).compact();
     }
 }

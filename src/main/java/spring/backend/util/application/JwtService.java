@@ -28,8 +28,8 @@ public class JwtService {
             @Value("${jwt.access-token-expiry}") long accessTokenExpiry,
             @Value("${jwt.refresh-token-expiry}") long refreshTokenExpiry
     ) {
-        this.SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));  // 문자열을 SecretKey로 변환
-        this.ACCESS_EXPIRATION = accessTokenExpiry;  // 초 단위 만료 시간
+        this.SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.ACCESS_EXPIRATION = accessTokenExpiry;
         this.REFRESH_EXPIRATION = refreshTokenExpiry;
     }
 
@@ -43,11 +43,10 @@ public class JwtService {
         return provideToken(member.getEmail(), member.getId(), Type.REFRESH, REFRESH_EXPIRATION);
     }
 
-    private String provideToken(String email, UUID id,  Type type, long expiration) {
+    private String provideToken(String email,  UUID id,Type type, long expiration) {
         Date exiaryDate = Date.from(
                 Instant.now().plus(expiration, ChronoUnit.HOURS)
         );
-
         return Jwts.builder()
                 .subject(email)
                 .claims(

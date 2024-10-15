@@ -32,12 +32,13 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void save(Member member) {
+    public Member save(Member member) {
         MemberJpaEntity memberJpaEntity = memberMapper.toJpaEntity(member);
         if (memberJpaEntity == null) {
             throw MemberErrorCode.MEMBER_SAVE_FAILED.toException();
         }
         memberJpaRepository.save(memberJpaEntity);
+        return memberMapper.toDomainEntity(memberJpaEntity);
     }
 
     @Override

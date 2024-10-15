@@ -8,7 +8,7 @@ import java.util.UUID;
 public interface MemberRepository {
 
     Member findById(UUID id);
-    void save(Member member);
+    Member save(Member member);
     Member findByEmail(String email);
     List<Member> findAllByEmail(String email);
 }

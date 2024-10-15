@@ -2,9 +2,10 @@ package spring.backend.util.application;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import spring.backend.auth.domain.jwt.value.Type;
 import spring.backend.member.domain.entity.Member;
 
 import javax.crypto.SecretKey;
@@ -15,8 +16,16 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
+
 @Service
 public class JwtService {
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Type {
+        ACCESS("access"), REFRESH("refresh");
+        private final String type;
+    }
 
     private final SecretKey SECRET_KEY;
     private final long ACCESS_EXPIRATION;
@@ -42,9 +51,9 @@ public class JwtService {
         return provideToken(member.getEmail(), member.getId(), Type.REFRESH, REFRESH_EXPIRATION);
     }
 
-    private String provideToken(String email,  UUID id,Type type, long expiration) {
-        Date exiaryDate = Date.from(
-                Instant.now().plus(expiration, ChronoUnit.HOURS)
+    private String provideToken(String email, UUID id, Type type, long expiration) {
+        Date expiryDate = Date.from(
+                Instant.now().plus(expiration, ChronoUnit.DAYS)
         );
         return Jwts.builder()
                 .claims(
@@ -55,9 +64,8 @@ public class JwtService {
                         )
                 )
                 .issuedAt(new Date())
-                .expiration(exiaryDate)
+                .expiration(expiryDate)
                 .signWith(SECRET_KEY)
                 .compact();
-
     }
 }

@@ -46,9 +46,6 @@ public class HandleOAuthLoginService {
 
         Member member = createMemberWithOAuthService.createMemberWithOAuth(createMemberWithOAuthRequest);
 
-        /**
-         * todo: 사용자 정보를 가지고 AccessToken, RefreshToken을 생성한다.
-         */
         return new LoginResponse(AccessTokenProviderService.accessTokenProvider(member), RefreshTokenProviderService.refreshTokenProvider(member), member.getRole());
     }
 }

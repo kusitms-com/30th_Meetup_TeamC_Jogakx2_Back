@@ -78,6 +78,13 @@ public class JwtService {
         }
     }
 
+    public void validateTokenExpiration(String token) {
+        Claims claims = getPayload(token);
+        if (claims.getExpiration().before(new Date())) {
+            throw AuthenticationErrorCode.EXPIRED_TOKEN.toException();
+        }
+    }
+
     private String provideToken(String email, UUID id, Type type, long expiration) {
         Date expiryDate = Date.from(Instant.now().plus(expiration, ChronoUnit.DAYS));
         return Jwts.builder()

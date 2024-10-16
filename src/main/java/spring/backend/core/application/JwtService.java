@@ -1,11 +1,16 @@
 package spring.backend.core.application;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.member.domain.entity.Member;
 
 import javax.crypto.SecretKey;
@@ -53,6 +58,24 @@ public class JwtService {
                 Type.REFRESH,
                 REFRESH_EXPIRATION
         );
+    }
+
+    public Claims getPayload(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(SECRET_KEY)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (SignatureException e) {
+            throw AuthenticationErrorCode.INVALID_SIGNATURE.toException();
+        } catch (ExpiredJwtException e) {
+            throw AuthenticationErrorCode.EXPIRED_TOKEN.toException();
+        } catch (MalformedJwtException e) {
+            throw AuthenticationErrorCode.NOT_MATCH_TOKEN_FORMAT.toException();
+        } catch (Exception e) {
+            throw AuthenticationErrorCode.NOT_DEFINE_TOKEN.toException();
+        }
     }
 
     private String provideToken(String email, UUID id, Type type, long expiration) {

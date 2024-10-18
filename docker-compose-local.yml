@@ -1,8 +1,12 @@
 services:
   cnergy-backend:
-    image: "${NCP_CONTAINER_REGISTRY}/cnergy-backend:${GITHUB_SHA}"
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - '8080:8080'
+    environment:
+      SPRING_PROFILES_ACTIVE: local
     depends_on:
       - redis
     networks:

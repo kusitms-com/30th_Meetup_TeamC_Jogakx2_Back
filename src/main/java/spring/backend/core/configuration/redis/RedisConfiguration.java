@@ -20,7 +20,6 @@ public class RedisConfiguration {
         return new LettuceConnectionFactory(new RedisStandaloneConfiguration(host, port));
     }
 
-
     @Bean
     public RedisTemplate<?, ?> redisTemplate() {
         RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();

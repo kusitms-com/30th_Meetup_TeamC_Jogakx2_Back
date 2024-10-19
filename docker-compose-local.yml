@@ -9,7 +9,6 @@ services:
       SPRING_PROFILES_ACTIVE: local
     depends_on:
         - redis
-        - mysql
     networks:
       - cnergy-backend-network
 
@@ -22,21 +21,8 @@ services:
     networks:
       - cnergy-backend-network
 
-  mysql:
-    image: mysql
-    ports:
-      - '3307:3306'
-    volumes:
-      - mysql-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: cnergy
-    networks:
-      - cnergy-backend-network
-
 volumes:
   redis-data:
-  mysql-data:
 
 networks:
   cnergy-backend-network:

@@ -78,6 +78,11 @@ public class JwtService {
         }
     }
 
+    public UUID extractMemberId(String token) {
+        Claims claims = getPayload(token);
+        return UUID.fromString(claims.get("memberId", String.class));
+    }
+
     public void validateTokenExpiration(String token) {
         Claims claims = getPayload(token);
         if (claims.getExpiration().before(new Date())) {

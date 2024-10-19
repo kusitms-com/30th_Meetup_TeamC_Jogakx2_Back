@@ -11,12 +11,22 @@ jobs:
     services:
       redis:
         image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         ports:
           - 6379:6379
 
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
 
       - name: Gradle 캐시 적용
         uses: actions/cache@v3
@@ -33,6 +43,23 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: YML 파일 세팅
+        env:
+          APPLICATION_PROPERTIES: ${{ secrets.APPLICATION_PROPERTIES }}
+          TEST_APPLICATION_PROPERTIES: ${{ secrets.TEST_APPLICATION_PROPERTIES }}
+        run: |
+          cd ./src
+          rm -rf main/resources/application.yml
+          mkdir -p test/resources
+          echo "$APPLICATION_PROPERTIES" > main/resources/application.yml
+          echo "$TEST_APPLICATION_PROPERTIES" > test/resources/application.yml
+
+      - name: gradlew 권한 부여
+        run: chmod +x gradlew
+
+      - name: 테스트 수행
+        run: ./gradlew test
 
       - name: 스프링부트 빌드
         run: ./gradlew build
@@ -68,7 +95,7 @@ jobs:
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
           script: |
+            echo "NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}" >> .env
+            echo "GITHUB_SHA=${{ github.sha }}" >> .env
             sudo chmod +x ./deploy.sh
-            export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
-            export GITHUB_SHA=${{ github.sha }}
             ./deploy.sh

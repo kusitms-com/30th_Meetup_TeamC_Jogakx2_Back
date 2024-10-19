@@ -26,6 +26,8 @@ public class HandleOAuthLoginService {
 
     private final JwtService jwtService;
 
+    private final RefreshTokenService refreshTokenService;
+
     public LoginResponse handleOAuthLogin(String providerName, String code, String state) {
         if (providerName == null || providerName.isEmpty()) {
             throw AuthenticationErrorCode.NOT_EXIST_PROVIDER.toException();
@@ -52,7 +54,6 @@ public class HandleOAuthLoginService {
 
         Member member = createMemberWithOAuthService.createMemberWithOAuth(createMemberWithOAuthRequest);
 
-        return new LoginResponse(jwtService.provideAccessToken(member), jwtService.provideRefreshToken(member), member.getRole());
-
+        return new LoginResponse(jwtService.provideAccessToken(member), refreshTokenService.saveRefreshToken(member), member.getRole());
     }
 }

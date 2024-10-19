@@ -95,7 +95,7 @@ jobs:
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
           script: |
-            echo "NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}" >> .env
-            echo "GITHUB_SHA=${{ github.sha }}" >> .env
+            export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
+            export GITHUB_SHA=${{ github.sha }}
             sudo chmod +x ./deploy.sh
             ./deploy.sh

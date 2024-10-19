@@ -38,7 +38,7 @@ public class RefreshTokenService {
 
     public String getRefreshToken(UUID memberId) {
         try {
-            return refreshTokenRepository.findById(memberId);
+            return refreshTokenRepository.findByMemberId(memberId);
         } catch (RedisConnectionException e) {
             throw GlobalErrorCode.REDIS_CONNECTION_ERROR.toException();
         } catch (Exception e) {

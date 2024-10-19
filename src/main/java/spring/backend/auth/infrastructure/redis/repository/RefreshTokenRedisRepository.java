@@ -21,7 +21,7 @@ public class RefreshTokenRedisRepository implements RefreshTokenRepository {
     }
 
     @Override
-    public String findById(UUID memberId) {
+    public String findByMemberId(UUID memberId) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         return valueOperations.get(memberId.toString());
     }

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import spring.backend.core.infrastructure.jpa.shared.BaseEntity;
 import spring.backend.member.domain.entity.Member;
+import spring.backend.member.domain.value.Gender;
 import spring.backend.member.domain.value.Provider;
 import spring.backend.member.domain.value.Role;
 
@@ -32,6 +33,13 @@ public class MemberJpaEntity extends BaseEntity {
 
     private String nickname;
 
+    private int birthYear;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private String profileImage;
+
     public static MemberJpaEntity toJpaEntity(Member member) {
         return MemberJpaEntity.builder()
                 .id(member.getId())
@@ -39,6 +47,9 @@ public class MemberJpaEntity extends BaseEntity {
                 .role(member.getRole())
                 .email(member.getEmail())
                 .nickname(member.getNickname())
+                .birthYear(member.getBirthYear())
+                .gender(member.getGender())
+                .profileImage(member.getProfileImage())
                 .createdAt(member.getCreatedAt())
                 .updatedAt(member.getUpdatedAt())
                 .deleted(Optional.ofNullable(member.getDeleted()).orElse(false))

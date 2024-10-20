@@ -5,6 +5,7 @@ import lombok.Getter;
 import spring.backend.member.domain.value.Gender;
 import spring.backend.member.domain.value.Provider;
 import spring.backend.member.domain.value.Role;
+import spring.backend.member.exception.MemberErrorCode;
 import spring.backend.member.infrastructure.persistence.jpa.entity.MemberJpaEntity;
 
 import java.time.LocalDateTime;
@@ -58,6 +59,17 @@ public class Member {
 
     public boolean isMember() {
         return Role.MEMBER.equals(this.role);
+    }
+
+    public void convertGuestToMember(String nickname, int birthYear, Gender gender, String profileImage) {
+        if (isMember()) {
+            throw MemberErrorCode.ALREADY_REGISTERED_MEMBER.toException();
+        }
+        this.role = Role.MEMBER;
+        this.nickname = nickname;
+        this.birthYear = birthYear;
+        this.gender = gender;
+        this.profileImage = profileImage;
     }
 
     public static Member createGuestMember(Provider provider, String email, String nickname) {

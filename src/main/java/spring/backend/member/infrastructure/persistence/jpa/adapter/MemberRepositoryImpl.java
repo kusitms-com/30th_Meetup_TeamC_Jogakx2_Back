@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Repository;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.repository.MemberRepository;
+import spring.backend.member.domain.value.Role;
 import spring.backend.member.exception.MemberErrorCode;
 import spring.backend.member.infrastructure.mapper.MemberMapper;
 import spring.backend.member.infrastructure.persistence.jpa.entity.MemberJpaEntity;
@@ -57,5 +58,10 @@ public class MemberRepositoryImpl implements MemberRepository {
             return null;
         }
         return memberJpaEntities.stream().map(memberMapper::toDomainEntity).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean existsByNicknameAndRole(String nickname, Role role) {
+        return memberJpaRepository.existsByNicknameAndRole(nickname, role);
     }
 }

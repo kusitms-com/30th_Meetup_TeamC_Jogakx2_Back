@@ -19,4 +19,8 @@ public class MemberServiceHelper {
         Member member = memberRepository.findById(memberId);
         return Optional.ofNullable(member).orElseThrow(MemberErrorCode.NOT_EXIST_MEMBER::toException);
     }
+
+    public Member save(Member member) {
+        return memberRepository.save(member);
+    }
 }

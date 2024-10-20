@@ -13,21 +13,21 @@ import java.util.UUID;
 @Builder
 public class Member {
 
-    private final UUID id;
+    private UUID id;
 
-    private final Provider provider;
+    private Provider provider;
 
-    private final Role role;
+    private Role role;
 
-    private final String email;
+    private String email;
 
-    private final String nickname;
+    private String nickname;
 
-    private final LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
-    private final LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
-    private final Boolean deleted;
+    private Boolean deleted;
 
     public static Member toDomainEntity(MemberJpaEntity memberJpaEntity) {
         return Member.builder()

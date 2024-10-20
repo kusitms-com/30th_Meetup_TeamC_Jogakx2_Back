@@ -2,6 +2,7 @@ package spring.backend.member.domain.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import spring.backend.member.domain.value.Gender;
 import spring.backend.member.domain.value.Provider;
 import spring.backend.member.domain.value.Role;
 import spring.backend.member.infrastructure.persistence.jpa.entity.MemberJpaEntity;
@@ -23,6 +24,12 @@ public class Member {
 
     private String nickname;
 
+    private int birthYear;
+
+    private Gender gender;
+
+    private String profileImage;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -36,6 +43,9 @@ public class Member {
                 .role(memberJpaEntity.getRole())
                 .email(memberJpaEntity.getEmail())
                 .nickname(memberJpaEntity.getNickname())
+                .birthYear(memberJpaEntity.getBirthYear())
+                .gender(memberJpaEntity.getGender())
+                .profileImage(memberJpaEntity.getProfileImage())
                 .createdAt(memberJpaEntity.getCreatedAt())
                 .updatedAt(memberJpaEntity.getUpdatedAt())
                 .deleted(memberJpaEntity.getDeleted())

@@ -11,7 +11,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import spring.backend.core.application.JwtService;
-import spring.backend.member.application.MemberService;
+import spring.backend.member.application.MemberServiceHelper;
 import spring.backend.member.domain.entity.Member;
 
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class LoginMemberArgumentResolverTest {
     private JwtService jwtService;
 
     @Mock
-    private MemberService memberService;
+    private MemberServiceHelper memberServiceHelper;
 
     @Mock
     private NativeWebRequest webRequest;
@@ -69,7 +69,7 @@ public class LoginMemberArgumentResolverTest {
         when(parameter.hasParameterAnnotation(LoginMember.class)).thenReturn(true);
         when(webRequest.getHeader("Authorization")).thenReturn("Bearer " + token);
         when(jwtService.extractMemberId(any(String.class))).thenReturn(memberId);
-        when(memberService.findByMemberId(memberId)).thenReturn(member);
+        when(memberServiceHelper.findByMemberId(memberId)).thenReturn(member);
 
         // then
         Object result = loginMemberArgumentResolver.resolveArgument(parameter, mavContainer, webRequest, null);

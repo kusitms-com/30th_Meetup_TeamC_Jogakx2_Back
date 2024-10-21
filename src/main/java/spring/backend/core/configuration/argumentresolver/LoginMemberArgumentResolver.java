@@ -10,7 +10,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.application.JwtService;
-import spring.backend.member.application.MemberService;
+import spring.backend.member.application.MemberServiceHelper;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     private final JwtService jwtService;
 
-    private final MemberService memberService;
+    private final MemberServiceHelper memberServiceHelper;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -37,7 +37,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         String authorizationHeader = webRequest.getHeader(AUTHORIZATION_HEADER);
         String token = extractToken(authorizationHeader);
         UUID memberId = jwtService.extractMemberId(token);
-        return memberService.findByMemberId(memberId);
+        return memberServiceHelper.findByMemberId(memberId);
     }
 
     private String extractToken(String authorizationHeader) {

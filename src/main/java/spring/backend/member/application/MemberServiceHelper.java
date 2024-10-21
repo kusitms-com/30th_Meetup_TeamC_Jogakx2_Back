@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberServiceHelper {
 
     private final MemberRepository memberRepository;
 

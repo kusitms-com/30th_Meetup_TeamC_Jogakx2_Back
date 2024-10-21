@@ -2,6 +2,8 @@ services:
   cnergy-backend:
     image: "${NCP_CONTAINER_REGISTRY}/cnergy-backend:${GITHUB_SHA}"
     container_name: cnergy-backend
+    env_file:
+      - .env
     ports:
       - '8080:8080'
     depends_on:

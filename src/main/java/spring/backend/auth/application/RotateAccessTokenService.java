@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class RotateTokenService {
+public class RotateAccessTokenService {
     private final MemberService memberService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;

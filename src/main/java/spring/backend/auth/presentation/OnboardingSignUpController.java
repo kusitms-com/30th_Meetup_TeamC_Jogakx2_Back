@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.auth.application.OnboardingSignUpService;
 import spring.backend.auth.dto.request.OnboardingSignUpRequest;
+import spring.backend.auth.presentation.swagger.OnboardingSignUpSwagger;
 import spring.backend.core.configuration.argumentresolver.LoginMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-public class OnboardingSignUpController {
+public class OnboardingSignUpController implements OnboardingSignUpSwagger {
 
     private final OnboardingSignUpService onboardingSignUpService;
 

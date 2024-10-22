@@ -38,14 +38,7 @@ public class RefreshTokenService {
 
     public String getRefreshToken(UUID memberId) {
         try {
-            String refreshToken = refreshTokenRepository.findByMemberId(memberId);
-
-            if (refreshToken == null || refreshToken.isEmpty()) {
-                log.error("리프레시 토큰이 저장소에 존재하지 않습니다.");
-                throw AuthenticationErrorCode.NOT_EXIST_REFRESH_TOKEN.toException();
-            }
-
-            return refreshToken;
+            return refreshTokenRepository.findByMemberId(memberId);
         } catch (DomainException e) {
             throw e;
         } catch (Exception e) {

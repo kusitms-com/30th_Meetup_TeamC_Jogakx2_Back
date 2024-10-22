@@ -2,6 +2,7 @@ package spring.backend.core.configuration.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -14,12 +15,6 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import io.swagger.v3.oas.models.security.SecurityScheme.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,8 +22,12 @@ import org.springframework.web.method.HandlerMethod;
 import spring.backend.core.exception.error.BaseErrorCode;
 import spring.backend.core.presentation.ErrorResponse;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "C-nergy API", description = "C-nergy : API 명세서", version = "v1.0.0"))
+@OpenAPIDefinition(info = @Info(title = "조각조각 API", description = "조각조각 : API 명세서", version = "v1.0.0"),
+        servers = {@Server(url = "${springdoc.server-url}", description = "Https Server URL")})
 public class SwaggerConfiguration {
 
   @Bean

@@ -30,10 +30,8 @@ public class RefreshTokenService {
 
     public String saveRefreshToken(Member member) {
         try {
-            refreshTokenRepository.save(member.getId(), jwtService.provideRefreshToken(member),REFRESH_TOKEN_EXPIRATION, convertChronoUnitToTimeUnit(ChronoUnit.DAYS));
+            refreshTokenRepository.save(member.getId(), jwtService.provideRefreshToken(member), REFRESH_TOKEN_EXPIRATION, convertChronoUnitToTimeUnit(ChronoUnit.DAYS));
             return getRefreshToken(member.getId());
-        } catch (RedisConnectionException e) {
-            throw GlobalErrorCode.REDIS_CONNECTION_ERROR.toException();
         } catch (Exception e) {
             throw GlobalErrorCode.INTERNAL_ERROR.toException();
         }
@@ -41,14 +39,14 @@ public class RefreshTokenService {
 
     public String getRefreshToken(UUID memberId) {
         try {
-            String refreshToken =  refreshTokenRepository.findByMemberId(memberId);
+            String refreshToken = refreshTokenRepository.findByMemberId(memberId);
+
             if (refreshToken == null || refreshToken.isEmpty()) {
                 log.error("리프레시 토큰이 저장소에 존재하지 않습니다.");
                 throw AuthenticationErrorCode.NOT_EXIST_REFRESH_TOKEN.toException();
             }
+
             return refreshToken;
-        } catch (RedisConnectionException e) {
-            throw GlobalErrorCode.REDIS_CONNECTION_ERROR.toException();
         } catch (DomainException e) {
             throw e;
         } catch (Exception e) {
@@ -58,9 +56,7 @@ public class RefreshTokenService {
 
     public void deleteRefreshToken(UUID memberId) {
         try {
-            refreshTokenRepository.delete(memberId);
-        } catch (RedisConnectionException e) {
-            throw GlobalErrorCode.REDIS_CONNECTION_ERROR.toException();
+            refreshTokenRepository.deleteByMemberId(memberId);
         } catch (Exception e) {
             throw GlobalErrorCode.INTERNAL_ERROR.toException();
         }

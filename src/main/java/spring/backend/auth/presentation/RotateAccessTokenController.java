@@ -13,7 +13,7 @@ import spring.backend.core.presentation.RestResponse;
 @RestController
 @RequestMapping("/v1/token/rotate")
 @RequiredArgsConstructor
-public class RotateTokenController {
+public class RotateAccessTokenController {
     private final RotateTokenService rotateTokenService;
 
     @GetMapping

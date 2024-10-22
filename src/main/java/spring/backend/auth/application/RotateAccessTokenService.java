@@ -3,7 +3,7 @@ package spring.backend.auth.application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import spring.backend.auth.dto.response.RotateTokenResponse;
+import spring.backend.auth.dto.response.RotateAccessTokenResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.application.JwtService;
 import spring.backend.member.application.MemberService;
@@ -18,14 +18,14 @@ public class RotateAccessTokenService {
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
 
-    public RotateTokenResponse rotateAccessToken(String refreshToken) {
+    public RotateAccessTokenResponse rotateAccessToken(String refreshToken) {
         UUID memberId = extractMemberIdFromRefreshToken(refreshToken);
         validateRefreshToken(memberId, refreshToken);
-        return new RotateTokenResponse(jwtService.provideAccessToken(memberService.findByMemberId(memberId)));
+        return new RotateAccessTokenResponse(jwtService.provideAccessToken(memberService.findByMemberId(memberId)));
     }
 
     private UUID extractMemberIdFromRefreshToken(String refreshToken) {
-        if(refreshToken == null) {
+        if (refreshToken == null) {
             log.error("쿠키에 refreshToken이 존재하지 않습니다.");
             throw AuthenticationErrorCode.MISSING_COOKIE_VALUE.toException();
         }

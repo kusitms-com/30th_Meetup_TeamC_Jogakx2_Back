@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 import spring.backend.auth.domain.repository.RefreshTokenRepository;
-import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 
 import java.util.UUID;

@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Repository;
 import spring.backend.auth.domain.repository.RefreshTokenRepository;
-import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 
 import java.util.UUID;
@@ -27,6 +26,8 @@ public class RefreshTokenRedisRepository implements RefreshTokenRepository {
         } catch (RedisConnectionException e) {
             log.error("Redis 연결 오류 : {}", e.getMessage());
             throw GlobalErrorCode.REDIS_CONNECTION_ERROR.toException();
+        } catch (Exception e) {
+            throw GlobalErrorCode.INTERNAL_ERROR.toException();
         }
     }
 
@@ -34,16 +35,14 @@ public class RefreshTokenRedisRepository implements RefreshTokenRepository {
     public String findByMemberId(UUID memberId) {
         try {
             ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-            String refreshToken = valueOperations.get(memberId.toString());
-            if (refreshToken == null || refreshToken.isEmpty()) {
-                log.error("리프레시 토큰이 저장소에 존재하지 않습니다.");
-                throw AuthenticationErrorCode.NOT_EXIST_REFRESH_TOKEN.toException();
-            }
-            return refreshToken;
+            return valueOperations.get(memberId.toString());
         } catch (RedisConnectionException e) {
             log.error("Redis 연결 오류 : {}", e.getMessage());
             throw GlobalErrorCode.REDIS_CONNECTION_ERROR.toException();
+        } catch (Exception e) {
+            throw GlobalErrorCode.INTERNAL_ERROR.toException();
         }
+
     }
 
     @Override
@@ -53,6 +52,8 @@ public class RefreshTokenRedisRepository implements RefreshTokenRepository {
         } catch (RedisConnectionException e) {
             log.error("Redis 연결 오류 : {}", e.getMessage());
             throw GlobalErrorCode.REDIS_CONNECTION_ERROR.toException();
+        } catch (Exception e) {
+            throw GlobalErrorCode.INTERNAL_ERROR.toException();
         }
     }
 }

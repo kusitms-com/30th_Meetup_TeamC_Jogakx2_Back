@@ -1,10 +1,12 @@
 package spring.backend.core.presentation;
 
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import spring.backend.core.exception.DomainException;
 import spring.backend.core.exception.error.BaseErrorCode;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class ErrorResponse extends BaseResponse {
@@ -37,5 +39,13 @@ public class ErrorResponse extends BaseResponse {
     this.statusCode = baseErrorCode.getHttpStatus().value();
     this.code = baseErrorCode.name();
     this.message = baseErrorCode.getMessage();
+  }
+
+  @Builder(builderClassName = "CreateValidationErrorResponse", builderMethodName = "createValidationErrorResponse")
+  public ErrorResponse(int statusCode, MethodArgumentNotValidException exception) {
+    super(false, LocalDateTime.now());
+    this.statusCode = statusCode;
+    this.code = exception.getClass().getSimpleName();
+    this.message = exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
   }
 }

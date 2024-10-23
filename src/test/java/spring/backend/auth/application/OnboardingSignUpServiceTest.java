@@ -9,8 +9,8 @@ import org.mockito.MockitoAnnotations;
 import spring.backend.auth.dto.request.OnboardingSignUpRequest;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.exception.DomainException;
-import spring.backend.member.application.MemberServiceHelper;
 import spring.backend.member.domain.entity.Member;
+import spring.backend.member.domain.repository.MemberRepository;
 import spring.backend.member.domain.value.Gender;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ class OnboardingSignUpServiceTest {
     private OnboardingSignUpService onboardingSignUpService;
 
     @Mock
-    private MemberServiceHelper memberServiceHelper;
+    private MemberRepository memberRepository;
 
     private Member member;
 
@@ -73,7 +73,7 @@ class OnboardingSignUpServiceTest {
         // Given
         OnboardingSignUpRequest request = new OnboardingSignUpRequest("조각조각", 2001, Gender.MALE, "http://test.jpg");
         when(member.isMember()).thenReturn(false);
-        when(memberServiceHelper.save(any(Member.class))).thenReturn(member);
+        when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         // When
         Member result = onboardingSignUpService.onboardingSignUp(member, request);
@@ -81,6 +81,6 @@ class OnboardingSignUpServiceTest {
         // Then
         assertNotNull(result);
         verify(member).convertGuestToMember("조각조각", 2001, Gender.MALE, "http://test.jpg");
-        verify(memberServiceHelper).save(member);
+        verify(memberRepository).save(member);
     }
 }

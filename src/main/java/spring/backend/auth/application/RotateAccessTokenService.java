@@ -6,22 +6,26 @@ import org.springframework.stereotype.Service;
 import spring.backend.auth.dto.response.RotateAccessTokenResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.application.JwtService;
-import spring.backend.member.application.MemberService;
+import spring.backend.member.domain.entity.Member;
+import spring.backend.member.domain.repository.MemberRepository;
+import spring.backend.member.exception.MemberErrorCode;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class RotateAccessTokenService {
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
 
     public RotateAccessTokenResponse rotateAccessToken(String refreshToken) {
         UUID memberId = extractMemberIdFromRefreshToken(refreshToken);
         validateRefreshToken(memberId, refreshToken);
-        return new RotateAccessTokenResponse(jwtService.provideAccessToken(memberService.findByMemberId(memberId)));
+        Member member = memberRepository.findById(memberId);
+        return new RotateAccessTokenResponse(jwtService.provideAccessToken(Optional.ofNullable(member).orElseThrow(MemberErrorCode.NOT_EXIST_MEMBER::toException)));
     }
 
     private UUID extractMemberIdFromRefreshToken(String refreshToken) {

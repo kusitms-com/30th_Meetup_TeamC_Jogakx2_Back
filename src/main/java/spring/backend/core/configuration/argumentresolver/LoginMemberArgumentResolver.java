@@ -10,8 +10,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.application.JwtService;
-import spring.backend.member.application.MemberServiceHelper;
+import spring.backend.member.domain.entity.Member;
+import spring.backend.member.domain.repository.MemberRepository;
+import spring.backend.member.exception.MemberErrorCode;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -25,7 +28,7 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
     private final JwtService jwtService;
 
-    private final MemberServiceHelper memberServiceHelper;
+    private final MemberRepository memberRepository;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -37,7 +40,8 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
         String authorizationHeader = webRequest.getHeader(AUTHORIZATION_HEADER);
         String token = extractToken(authorizationHeader);
         UUID memberId = jwtService.extractMemberId(token);
-        return memberServiceHelper.findByMemberId(memberId);
+        Member member = memberRepository.findById(memberId);
+        return Optional.ofNullable(member).orElseThrow(MemberErrorCode.NOT_EXIST_MEMBER::toException);
     }
 
     private String extractToken(String authorizationHeader) {

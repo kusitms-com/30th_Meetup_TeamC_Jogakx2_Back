@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.auth.dto.request.OnboardingSignUpRequest;
 import spring.backend.auth.exception.AuthenticationErrorCode;
-import spring.backend.member.application.MemberServiceHelper;
 import spring.backend.member.domain.entity.Member;
+import spring.backend.member.domain.repository.MemberRepository;
 
 import java.time.Year;
 
@@ -19,14 +19,14 @@ public class OnboardingSignUpService {
 
     private static final int BIRTH_YEAR_RANGE = 100;
 
-    private final MemberServiceHelper memberServiceHelper;
+    private final MemberRepository memberRepository;
 
     public Member onboardingSignUp(Member member, OnboardingSignUpRequest request) {
         validateMember(member);
         validateRequest(request);
         validateBirthYear(request);
         member.convertGuestToMember(request.nickname(), request.birthYear(), request.gender(), request.profileImage());
-        return memberServiceHelper.save(member);
+        return memberRepository.save(member);
     }
 
     private void validateMember(Member member) {

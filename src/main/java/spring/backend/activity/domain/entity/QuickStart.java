@@ -29,4 +29,14 @@ public class QuickStart {
     private LocalDateTime updatedAt;
 
     private Boolean deleted;
+
+    public static QuickStart create(UUID memberId, String name, Time startTime, Integer spareTime, Type type) {
+        return QuickStart.builder()
+                .memberId(memberId)
+                .name(name)
+                .startTime(startTime)
+                .spareTime(spareTime)
+                .type(type)
+                .build();
+    }
 }

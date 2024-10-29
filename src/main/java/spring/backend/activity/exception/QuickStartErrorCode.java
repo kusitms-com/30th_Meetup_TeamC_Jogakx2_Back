@@ -10,7 +10,9 @@ import spring.backend.core.exception.error.BaseErrorCode;
 @RequiredArgsConstructor
 public enum QuickStartErrorCode implements BaseErrorCode<DomainException> {
 
-    QUICK_START_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "빠른 시작 정보를 저장하는데 실패하였습니다.");
+    QUICK_START_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "빠른 시작 정보를 저장하는데 실패하였습니다."),
+    NOT_EXIST_QUICK_START_CONDITION(HttpStatus.BAD_REQUEST, "빠른 시작 요청 조건이 유효하지 않습니다."),
+    NOT_A_MEMBER(HttpStatus.FORBIDDEN, "사용자가 멤버 사용자가 아닙니다.");
 
     private final HttpStatus httpStatus;
 

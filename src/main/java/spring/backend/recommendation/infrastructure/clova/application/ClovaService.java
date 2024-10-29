@@ -21,9 +21,9 @@ public class ClovaService {
 
     private final WebClient webClient;
 
-    public String requestToClovaStudio(ClovaRecommendationRequest userInputRequest) {
+    public String requestToClovaStudio(ClovaRecommendationRequest clovaRecommendationRequest) {
         try {
-            ClovaRequest request = ClovaRequest.createClovaRequest(userInputRequest);
+            ClovaRequest request = ClovaRequest.createClovaRequest(clovaRecommendationRequest);
 
             ClovaResponse result = webClient.post()
                     .uri(apiUrl)

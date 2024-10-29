@@ -21,8 +21,8 @@ public class RequestRecommendationsFromClovaController {
     private final GetRecommendationsFromClovaService getRecommendationsFromClovaService;
 
     @PostMapping
-    public ResponseEntity<RestResponse<List<ClovaRecommendationResponse>>> requestRecommendations(@Valid @RequestBody ClovaRecommendationRequest userInputRequest) {
-        List<ClovaRecommendationResponse> response = getRecommendationsFromClovaService.getRecommendationsFromClova(userInputRequest);
+    public ResponseEntity<RestResponse<List<ClovaRecommendationResponse>>> requestRecommendations(@Valid @RequestBody ClovaRecommendationRequest clovaRecommendationRequest) {
+        List<ClovaRecommendationResponse> response = getRecommendationsFromClovaService.getRecommendationsFromClova(clovaRecommendationRequest);
         return ResponseEntity.ok(new RestResponse<>(response));
     }
 }

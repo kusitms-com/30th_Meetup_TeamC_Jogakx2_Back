@@ -3,6 +3,7 @@ package spring.backend.recommendation.infrastructure.clova.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import spring.backend.activity.domain.value.Keyword;
 import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 
@@ -25,15 +26,15 @@ public class Message {
                 .build();
     }
 
-    public static Message createMessage(ClovaRecommendationRequest userInputRequest) {
-        return Message.builder().role(ROLE.user).content(createContent(userInputRequest)).build();
+    public static Message createMessage(ClovaRecommendationRequest clovaRecommendationRequest) {
+        return Message.builder().role(ROLE.user).content(createContent(clovaRecommendationRequest)).build();
     }
 
-    private static String createContent(ClovaRecommendationRequest userInputRequest) {
-        int spareTime = userInputRequest.getSpareTime();
-        String activityType = userInputRequest.getActivityType().toString();
-        String keyword = userInputRequest.getKeyword();
-        String location = userInputRequest.getLocation();
+    private static String createContent(ClovaRecommendationRequest clovaRecommendationRequest) {
+        int spareTime = clovaRecommendationRequest.getSpareTime();
+        String activityType = clovaRecommendationRequest.getActivityType().toString();
+        Keyword keyword = clovaRecommendationRequest.getKeyword();
+        String location = clovaRecommendationRequest.getLocation();
 
         if (activityType.equals("OFFLINE")) {
             if (location == null) {

@@ -9,13 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.UpdateQuickStartService;
 import spring.backend.activity.dto.request.QuickStartRequest;
+import spring.backend.activity.presentation.swagger.UpdateQuickStartSwagger;
 import spring.backend.core.configuration.argumentresolver.LoginMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.member.domain.entity.Member;
 
 @RestController
 @RequiredArgsConstructor
-public class UpdateQuickStartController {
+public class UpdateQuickStartController implements UpdateQuickStartSwagger {
 
     private final UpdateQuickStartService updateQuickStartService;
 

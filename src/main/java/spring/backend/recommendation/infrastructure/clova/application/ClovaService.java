@@ -2,15 +2,13 @@ package spring.backend.recommendation.infrastructure.clova.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
-import reactor.core.publisher.Mono;
 import spring.backend.core.exception.DomainException;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.recommendation.infrastructure.clova.dto.request.ClovaRequest;
-import spring.backend.recommendation.dto.request.UserInputRequest;
+import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 import spring.backend.recommendation.infrastructure.clova.dto.response.ClovaResponse;
 import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 
@@ -23,7 +21,7 @@ public class ClovaService {
 
     private final WebClient webClient;
 
-    public String requestToClovaStudio(UserInputRequest userInputRequest) {
+    public String requestToClovaStudio(ClovaRecommendationRequest userInputRequest) {
         try {
             ClovaRequest request = ClovaRequest.createClovaRequest(userInputRequest);
 

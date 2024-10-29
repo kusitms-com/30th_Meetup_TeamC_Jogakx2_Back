@@ -3,7 +3,7 @@ package spring.backend.recommendation.infrastructure.clova.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import spring.backend.recommendation.dto.request.UserInputRequest;
+import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 
 @Getter
@@ -25,11 +25,11 @@ public class Message {
                 .build();
     }
 
-    public static Message createMessage(UserInputRequest userInputRequest) {
+    public static Message createMessage(ClovaRecommendationRequest userInputRequest) {
         return Message.builder().role(ROLE.user).content(createContent(userInputRequest)).build();
     }
 
-    private static String createContent(UserInputRequest userInputRequest) {
+    private static String createContent(ClovaRecommendationRequest userInputRequest) {
         int spareTime = userInputRequest.getSpareTime();
         String activityType = userInputRequest.getActivityType().toString();
         String keyword = userInputRequest.getKeyword();

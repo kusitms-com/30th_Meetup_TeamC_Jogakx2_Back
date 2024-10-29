@@ -2,7 +2,7 @@ package spring.backend.recommendation.infrastructure.clova.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import spring.backend.recommendation.dto.request.UserInputRequest;
+import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public class ClovaRequest {
     private boolean includeAiFilters;
     private int seed;
 
-    public static ClovaRequest createClovaRequest(UserInputRequest userInputRequest) {
+    public static ClovaRequest createClovaRequest(ClovaRecommendationRequest userInputRequest) {
         ArrayList<Message> messages = new ArrayList<>();
         messages.add(Message.createSystem());
         messages.add(Message.createMessage(userInputRequest));

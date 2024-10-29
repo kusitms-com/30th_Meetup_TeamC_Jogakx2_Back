@@ -15,19 +15,19 @@ public class Message {
     private String content;
 
     public enum ROLE {
-        system, user
+        SYSTEM, USER
     }
 
     public static Message createSystem() {
         String content = "너는 자투리시간과 활동의 타입(온라인,오프라인, 둘다)를 받고, 키워드와 위치 정보를 받아 사용자에게 5가지의 활동을 추천해주는 봇이야. 추천목록만 보내주면 되고, 각 추천목록은 줄바꿈으로 구분해줘. 추천목록을 제외한 잡설은 보내지마.";
         return Message.builder()
-                .role(ROLE.system)
+                .role(ROLE.SYSTEM)
                 .content(content)
                 .build();
     }
 
     public static Message createMessage(ClovaRecommendationRequest clovaRecommendationRequest) {
-        return Message.builder().role(ROLE.user).content(createContent(clovaRecommendationRequest)).build();
+        return Message.builder().role(ROLE.USER).content(createContent(clovaRecommendationRequest)).build();
     }
 
     private static String createContent(ClovaRecommendationRequest clovaRecommendationRequest) {

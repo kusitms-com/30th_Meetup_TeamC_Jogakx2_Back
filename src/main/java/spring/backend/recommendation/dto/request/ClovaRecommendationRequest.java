@@ -5,7 +5,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import spring.backend.recommendation.infrastructure.clova.domain.value.Type;
+import spring.backend.activity.domain.value.Keyword;
+import spring.backend.activity.domain.value.Type;
 
 @Getter
 public class ClovaRecommendationRequest {
@@ -22,7 +23,7 @@ public class ClovaRecommendationRequest {
 
     @NotNull
     @Schema(description = "활동 키워드", example = "문화/예술")
-    private String keyword;
+    private Keyword keyword;
 
     @Schema(description = "위치", example = "서울시 강남구")
     private String location;

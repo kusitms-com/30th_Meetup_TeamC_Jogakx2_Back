@@ -39,4 +39,11 @@ public class QuickStart {
                 .type(type)
                 .build();
     }
+
+    public void update(String name, Time startTime, Integer spareTime, Type type) {
+        this.name = name;
+        this.startTime = startTime;
+        this.spareTime = spareTime;
+        this.type = type;
+    }
 }

@@ -5,7 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import spring.backend.recommendation.dto.response.ClovaRecommendationResponse;
 import spring.backend.recommendation.infrastructure.clova.application.ClovaService;
-import spring.backend.recommendation.dto.request.UserInputRequest;
+import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 public class GetRecommendationsFromClovaService {
     private final ClovaService clovaService;
 
-    public List<ClovaRecommendationResponse> getRecommendationsFromClova(UserInputRequest userInputRequest) {
+    public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest userInputRequest) {
         String result = clovaService.requestToClovaStudio(userInputRequest);
         String[] recommendations = result.split("\n");
 

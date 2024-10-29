@@ -33,7 +33,7 @@ public class Message {
     private static String createContent(ClovaRecommendationRequest clovaRecommendationRequest) {
         int spareTime = clovaRecommendationRequest.getSpareTime();
         String activityType = clovaRecommendationRequest.getActivityType().toString();
-        Keyword keyword = clovaRecommendationRequest.getKeyword();
+        Keyword.Category keyword = clovaRecommendationRequest.getKeyword();
         String location = clovaRecommendationRequest.getLocation();
 
         if (activityType.equals("OFFLINE")) {

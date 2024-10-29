@@ -14,11 +14,13 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 public class GetRecommendationsFromClovaService {
+    private static final String LF = "\n";
+
     private final ClovaService clovaService;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest userInputRequest) {
         String result = clovaService.requestToClovaStudio(userInputRequest);
-        String[] recommendations = result.split("\n");
+        String[] recommendations = result.split(LF);
 
         List<ClovaRecommendationResponse> clovaResponses = new ArrayList<>();
 

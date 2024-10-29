@@ -9,6 +9,14 @@ import java.util.ArrayList;
 @Builder
 @Getter
 public class ClovaRequest {
+    private static final double DEFAULT_TOP_P = 0.8;
+    private static final int DEFAULT_TOP_K = 0;
+    private static final int DEFAULT_MAX_TOKENS = 500;
+    private static final double DEFAULT_TEMPERATURE = 0.5;
+    private static final double DEFAULT_REPEAT_PENALTY = 5.0;
+    private static final boolean DEFAULT_INCLUDE_AI_FILTERS = true;
+    private static final int DEFAULT_SEED = 0;
+
     private ArrayList<Message> messages;
     private double topP;
     private int topK;
@@ -25,13 +33,13 @@ public class ClovaRequest {
 
         return ClovaRequest.builder()
                 .messages(messages)
-                .topP(0.8)
-                .topK(0)
-                .maxTokens(500)
-                .temperature(0.5)
-                .repeatPenalty(5.0)
-                .includeAiFilters(true)
-                .seed(0)
+                .topP(DEFAULT_TOP_P)
+                .topK(DEFAULT_TOP_K)
+                .maxTokens(DEFAULT_MAX_TOKENS)
+                .temperature(DEFAULT_TEMPERATURE)
+                .repeatPenalty(DEFAULT_REPEAT_PENALTY)
+                .includeAiFilters(DEFAULT_INCLUDE_AI_FILTERS)
+                .seed(DEFAULT_SEED)
                 .build();
     }
 }

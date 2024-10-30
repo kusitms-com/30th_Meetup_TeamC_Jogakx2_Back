@@ -16,7 +16,21 @@ import java.util.stream.Collectors;
 @Builder
 public class Message {
 
-    private static final String DEFAULT_SYSTEM_CONTENT = "너는 자투리시간과 활동의 타입(온라인,오프라인, 둘다)를 받고, 키워드와 위치 정보를 받아 사용자에게 5가지의 활동을 추천해주는 봇이야. 추천목록만 보내주면 되고, 각 추천목록은 줄바꿈으로 구분해줘. 추천목록을 제외한 잡설은 보내지마.";
+    private static final String DEFAULT_SYSTEM_CONTENT = "사용자에게 자투리 시간 , 원하는 활동 타입, 활동 키워드, 위치를 입력받은 뒤 입력받은 값들을 고려해 활동을 추천해줘.\n" +
+            "\n" +
+            "예를 들어 입력으로 \n" +
+            "자투리 시간 : 20분 , 선호활동 : ONLINE , 활동 키워드: RELAXATION,\n" +
+            "\n" +
+            "답변은 다음과 같은 형식으로 해줘.\n" +
+            "\n" +
+            "title : 마음의 편안을 가져다주는 명상 음악 20분 듣기\n" +
+            "content: 휴식에는 역시 명상이 최고!\n" +
+            "\n" +
+            "답변 예시와 비슷한 형태로 5가지의 활동을 추천해줘.\n" +
+            "\n" +
+            "답변의 형식을 꼭 지켜줘\n" +
+            "title : string \n" +
+            "content : string";
 
     private String role;
     private String content;
@@ -45,18 +59,18 @@ public class Message {
         String keywords = parseKeywords(clovaRecommendationRequest.getKeywords());
         String location = clovaRecommendationRequest.getLocation();
 
-        if (isActivityTypeOffline(activityType, location)) {
-            return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n위치: %s\n\n활동 추천해줘\n\n", spareTime, activityType, keywords, location);
+        if (isActivityTypeOfflineOrOnlineAndOffline(activityType, location)) {
+            return  String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n위치: %s\n\n활동 추천해줘\n\n", spareTime, activityType.getDescription(), keywords, location);
         } else {
-            return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n\n활동 추천해줘\n\n", spareTime, activityType, keywords);
+            return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n\n활동 추천해줘\n\n", spareTime, activityType.getDescription(), keywords);
         }
     }
 
-    private static boolean isActivityTypeOffline(Type activityType, String location) {
-        if (activityType.equals(Type.OFFLINE) && location == null) {
+    private static boolean isActivityTypeOfflineOrOnlineAndOffline(Type activityType, String location) {
+        if (activityType.equals(Type.OFFLINE) && location == null || activityType.equals(Type.ONLINE_AND_OFFLINE) && location == null) {
             throw ClovaErrorCode.NOT_EXIST_LOCATION_WHEN_OFFLINE.toException();
         }
-        return activityType.equals(Type.OFFLINE);
+        return activityType.equals(Type.OFFLINE) || activityType.equals(Type.ONLINE_AND_OFFLINE);
     }
 
     private static String parseKeywords(Keyword.Category[] keywords) {

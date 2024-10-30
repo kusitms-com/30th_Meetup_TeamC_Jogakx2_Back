@@ -12,8 +12,8 @@ import spring.backend.activity.domain.value.Type;
 public class ClovaRecommendationRequest {
 
     @NotNull
-    @Min(value = 5, message = "자투리 시간은 5부터 300 사이의 숫자로 입력해주세요.")
-    @Max(value = 300, message = "자투리 시간은 5부터 300 사이의 숫자로 입력해주세요.")
+    @Min(value = 10, message = "자투리 시간은 10부터 300 사이의 숫자로 입력해주세요.")
+    @Max(value = 300, message = "자투리 시간은 10부터 300 사이의 숫자로 입력해주세요.")
     @Schema(description = "자투리 시간", example = "30")
     private Integer spareTime;
 

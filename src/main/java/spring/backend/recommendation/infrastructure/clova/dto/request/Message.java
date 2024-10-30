@@ -42,9 +42,7 @@ public class Message {
     private static String createContent(ClovaRecommendationRequest clovaRecommendationRequest) {
         int spareTime = clovaRecommendationRequest.getSpareTime();
         Type activityType = clovaRecommendationRequest.getActivityType();
-        String keywords = Arrays.stream(clovaRecommendationRequest.getKeywords())
-                .map(Keyword.Category::getDescription)
-                .collect(Collectors.joining(", "));
+        String keywords = parseKeywords(clovaRecommendationRequest.getKeywords());
         String location = clovaRecommendationRequest.getLocation();
 
         if (isActivityTypeOffline(activityType, location)) {
@@ -59,5 +57,17 @@ public class Message {
             throw ClovaErrorCode.NOT_EXIST_LOCATION_WHEN_OFFLINE.toException();
         }
         return activityType.equals(Type.OFFLINE);
+    }
+
+    private static String parseKeywords(Keyword.Category[] keywords) {
+        if (keywords.length == 0) {
+            return Arrays.stream(Keyword.Category.values())
+                    .map(Keyword.Category::getDescription)
+                    .collect(Collectors.joining(", "));
+        } else {
+            return Arrays.stream(keywords)
+                    .map(Keyword.Category::getDescription)
+                    .collect(Collectors.joining(", "));
+        }
     }
 }

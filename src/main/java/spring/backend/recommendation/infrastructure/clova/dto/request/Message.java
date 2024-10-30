@@ -20,20 +20,20 @@ public class Message {
 
     @RequiredArgsConstructor
     @Getter
-    public enum ROLE {
+    public enum Role {
         SYSTEM("system"), USER("user");
         private final String description;
     }
 
     public static Message createSystem() {
         return Message.builder()
-                .role(ROLE.SYSTEM.getDescription())
+                .role(Role.SYSTEM.getDescription())
                 .content(DEFAULT_SYSTEM_CONTENT)
                 .build();
     }
 
     public static Message createMessage(ClovaRecommendationRequest clovaRecommendationRequest) {
-        return Message.builder().role(ROLE.USER.getDescription()).content(createContent(clovaRecommendationRequest)).build();
+        return Message.builder().role(Role.USER.getDescription()).content(createContent(clovaRecommendationRequest)).build();
     }
 
     private static String createContent(ClovaRecommendationRequest clovaRecommendationRequest) {

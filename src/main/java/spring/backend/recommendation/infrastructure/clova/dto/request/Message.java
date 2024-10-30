@@ -9,6 +9,9 @@ import spring.backend.activity.domain.value.Type;
 import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 @Getter
 @Builder
 public class Message {
@@ -39,13 +42,15 @@ public class Message {
     private static String createContent(ClovaRecommendationRequest clovaRecommendationRequest) {
         int spareTime = clovaRecommendationRequest.getSpareTime();
         Type activityType = clovaRecommendationRequest.getActivityType();
-        Keyword.Category keyword = clovaRecommendationRequest.getKeyword();
+        String keywords = Arrays.stream(clovaRecommendationRequest.getKeywords())
+                .map(Keyword.Category::getDescription)
+                .collect(Collectors.joining(", "));
         String location = clovaRecommendationRequest.getLocation();
 
         if (isActivityTypeOffline(activityType, location)) {
-            return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n위치: %s\n\n활동 추천해줘\n\n", spareTime, activityType, keyword, location);
+            return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n위치: %s\n\n활동 추천해줘\n\n", spareTime, activityType, keywords, location);
         } else {
-            return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n\n활동 추천해줘\n\n", spareTime, activityType, keyword);
+            return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n\n활동 추천해줘\n\n", spareTime, activityType, keywords);
         }
     }
 

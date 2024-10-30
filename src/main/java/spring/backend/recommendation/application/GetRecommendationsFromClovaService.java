@@ -13,13 +13,13 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 public class GetRecommendationsFromClovaService {
-    private static final String LF = "\n";
+    private static final String LINE_SEPARATOR = "\n";
 
     private final RecommendationProvider recommendationProvider;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest clovaRecommendationRequest) {
 
-        String[] recommendations = recommendationProvider.requestToClovaStudio(clovaRecommendationRequest).split(LF);
+        String[] recommendations = recommendationProvider.requestToClovaStudio(clovaRecommendationRequest).split(LINE_SEPARATOR);
 
         List<ClovaRecommendationResponse> clovaResponses = new ArrayList<>();
 

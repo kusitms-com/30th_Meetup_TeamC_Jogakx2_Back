@@ -3,16 +3,13 @@ package spring.backend.recommendation.infrastructure.clova.application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
-import spring.backend.core.exception.DomainException;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 import spring.backend.recommendation.infrastructure.clova.dto.request.ClovaRequest;
 import spring.backend.recommendation.infrastructure.clova.dto.response.ClovaResponse;
-import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 
 @Service
 @RequiredArgsConstructor

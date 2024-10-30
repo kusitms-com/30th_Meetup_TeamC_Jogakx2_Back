@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/recommendations")
-public class RequestRecommendationsFromClovaController {
+public class GetRecommendationsFromClovaController {
     private final GetRecommendationsFromClovaService getRecommendationsFromClovaService;
 
     @PostMapping

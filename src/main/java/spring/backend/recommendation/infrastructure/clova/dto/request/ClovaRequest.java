@@ -26,10 +26,10 @@ public class ClovaRequest {
     private boolean includeAiFilters;
     private int seed;
 
-    public static ClovaRequest createClovaRequest(ClovaRecommendationRequest userInputRequest) {
+    public static ClovaRequest createClovaRequest(ClovaRecommendationRequest clovaRecommendationRequest) {
         ArrayList<Message> messages = new ArrayList<>();
         messages.add(Message.createSystem());
-        messages.add(Message.createMessage(userInputRequest));
+        messages.add(Message.createMessage(clovaRecommendationRequest));
 
         return ClovaRequest.builder()
                 .messages(messages)

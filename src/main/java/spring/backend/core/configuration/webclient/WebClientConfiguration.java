@@ -16,13 +16,13 @@ public class WebClientConfiguration {
     private String apiGatewayKey;
 
     @Bean
-    public WebClient webClient(WebClient.Builder builder) {
-        return builder.defaultHeaders(
-                httpHeaders -> {
+    public WebClient clovaStudioWebClient() {
+        return WebClient.builder()
+                .defaultHeaders(httpHeaders -> {
                     httpHeaders.set("X-NCP-CLOVASTUDIO-API-KEY", apiKey);
                     httpHeaders.set("X-NCP-APIGW-API-KEY", apiGatewayKey);
                     httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-                }
-        ).build();
+                })
+                .build();
     }
 }

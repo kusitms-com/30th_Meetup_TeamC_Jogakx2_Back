@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GetRecommendationsFromClovaService {
     private static final String LINE_SEPARATOR = "\n";
-
     private final RecommendationProvider recommendationProvider;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest clovaRecommendationRequest) {
@@ -23,8 +22,23 @@ public class GetRecommendationsFromClovaService {
 
         List<ClovaRecommendationResponse> clovaResponses = new ArrayList<>();
 
+        int order = 1;
+
         for (int i = 0; i < recommendations.length; i++) {
-            clovaResponses.add(new ClovaRecommendationResponse(i + 1, recommendations[i]));
+            String line = recommendations[i].trim();
+
+            if (line.matches("^\\d+\\. title :.*")) {
+                String title = line.replaceFirst("^\\d+\\. title :", "").trim();
+                String content = "";
+
+                if (i + 1 < recommendations.length && recommendations[i + 1].trim().startsWith("content :")) {
+                    content = recommendations[i + 1].trim().replaceFirst("^content :", "").trim();
+                    i++;
+                }
+
+                clovaResponses.add(new ClovaRecommendationResponse(order, title, content));
+                order++;
+            }
         }
 
         return clovaResponses;

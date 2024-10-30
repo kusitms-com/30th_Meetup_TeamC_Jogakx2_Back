@@ -7,5 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ClovaRecommendationResponse {
     private Integer order;
+    private String title;
     private String content;
 }

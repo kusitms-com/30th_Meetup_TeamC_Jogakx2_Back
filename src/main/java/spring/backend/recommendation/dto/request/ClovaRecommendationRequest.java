@@ -22,7 +22,7 @@ public class ClovaRecommendationRequest {
     private Type activityType;
 
     @NotNull
-    @Schema(description = "활동 키워드", example = "문화/예술")
+    @Schema(description = "활동 키워드", example = "[\"NATURE\",\"CULTURE_ART\"]")
     private Keyword.Category[] keywords;
 
     @Schema(description = "위치", example = "서울시 강남구")

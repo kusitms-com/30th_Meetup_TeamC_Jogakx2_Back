@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.core.infrastructure.jpa.shared.BaseLongIdEntity;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +25,7 @@ public class QuickStartJpaEntity extends BaseLongIdEntity {
 
     private String name;
 
-    private Time startTime;
+    private LocalTime startTime;
 
     private Integer spareTime;
 

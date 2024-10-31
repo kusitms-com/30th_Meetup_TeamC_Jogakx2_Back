@@ -11,7 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import spring.backend.activity.domain.value.Type;
 
-import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +33,7 @@ class QuickStartRequestTest {
         @Test
         @DisplayName("null 값일 경우 에러가 발생한다.")
         void whenNameIsNull_thenValidationFails() {
-            QuickStartRequest request = new QuickStartRequest(null, Time.valueOf("12:30:00"), 300, Type.OFFLINE);
+            QuickStartRequest request = new QuickStartRequest(null, LocalTime.now(), 300, Type.OFFLINE);
             Set<ConstraintViolation<QuickStartRequest>> violations = validator.validate(request);
 
             assertThat(violations).isNotEmpty();
@@ -44,7 +44,7 @@ class QuickStartRequestTest {
         @DisplayName("올바른 형식의 이름일 경우 성공한다.")
         @ValueSource(strings = {"등교", "이름테스트", "John Doe", "사용자1"})
         void whenNameIsValid_thenValidationSucceeds(String name) {
-            QuickStartRequest request = new QuickStartRequest(name, Time.valueOf("12:30:00"), 300, Type.OFFLINE);
+            QuickStartRequest request = new QuickStartRequest(name, LocalTime.now(), 300, Type.OFFLINE);
             Set<ConstraintViolation<QuickStartRequest>> violations = validator.validate(request);
 
             assertThat(violations).isEmpty();
@@ -54,7 +54,7 @@ class QuickStartRequestTest {
         @DisplayName("형식에 맞지 않는 이름일 경우 에러가 발생한다.")
         @ValueSource(strings = {" 이름", "이름 ", "이름@이름", "공백  공백"})
         void whenNameIsInvalid_thenValidationFails(String name) {
-            QuickStartRequest request = new QuickStartRequest(name, Time.valueOf("12:30:00"), 300, Type.OFFLINE);
+            QuickStartRequest request = new QuickStartRequest(name, LocalTime.now(), 300, Type.OFFLINE);
             Set<ConstraintViolation<QuickStartRequest>> violations = validator.validate(request);
 
             assertThat(violations).isNotEmpty();
@@ -65,7 +65,7 @@ class QuickStartRequestTest {
         @DisplayName("10자를 초과하는 경우 에러가 발생한다.")
         void whenNameExceedsMaxLength_thenValidationFails() {
             String name = "매우몹시너무긴이름longname";
-            QuickStartRequest request = new QuickStartRequest(name, Time.valueOf("12:30:00"), 300, Type.OFFLINE);
+            QuickStartRequest request = new QuickStartRequest(name, LocalTime.now(), 300, Type.OFFLINE);
             Set<ConstraintViolation<QuickStartRequest>> violations = validator.validate(request);
 
             assertThat(violations).isNotEmpty();

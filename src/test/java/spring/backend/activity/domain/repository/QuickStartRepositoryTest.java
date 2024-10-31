@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import spring.backend.activity.domain.entity.QuickStart;
 import spring.backend.activity.domain.value.Type;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,7 +26,7 @@ class QuickStartRepositoryTest {
         quickStart = QuickStart.builder()
                 .memberId(UUID.randomUUID())
                 .name("Test QuickStart")
-                .startTime(Time.valueOf("01:02:03"))
+                .startTime(LocalTime.of(12, 30))
                 .spareTime(60)
                 .type(Type.ONLINE)
                 .createdAt(LocalDateTime.now())

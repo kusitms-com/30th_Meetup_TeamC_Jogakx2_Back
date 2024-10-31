@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import spring.backend.activity.domain.value.Type;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 public record QuickStartRequest(
 
@@ -15,8 +15,8 @@ public record QuickStartRequest(
         String name,
 
         @NotNull(message = "시작 시간은 필수 입력 항목입니다.")
-        @Schema(description = "시작 시간", example = "12:30:00")
-        Time startTime,
+        @Schema(description = "시작 시간", example = "12:30")
+        LocalTime startTime,
 
         @NotNull(message = "자투리 시간은 필수 입력 항목입니다.")
         @Min(value = 10, message = "자투리 시간은 최소 10이어야 합니다.")

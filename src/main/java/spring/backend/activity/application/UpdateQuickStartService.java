@@ -30,7 +30,6 @@ public class UpdateQuickStartService {
     private void validateUpdateRequest(Member member, QuickStartRequest request, QuickStart quickStart) {
         validateQuickStartExistence(quickStart);
         validateRequest(request);
-        validateMember(member);
         validateMemberId(member.getId(), quickStart.getMemberId());
     }
 
@@ -45,13 +44,6 @@ public class UpdateQuickStartService {
         if (request == null) {
             log.error("[validateRequest] Request is null.");
             throw QuickStartErrorCode.NOT_EXIST_QUICK_START_CONDITION.toException();
-        }
-    }
-
-    private void validateMember(Member member) {
-        if (!member.isMember()) {
-            log.error("[validateMember] Unauthorized member.");
-            throw QuickStartErrorCode.NOT_A_MEMBER.toException();
         }
     }
 

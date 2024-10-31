@@ -20,7 +20,6 @@ public class CreateQuickStartService {
 
     public Long createQuickStart(Member member, QuickStartRequest request) {
         validateRequest(request);
-        validateMember(member);
         QuickStart quickStart = QuickStart.create(member.getId(), request.name(), request.startTime(), request.spareTime(), request.type());
         QuickStart savedQuickStart = quickStartRepository.save(quickStart);
         return savedQuickStart.getId();
@@ -30,13 +29,6 @@ public class CreateQuickStartService {
         if (request == null) {
             log.error("[CreateQuickStartService] Invalid request.");
             throw QuickStartErrorCode.NOT_EXIST_QUICK_START_CONDITION.toException();
-        }
-    }
-
-    private void validateMember(Member member) {
-        if (!member.isMember()) {
-            log.error("[CreateQuickStartService] Client is not a member.");
-            throw QuickStartErrorCode.NOT_A_MEMBER.toException();
         }
     }
 }

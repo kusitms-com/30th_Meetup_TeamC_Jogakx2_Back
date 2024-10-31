@@ -10,7 +10,6 @@ import spring.backend.activity.domain.value.Type;
 import spring.backend.core.infrastructure.jpa.shared.BaseLongIdEntity;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -29,10 +28,8 @@ public class ActivityJpaEntity extends BaseLongIdEntity {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "activity_keyword",
-            joinColumns = @JoinColumn(name = "activity_id"))
-    private Set<Keyword> keywords;
+    @Embedded
+    private Keyword keyword;
 
     private String title;
 

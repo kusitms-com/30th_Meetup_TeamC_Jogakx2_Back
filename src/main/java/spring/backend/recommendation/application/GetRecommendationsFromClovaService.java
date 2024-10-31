@@ -14,12 +14,11 @@ import java.util.regex.Pattern;
 @Log4j2
 @RequiredArgsConstructor
 public class GetRecommendationsFromClovaService {
-    private static final Pattern TITLE_FULL_LINE_PATTERN = Pattern.compile("^\\d+\\. title :.*");
-    private static final Pattern TITLE_PREFIX_PATTERN = Pattern.compile("^\\d+\\. title :");
-    private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile("^content :");
+    private static final Pattern TITLE_FULL_LINE_PATTERN = Pattern.compile(".*title :.*");
+    private static final Pattern TITLE_PREFIX_PATTERN = Pattern.compile(".*title :");
+    private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content :");
     private static final String LINE_SEPARATOR = "\n";
     private final RecommendationProvider recommendationProvider;
-
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest clovaRecommendationRequest) {
 
         String[] recommendations = recommendationProvider.requestToClovaStudio(clovaRecommendationRequest).split(LINE_SEPARATOR);

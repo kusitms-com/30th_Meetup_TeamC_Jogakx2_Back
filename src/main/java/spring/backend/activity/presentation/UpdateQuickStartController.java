@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.UpdateQuickStartService;
 import spring.backend.activity.dto.request.QuickStartRequest;
 import spring.backend.activity.presentation.swagger.UpdateQuickStartSwagger;
-import spring.backend.core.configuration.argumentresolver.LoginMember;
+import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.member.domain.entity.Member;
 
@@ -22,7 +22,7 @@ public class UpdateQuickStartController implements UpdateQuickStartSwagger {
 
     @Authorization
     @PatchMapping("/v1/quick-starts/{quickStartId}")
-    public ResponseEntity<Void> updateQuickStart(@LoginMember Member member, @Valid @RequestBody QuickStartRequest request, @PathVariable Long quickStartId) {
+    public ResponseEntity<Void> updateQuickStart(@AuthorizedMember Member member, @Valid @RequestBody QuickStartRequest request, @PathVariable Long quickStartId) {
         updateQuickStartService.updateQuickStart(member, request, quickStartId);
         return ResponseEntity.ok().build();
     }

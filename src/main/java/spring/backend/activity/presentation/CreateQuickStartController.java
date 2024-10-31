@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.CreateQuickStartService;
 import spring.backend.activity.dto.request.QuickStartRequest;
 import spring.backend.activity.presentation.swagger.CreateQuickStartSwagger;
-import spring.backend.core.configuration.argumentresolver.LoginMember;
+import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
@@ -22,7 +22,7 @@ public class CreateQuickStartController implements CreateQuickStartSwagger {
 
     @Authorization
     @PostMapping("/v1/quick-starts")
-    public ResponseEntity<RestResponse<Long>> createQuickStart(@LoginMember Member member, @Valid @RequestBody QuickStartRequest request) {
+    public ResponseEntity<RestResponse<Long>> createQuickStart(@AuthorizedMember Member member, @Valid @RequestBody QuickStartRequest request) {
         Long memberId = createQuickStartService.createQuickStart(member, request);
         return ResponseEntity.ok(new RestResponse<>(memberId));
     }

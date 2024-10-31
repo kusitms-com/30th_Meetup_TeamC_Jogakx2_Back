@@ -21,7 +21,8 @@ import java.sql.Time;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CreateQuickStartServiceTest {
@@ -33,16 +34,12 @@ class CreateQuickStartServiceTest {
     private QuickStartRepository quickStartRepository;
 
     private Member member;
-    private Member guest;
     private QuickStartRequest request;
 
     @BeforeEach
     public void setUp() {
         member = Member.builder()
                 .role(Role.MEMBER)
-                .build();
-        guest = Member.builder()
-                .role(Role.GUEST)
                 .build();
         request = new QuickStartRequest(
                 "등교",
@@ -60,16 +57,6 @@ class CreateQuickStartServiceTest {
 
         // then
         assertEquals(QuickStartErrorCode.NOT_EXIST_QUICK_START_CONDITION.getMessage(), ex.getMessage());
-    }
-
-    @DisplayName("비회원이 요청하는 경우 예외가 발생한다")
-    @Test
-    public void createQuickStart_NonMember_ThrowsException() {
-        // when
-        DomainException ex = assertThrows(DomainException.class, () -> createQuickStartService.createQuickStart(guest, request));
-
-        // then
-        assertEquals(QuickStartErrorCode.NOT_A_MEMBER.getMessage(), ex.getMessage());
     }
 
     @DisplayName("유효한 빠른 시작 요청인 경우 저장된 ID를 반환한다")

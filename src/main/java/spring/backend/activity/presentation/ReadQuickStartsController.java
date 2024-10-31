@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.ReadQuickStartsService;
 import spring.backend.activity.dto.response.QuickStartsResponse;
 import spring.backend.activity.presentation.swagger.ReadQuickStartsSwagger;
-import spring.backend.core.configuration.argumentresolver.LoginMember;
+import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
@@ -20,7 +20,7 @@ public class ReadQuickStartsController implements ReadQuickStartsSwagger {
 
     @Authorization
     @GetMapping("/v1/quick-starts")
-    public ResponseEntity<RestResponse<QuickStartsResponse>> readQuickStarts(@LoginMember Member member) {
+    public ResponseEntity<RestResponse<QuickStartsResponse>> readQuickStarts(@AuthorizedMember Member member) {
         return ResponseEntity.ok(new RestResponse<>(readQuickStartsService.readQuickStarts(member)));
     }
 }

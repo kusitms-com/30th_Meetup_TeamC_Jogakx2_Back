@@ -18,7 +18,8 @@ public enum MemberErrorCode implements BaseErrorCode<DomainException> {
     NOT_EXIST_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임은 필수 입력값입니다."),
     INVALID_NICKNAME_LENGTH(HttpStatus.BAD_REQUEST, "닉네임은 1자에서 6자 사이여야 합니다."),
     INVALID_NICKNAME_FORMAT(HttpStatus.BAD_REQUEST, "닉네임은 한글, 영문, 숫자 조합이어야 합니다."),
-    ALREADY_REGISTERED_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임이 이미 사용 중입니다.");
+    ALREADY_REGISTERED_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임이 이미 사용 중입니다."),
+    NOT_AUTHORIZED_MEMBER(HttpStatus.FORBIDDEN, "회원가입을 완료한 사용자가 아닙니다.");
 
     private final HttpStatus httpStatus;
 

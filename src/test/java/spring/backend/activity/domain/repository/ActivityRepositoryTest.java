@@ -9,7 +9,6 @@ import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +28,7 @@ class ActivityRepositoryTest {
                 .quickStartId(100L)
                 .spareTime(120)
                 .type(Type.ONLINE)
-                .keywords(Set.of(Keyword.create(Keyword.Category.SELF_DEVELOPMENT, "test.url"), Keyword.create(Keyword.Category.ENTERTAINMENT, "test1.url")))
+                .keyword(Keyword.create(Keyword.Category.SELF_DEVELOPMENT, "test.url"))
                 .title("Test Activity")
                 .content("This is a test activity.")
                 .location("Test Location")
@@ -48,6 +47,6 @@ class ActivityRepositoryTest {
         Activity foundActivity = activityRepository.findById(savedActivity.getId());
 
         assertThat(foundActivity).isNotNull();
-        assertThat(foundActivity.getKeywords()).isEqualTo(activity.getKeywords());
+        assertThat(foundActivity.getKeyword()).isEqualTo(activity.getKeyword());
     }
 }

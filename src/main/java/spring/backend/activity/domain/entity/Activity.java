@@ -6,7 +6,6 @@ import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -23,7 +22,7 @@ public class Activity {
 
     private Type type;
 
-    private Set<Keyword> keywords;
+    private Keyword keyword;
 
     private String title;
 

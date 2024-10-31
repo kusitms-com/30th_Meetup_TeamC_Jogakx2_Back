@@ -3,7 +3,7 @@ package spring.backend.activity.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import spring.backend.activity.domain.value.Type;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 public record QuickStartResponse(
 
@@ -13,8 +13,8 @@ public record QuickStartResponse(
         @Schema(description = "빠른 시작 이름", example = "등교")
         String name,
 
-        @Schema(description = "시작 시간", example = "12:30:00")
-        Time startTime,
+        @Schema(description = "시작 시간", example = "12:30")
+        LocalTime startTime,
 
         @Schema(description = "자투리 시간", example = "300")
         Integer spareTime,

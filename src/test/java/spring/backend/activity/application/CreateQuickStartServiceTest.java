@@ -16,12 +16,13 @@ import spring.backend.core.exception.DomainException;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Role;
 
-import java.sql.Time;
+import java.time.LocalTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CreateQuickStartServiceTest {
@@ -46,7 +47,7 @@ class CreateQuickStartServiceTest {
                 .build();
         request = new QuickStartRequest(
                 "등교",
-                Time.valueOf("12:30:00"),
+                LocalTime.of(12, 30),
                 300,
                 Type.ONLINE
         );

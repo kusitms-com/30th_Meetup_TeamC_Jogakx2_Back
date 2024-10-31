@@ -4,8 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import spring.backend.activity.domain.value.Type;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Getter
@@ -18,7 +18,7 @@ public class QuickStart {
 
     private String name;
 
-    private Time startTime;
+    private LocalTime startTime;
 
     private Integer spareTime;
 
@@ -30,7 +30,7 @@ public class QuickStart {
 
     private Boolean deleted;
 
-    public static QuickStart create(UUID memberId, String name, Time startTime, Integer spareTime, Type type) {
+    public static QuickStart create(UUID memberId, String name, LocalTime startTime, Integer spareTime, Type type) {
         return QuickStart.builder()
                 .memberId(memberId)
                 .name(name)
@@ -40,7 +40,7 @@ public class QuickStart {
                 .build();
     }
 
-    public void update(String name, Time startTime, Integer spareTime, Type type) {
+    public void update(String name, LocalTime startTime, Integer spareTime, Type type) {
         this.name = name;
         this.startTime = startTime;
         this.spareTime = spareTime;

@@ -73,9 +73,10 @@ public class Activity {
         return Math.toIntExact(savedTime);
     }
 
-    public static Activity create(UUID memberId, Integer spareTime, Type type, Keyword keyword, String title, String content, String location) {
+    public static Activity create(UUID memberId, Long quickStartId, Integer spareTime, Type type, Keyword keyword, String title, String content, String location) {
         return Activity.builder()
                 .memberId(memberId)
+                .quickStartId(quickStartId)
                 .spareTime(spareTime)
                 .type(type)
                 .keyword(keyword)

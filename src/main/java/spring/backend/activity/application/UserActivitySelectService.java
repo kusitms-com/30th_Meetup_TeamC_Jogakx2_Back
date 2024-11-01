@@ -20,7 +20,7 @@ public class UserActivitySelectService {
 
     public Long userActivitySelection(Member member, UserActivitySelectRequest userActivitySelectRequest) {
         validateRequest(userActivitySelectRequest);
-        Activity activity = Activity.create(member.getId(), null , userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keywords(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
+        Activity activity = Activity.create(member.getId(), null , userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keyword(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
         Activity savedActivity = activityRepository.save(activity);
         return savedActivity.getId();
     }

@@ -34,7 +34,6 @@ public class UserActivitySelectServiceTest {
     private ActivityRepository activityRepository;
 
     private Member member;
-    private Member guest;
     private UserActivitySelectRequest userActivitySelectRequest;
 
     @BeforeEach
@@ -73,7 +72,7 @@ public class UserActivitySelectServiceTest {
     @Test
     public void returnsSavedActivityIdWhenValidActivitySelection() {
         // when
-        Activity activity = Activity.create(member.getId(), userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keywords(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
+        Activity activity = Activity.create(member.getId(), null, userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keywords(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
         when(activityRepository.save(any(Activity.class))).thenReturn(activity);
 
         // then

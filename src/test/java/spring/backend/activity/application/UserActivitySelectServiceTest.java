@@ -43,8 +43,7 @@ public class UserActivitySelectServiceTest {
                 .build();
 
         Set<Keyword> keywords = Set.of(
-                Keyword.create(Keyword.Category.CULTURE_ART, "example-image1.png"),
-                Keyword.create(Keyword.Category.HEALTH, "example-image2.png")
+                Keyword.create(Keyword.Category.CULTURE_ART, "example-image1.png")
         );
 
 
@@ -72,7 +71,7 @@ public class UserActivitySelectServiceTest {
     @Test
     public void returnsSavedActivityIdWhenValidActivitySelection() {
         // when
-        Activity activity = Activity.create(member.getId(), null, userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keywords(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
+        Activity activity = Activity.create(member.getId(), null, userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keyword(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
         when(activityRepository.save(any(Activity.class))).thenReturn(activity);
 
         // then

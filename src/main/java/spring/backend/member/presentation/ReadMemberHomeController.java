@@ -10,10 +10,11 @@ import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.application.ReadMemberHomeService;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.dto.response.HomeMainResponse;
+import spring.backend.member.presentation.swagger.ReadMemberHomeSwagger;
 
 @RestController
 @RequiredArgsConstructor
-public class ReadMemberHomeController {
+public class ReadMemberHomeController implements ReadMemberHomeSwagger {
 
     private final ReadMemberHomeService readMemberHomeService;
 

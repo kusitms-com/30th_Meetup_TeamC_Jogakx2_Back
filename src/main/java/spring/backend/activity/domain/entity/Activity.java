@@ -72,4 +72,17 @@ public class Activity {
         }
         return Math.toIntExact(savedTime);
     }
+
+    public static Activity create(UUID memberId, Integer spareTime, Type type, Keyword keyword, String title, String content, String location) {
+        return Activity.builder()
+                .memberId(memberId)
+                .spareTime(spareTime)
+                .type(type)
+                .keyword(keyword)
+                .title(title)
+                .content(content)
+                .location(location)
+                .finished(false)
+                .build();
+    }
 }

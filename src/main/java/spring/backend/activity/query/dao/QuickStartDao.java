@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface QuickStartDao {
 
     List<QuickStartResponse> findByMemberId(UUID memberId, Sort sort);
+
+    List<QuickStartResponse> findUpcomingQuickStarts(UUID memberId);
 }

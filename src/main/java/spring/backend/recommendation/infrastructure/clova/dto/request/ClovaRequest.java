@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ClovaRequest {
     private static final double DEFAULT_TOP_P = 0.8;
     private static final int DEFAULT_TOP_K = 0;
-    private static final int DEFAULT_MAX_TOKENS = 500;
+    private static final int DEFAULT_MAX_TOKENS = 1000;
     private static final double DEFAULT_TEMPERATURE = 0.5;
     private static final double DEFAULT_REPEAT_PENALTY = 5.0;
     private static final boolean DEFAULT_INCLUDE_AI_FILTERS = true;

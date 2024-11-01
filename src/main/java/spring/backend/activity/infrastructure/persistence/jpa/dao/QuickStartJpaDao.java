@@ -25,4 +25,20 @@ public interface QuickStartJpaDao extends JpaRepository<QuickStartJpaEntity, Lon
         where q.memberId = :memberId
     """)
     List<QuickStartResponse> findByMemberId(UUID memberId, Sort sort);
+
+    @Override
+    @Query("""
+        select new spring.backend.activity.dto.response.QuickStartResponse(
+                q.id,
+                q.name,
+                q.startTime,
+                q.spareTime,
+                q.type
+        )
+        from QuickStartJpaEntity q
+        where q.memberId = :memberId
+        and q.startTime > CURRENT_TIMESTAMP
+        order by q.startTime ASC
+    """)
+    List<QuickStartResponse> findUpcomingQuickStarts(UUID memberId);
 }

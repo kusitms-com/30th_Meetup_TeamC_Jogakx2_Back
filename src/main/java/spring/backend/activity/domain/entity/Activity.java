@@ -34,7 +34,8 @@ public class Activity {
 
     private String location;
 
-    private Boolean finished;
+    @Builder.Default
+    private Boolean finished = false;
 
     private LocalDateTime finishedAt;
 
@@ -83,7 +84,6 @@ public class Activity {
                 .title(title)
                 .content(content)
                 .location(location)
-                .finished(false)
                 .build();
     }
 }

@@ -20,6 +20,14 @@ public class GetRecommendationsFromClovaService {
     private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content :");
     private static final Pattern KEYWORD_PREFIX_PATTERN = Pattern.compile(".*keyword :");
     private static final String LINE_SEPARATOR = "\n";
+    private static final String SELF_DEVELOPMENT = "자기개발";
+    private static final String HEALTH = "건강";
+    private static final String NATURE = "자연";
+    private static final String CULTURE_ART = "문화/예술";
+    private static final String ENTERTAINMENT = "엔터테인먼트";
+    private static final String RELAXATION = "휴식";
+    private static final String SOCIAL = "소셜";
+
     private final RecommendationProvider recommendationProvider;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest clovaRecommendationRequest) {
@@ -59,23 +67,15 @@ public class GetRecommendationsFromClovaService {
     }
 
     private Keyword.Category convertClovaResonseKeywordToKewordCategory(String keywordText) {
-        switch (keywordText.toLowerCase()) {
-            case "자기개발":
-                return Keyword.Category.SELF_DEVELOPMENT;
-            case "건강":
-                return Keyword.Category.HEALTH;
-            case "자연":
-                return Keyword.Category.NATURE;
-            case "문화/예술":
-                return Keyword.Category.CULTURE_ART;
-            case "엔터테인먼트":
-                return Keyword.Category.ENTERTAINMENT;
-            case "휴식":
-                return Keyword.Category.RELAXATION;
-            case "소셜":
-                return Keyword.Category.SOCIAL;
-            default:
-                return null;
-        }
+        return switch (keywordText) {
+            case SELF_DEVELOPMENT -> Keyword.Category.SELF_DEVELOPMENT;
+            case HEALTH -> Keyword.Category.HEALTH;
+            case NATURE -> Keyword.Category.NATURE;
+            case CULTURE_ART -> Keyword.Category.CULTURE_ART;
+            case ENTERTAINMENT -> Keyword.Category.ENTERTAINMENT;
+            case RELAXATION -> Keyword.Category.RELAXATION;
+            case SOCIAL -> Keyword.Category.SOCIAL;
+            default -> null;
+        };
     }
 }

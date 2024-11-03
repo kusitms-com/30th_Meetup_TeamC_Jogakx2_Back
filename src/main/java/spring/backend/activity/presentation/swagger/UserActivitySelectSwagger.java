@@ -11,7 +11,7 @@ import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
 
-@Tag(name = "UserActivitySelection", description = "활동 선택")
+@Tag(name = "Activity", description = "활동")
 public interface UserActivitySelectSwagger {
 
     @Operation(
@@ -20,5 +20,5 @@ public interface UserActivitySelectSwagger {
             operationId = "/v1/user-activity-selection"
     )
     @ApiErrorCode({GlobalErrorCode.class, ActivityErrorCode.class})
-    ResponseEntity<RestResponse<Long>>  userActivitySelection(@Parameter(hidden = true) Member member, UserActivitySelectRequest userActivitySelectRequest);
+    ResponseEntity<RestResponse<Long>> userActivitySelect(@Parameter(hidden = true) Member member, UserActivitySelectRequest userActivitySelectRequest);
 }

@@ -4,8 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import spring.backend.activity.domain.value.Type;
 
-import java.time.LocalTime;
-
 public record QuickStartRequest(
 
         @NotNull(message = "이름은 필수 입력 항목입니다.")
@@ -14,9 +12,22 @@ public record QuickStartRequest(
         @Schema(description = "빠른 시작 이름", example = "등교")
         String name,
 
-        @NotNull(message = "시작 시간은 필수 입력 항목입니다.")
-        @Schema(description = "시작 시간", example = "12:30")
-        LocalTime startTime,
+        @NotNull(message = "시작 시간의 시간은 필수 입력 항목입니다.")
+        @Min(value = 0, message = "시작 시간의 시간은 최소 0이어야 합니다.")
+        @Max(value = 12, message = "시작 시간의 시간은 최대 12이어야 합니다.")
+        @Schema(description = "시작 시간의 시간", example = "12")
+        Integer hour,
+
+        @NotNull(message = "시작 시간의 분은 필수 입력 항목입니다.")
+        @Min(value = 0, message = "시작 시간의 분은 최소 0이어야 합니다.")
+        @Max(value = 59, message = "시작 시간의 분은 최대 59이어야 합니다.")
+        @Schema(description = "시작 시간의 분", example = "30")
+        Integer minute,
+
+        @NotNull(message = "오전/오후 표시는 필수 입력 항목입니다.")
+        @Pattern(regexp = "^(오전|오후)$", message = "meridiem은 '오전' 또는 '오후'여야 합니다.")
+        @Schema(description = "오전/오후 표시", example = "오후")
+        String meridiem,
 
         @NotNull(message = "자투리 시간은 필수 입력 항목입니다.")
         @Min(value = 10, message = "자투리 시간은 최소 10이어야 합니다.")

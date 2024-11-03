@@ -2,6 +2,7 @@ package spring.backend.activity.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import spring.backend.activity.domain.value.Type;
+import spring.backend.core.util.TimeUtil;
 
 import java.time.LocalTime;
 
@@ -20,6 +21,18 @@ public record QuickStartResponse(
         Integer spareTime,
 
         @Schema(description = "활동 유형 (ONLINE, OFFLINE, ONLINE_AND_OFFLINE)", example = "ONLINE")
-        Type type
+        Type type,
+
+        @Schema(description = "시작 시간의 시", example = "12")
+        Integer hour,
+
+        @Schema(description = "시작 시간의 분", example = "30")
+        Integer minute,
+
+        @Schema(description = "오전/오후 표시", example = "오후")
+        String meridiem
 ) {
+        public QuickStartResponse(Long id, String name, LocalTime startTime, Integer spareTime, Type type) {
+                this(id, name, startTime, spareTime, type, TimeUtil.toHour(startTime), TimeUtil.toMinute(startTime), TimeUtil.toMeridiem(startTime));
+        }
 }

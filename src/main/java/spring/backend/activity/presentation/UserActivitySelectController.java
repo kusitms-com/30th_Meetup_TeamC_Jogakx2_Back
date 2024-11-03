@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.UserActivitySelectService;
 import spring.backend.activity.dto.request.UserActivitySelectRequest;
 import spring.backend.activity.presentation.swagger.UserActivitySelectSwagger;
-import spring.backend.core.configuration.argumentresolver.LoginMember;
+import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
@@ -21,10 +21,10 @@ public class UserActivitySelectController implements UserActivitySelectSwagger {
     private final UserActivitySelectService userActivitySelectService;
 
     @Authorization
-    @PostMapping("/v1/user-activity-selection")
+    @PostMapping("/v1/activities")
     @Override
-    public ResponseEntity<RestResponse<Long>> userActivitySelection(@LoginMember Member member, @Valid @RequestBody UserActivitySelectRequest userActivitySelectRequest) {
-        Long savedActivityId = userActivitySelectService.userActivitySelection(member, userActivitySelectRequest);
+    public ResponseEntity<RestResponse<Long>> userActivitySelect(@AuthorizedMember Member member, @Valid @RequestBody UserActivitySelectRequest userActivitySelectRequest) {
+        Long savedActivityId = userActivitySelectService.userActivitySelect(member, userActivitySelectRequest);
         return ResponseEntity.ok(new RestResponse<>(savedActivityId));
     }
 }

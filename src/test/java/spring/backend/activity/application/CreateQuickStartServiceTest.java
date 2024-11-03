@@ -13,6 +13,7 @@ import spring.backend.activity.domain.value.Type;
 import spring.backend.activity.dto.request.QuickStartRequest;
 import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.core.exception.DomainException;
+import spring.backend.core.util.TimeUtil;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Role;
 
@@ -43,7 +44,9 @@ class CreateQuickStartServiceTest {
                 .build();
         request = new QuickStartRequest(
                 "등교",
-                LocalTime.of(12, 30),
+                12,
+                30,
+                "오전",
                 300,
                 Type.ONLINE
         );
@@ -62,7 +65,8 @@ class CreateQuickStartServiceTest {
     @DisplayName("유효한 빠른 시작 요청인 경우 저장된 ID를 반환한다")
     @Test
     public void createQuickStart_ValidRequest_ReturnsSavedQuickStartId() {
-        QuickStart quickStart = QuickStart.create(member.getId(), request.name(), request.startTime(), request.spareTime(), request.type());
+        LocalTime startTime = TimeUtil.toLocalTime(request.meridiem(), request.hour(), request.minute());
+        QuickStart quickStart = QuickStart.create(member.getId(), request.name(), startTime, request.spareTime(), request.type());
         when(quickStartRepository.save(any(QuickStart.class))).thenReturn(quickStart);
 
         // when

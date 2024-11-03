@@ -42,15 +42,13 @@ public class UserActivitySelectServiceTest {
                 .role(Role.MEMBER)
                 .build();
 
-        Set<Keyword> keywords = Set.of(
-                Keyword.create(Keyword.Category.CULTURE_ART, "example-image1.png")
-        );
+        Keyword keyword = Keyword.create(Keyword.Category.CULTURE_ART, "example-image1.png");
 
 
         userActivitySelectRequest = new UserActivitySelectRequest(
                 Type.OFFLINE,
                 150,
-                keywords,
+                keyword,
                 "title",
                 "content",
                 "location"
@@ -61,7 +59,7 @@ public class UserActivitySelectServiceTest {
     @Test
     public void throwsExceptionWhenUserActivitySelectRequestIsNull() {
         // when
-        DomainException ex = assertThrows(DomainException.class, () -> userActivitySelectService.userActivitySelection(member, null));
+        DomainException ex = assertThrows(DomainException.class, () -> userActivitySelectService.userActivitySelect(member, null));
 
         // then
         assertEquals(ActivityErrorCode.NOT_EXIST_ACTIVITY_CONDITION.getMessage(), ex.getMessage());
@@ -75,7 +73,7 @@ public class UserActivitySelectServiceTest {
         when(activityRepository.save(any(Activity.class))).thenReturn(activity);
 
         // then
-        Long savedActivityId = userActivitySelectService.userActivitySelection(member, userActivitySelectRequest);
+        Long savedActivityId = userActivitySelectService.userActivitySelect(member, userActivitySelectRequest);
 
         // then
         assertEquals(activity.getId(), savedActivityId);

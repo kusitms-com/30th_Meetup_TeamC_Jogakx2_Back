@@ -3,15 +3,17 @@ package spring.backend.activity.presentation.swagger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import spring.backend.activity.dto.request.QuickStartActivitySelectRequest;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
+import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
 
-@Tag(name = "QuickStartActivitySelect", description = "빠른 시작 활동 선택")
+@Tag(name = "Activity", description = "활동")
 public interface QuickStartActivitySelectSwagger {
 
     @Operation(
@@ -22,5 +24,5 @@ public interface QuickStartActivitySelectSwagger {
     @ApiErrorCode({
             GlobalErrorCode.class, ActivityErrorCode.class, QuickStartErrorCode.class
     })
-    Long quickStartUserActivitySelect(@Parameter(hidden = true) Member member, @PathVariable Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest);
+    ResponseEntity<RestResponse<Long>> quickStartUserActivitySelect(@Parameter(hidden = true) Member member, @PathVariable Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest);
 }

@@ -4,8 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import spring.backend.activity.domain.entity.Activity;
 import spring.backend.activity.domain.repository.ActivityRepository;
+import spring.backend.activity.domain.repository.QuickStartRepository;
 import spring.backend.activity.dto.request.QuickStartActivitySelectRequest;
+import spring.backend.activity.exception.ActivityErrorCode;
+import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.member.domain.entity.Member;
 
 @Service
@@ -14,8 +18,28 @@ import spring.backend.member.domain.entity.Member;
 @Transactional
 public class QuickStartActivitySelectService {
     private final ActivityRepository activityRepository;
+    private final QuickStartRepository quickStartRepository;
 
-    public Long quickStartUserActivitySelect(Member member , Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest
-    ) {}
+    public Long quickStartUserActivitySelect(Member member, Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest
+    ) {
+        validateQuickStart(quickStartId);
+        validateRequest(quickStartActivitySelectRequest);
+        Activity activity = Activity.create(member.getId(), quickStartId, quickStartActivitySelectRequest.spareTime(), quickStartActivitySelectRequest.type(), quickStartActivitySelectRequest.keyword(), quickStartActivitySelectRequest.title(), quickStartActivitySelectRequest.content(), quickStartActivitySelectRequest.location());
+        Activity savedActivity = activityRepository.save(activity);
+        return savedActivity.getId();
+    }
 
+    private void validateQuickStart(Long quickStartId) {
+        if (quickStartRepository.findById(quickStartId) == null) {
+            log.error("[QuickStartActivitySelectRequest] Invalid quickStartId.");
+            throw QuickStartErrorCode.NOT_EXIST_QUICK_START.toException();
+        }
+    }
+
+    private void validateRequest(QuickStartActivitySelectRequest quickStartActivitySelectRequest) {
+        if (quickStartActivitySelectRequest == null) {
+            log.error("[QuickStartActivitySelectRequest] Invalid request.");
+            throw ActivityErrorCode.NOT_EXIST_ACTIVITY_CONDITION.toException();
+        }
+    }
 }

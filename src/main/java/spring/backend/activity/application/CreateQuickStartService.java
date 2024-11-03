@@ -8,7 +8,10 @@ import spring.backend.activity.domain.entity.QuickStart;
 import spring.backend.activity.domain.repository.QuickStartRepository;
 import spring.backend.activity.dto.request.QuickStartRequest;
 import spring.backend.activity.exception.QuickStartErrorCode;
+import spring.backend.core.util.TimeUtil;
 import spring.backend.member.domain.entity.Member;
+
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +23,11 @@ public class CreateQuickStartService {
 
     public Long createQuickStart(Member member, QuickStartRequest request) {
         validateRequest(request);
-        QuickStart quickStart = QuickStart.create(member.getId(), request.name(), request.startTime(), request.spareTime(), request.type());
+
+        LocalTime startTime = TimeUtil.toLocalTime(request.meridiem(), request.hour(), request.minute());
+        validateStartTime(startTime);
+
+        QuickStart quickStart = QuickStart.create(member.getId(), request.name(), startTime, request.spareTime(), request.type());
         QuickStart savedQuickStart = quickStartRepository.save(quickStart);
         return savedQuickStart.getId();
     }
@@ -29,6 +36,13 @@ public class CreateQuickStartService {
         if (request == null) {
             log.error("[CreateQuickStartService] Invalid request.");
             throw QuickStartErrorCode.NOT_EXIST_QUICK_START_CONDITION.toException();
+        }
+    }
+
+    private void validateStartTime(LocalTime time) {
+        if (time == null) {
+            log.error("[CreateQuickStartService] Invalid start time.");
+            throw QuickStartErrorCode.START_TIME_CONVERSION_FAILED.toException();
         }
     }
 }

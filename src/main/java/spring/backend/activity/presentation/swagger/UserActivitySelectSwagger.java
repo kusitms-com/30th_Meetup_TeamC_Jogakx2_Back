@@ -17,7 +17,7 @@ public interface UserActivitySelectSwagger {
     @Operation(
             summary = "사용자 활동 선택 API",
             description = "사용자가 추천받은 활동 중 한가지 활동을 선택합니다.",
-            operationId = "/v1/user-activity-selection"
+            operationId = "/v1/activities"
     )
     @ApiErrorCode({GlobalErrorCode.class, ActivityErrorCode.class})
     ResponseEntity<RestResponse<Long>> userActivitySelect(@Parameter(hidden = true) Member member, UserActivitySelectRequest userActivitySelectRequest);

@@ -37,10 +37,10 @@ public class Message {
     }
 
     private static String createContent(ClovaRecommendationRequest clovaRecommendationRequest) {
-        int spareTime = clovaRecommendationRequest.getSpareTime();
-        Type activityType = clovaRecommendationRequest.getActivityType();
-        String keywords = parseKeywords(clovaRecommendationRequest.getKeywords());
-        String location = clovaRecommendationRequest.getLocation();
+        int spareTime = clovaRecommendationRequest.spareTime();
+        Type activityType = clovaRecommendationRequest.activityType();
+        String keywords = parseKeywords(clovaRecommendationRequest.keywords());
+        String location = clovaRecommendationRequest.location();
 
         if (isActivityTypeOfflineOrOnlineAndOffline(activityType, location)) {
             return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n위치: %s\n\n 5가지 활동 추천해줘\n\n", spareTime, activityType.getDescription(), keywords, location);

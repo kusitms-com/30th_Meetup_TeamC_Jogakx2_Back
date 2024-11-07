@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 
-import java.util.Set;
-
 public record UserActivitySelectRequest(
         @NotNull(message = "활동 유형은 필수 입력 항목입니다.")
         @Schema(description = "활동 유형 (ONLINE, OFFLINE, ONLINE_AND_OFFLINE)", example = "ONLINE")
@@ -32,7 +30,7 @@ public record UserActivitySelectRequest(
         @Schema(description = "내용", example = "조용한 카페에서 좋아하는 책을 읽으며 여유로운 시간을 즐길 수 있습니다.")
         String content,
 
-        @Schema(description = "장소", example = "서울시 강남구 역삼동")
+        @Schema(description = "장소(활동 유형이 OFFLINE, ONLINE_AND_OFFLINE 인 경우에만 입력합니다.)", example = "서울시 강남구 역삼동")
         String location
 ) {
 }

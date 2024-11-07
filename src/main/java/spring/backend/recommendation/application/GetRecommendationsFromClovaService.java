@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import spring.backend.activity.domain.value.Keyword;
+import spring.backend.activity.domain.value.Type;
 import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 import spring.backend.recommendation.dto.response.ClovaRecommendationResponse;
+import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,6 +34,7 @@ public class GetRecommendationsFromClovaService {
     private final RecommendationProvider recommendationProvider;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest clovaRecommendationRequest) {
+        validateClovaRecommendationRequestKeyword(clovaRecommendationRequest);
         String[] recommendations = recommendationProvider.requestToClovaStudio(clovaRecommendationRequest).split(LINE_SEPARATOR);
 
         List<ClovaRecommendationResponse> clovaResponses = new ArrayList<>();
@@ -64,6 +68,15 @@ public class GetRecommendationsFromClovaService {
         }
 
         return clovaResponses;
+    }
+
+    private void validateClovaRecommendationRequestKeyword(ClovaRecommendationRequest clovaRecommendationRequest) {
+        if (clovaRecommendationRequest.activityType().equals(Type.ONLINE) && Arrays.toString(clovaRecommendationRequest.keywords()).contains("NATURE")) {
+            throw ClovaErrorCode.ONLINE_TYPE_CONTAIN_NATURE.toException();
+        }
+        if(clovaRecommendationRequest.activityType().equals(Type.OFFLINE) && Arrays.toString(clovaRecommendationRequest.keywords()).contains("SOCIAL")) {
+            throw ClovaErrorCode.OFFLINE_TYPE_CONTAIN_SOCIAL.toException();
+        }
     }
 
     private Keyword.Category convertClovaResonseKeywordToKewordCategory(String keywordText) {

@@ -8,6 +8,7 @@ import spring.backend.activity.domain.entity.Activity;
 import spring.backend.activity.domain.repository.ActivityRepository;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.dto.request.UserActivitySelectRequest;
+import spring.backend.activity.dto.response.UserActivitySelectResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.member.domain.entity.Member;
 
@@ -19,11 +20,11 @@ public class UserActivitySelectService {
 
     private final ActivityRepository activityRepository;
 
-    public Long userActivitySelect(Member member, UserActivitySelectRequest userActivitySelectRequest) {
+    public UserActivitySelectResponse userActivitySelect(Member member, UserActivitySelectRequest userActivitySelectRequest) {
         validateRequest(userActivitySelectRequest);
         Activity activity = Activity.create(member.getId(), null, userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keyword(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
         Activity savedActivity = activityRepository.save(activity);
-        return savedActivity.getId();
+        return new UserActivitySelectResponse(savedActivity.getId(), savedActivity.getTitle(), savedActivity.getKeyword());
     }
 
     private void validateRequest(UserActivitySelectRequest userActivitySelectRequest) {

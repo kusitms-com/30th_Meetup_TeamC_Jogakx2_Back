@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import spring.backend.activity.dto.request.UserActivitySelectRequest;
+import spring.backend.activity.dto.response.UserActivitySelectResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
@@ -20,5 +21,5 @@ public interface UserActivitySelectSwagger {
             operationId = "/v1/activities"
     )
     @ApiErrorCode({GlobalErrorCode.class, ActivityErrorCode.class})
-    ResponseEntity<RestResponse<Long>> userActivitySelect(@Parameter(hidden = true) Member member, UserActivitySelectRequest userActivitySelectRequest);
+    ResponseEntity<RestResponse<UserActivitySelectResponse>> userActivitySelect(@Parameter(hidden = true) Member member, UserActivitySelectRequest userActivitySelectRequest);
 }

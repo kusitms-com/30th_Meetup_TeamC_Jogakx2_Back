@@ -12,12 +12,11 @@ import spring.backend.activity.domain.repository.ActivityRepository;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.activity.dto.request.UserActivitySelectRequest;
+import spring.backend.activity.dto.response.UserActivitySelectResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.core.exception.DomainException;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Role;
-
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -73,10 +72,12 @@ public class UserActivitySelectServiceTest {
         when(activityRepository.save(any(Activity.class))).thenReturn(activity);
 
         // then
-        Long savedActivityId = userActivitySelectService.userActivitySelect(member, userActivitySelectRequest);
+        UserActivitySelectResponse userActivitySelectResponse = userActivitySelectService.userActivitySelect(member, userActivitySelectRequest);
 
         // then
-        assertEquals(activity.getId(), savedActivityId);
+        assertEquals(activity.getId(), userActivitySelectResponse.id());
+        assertEquals(activity.getTitle(), userActivitySelectResponse.title());
+        assertEquals(activity.getKeyword(), userActivitySelectResponse.keyword());
         verify(activityRepository).save(any(Activity.class));
     }
 

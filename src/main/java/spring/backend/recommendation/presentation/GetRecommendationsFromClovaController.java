@@ -14,6 +14,7 @@ import spring.backend.member.domain.entity.Member;
 import spring.backend.recommendation.application.GetRecommendationsFromClovaService;
 import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
 import spring.backend.recommendation.dto.response.ClovaRecommendationResponse;
+import spring.backend.recommendation.presentation.swagger.GetRecommendationsFromClovaSwagger;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/recommendations")
-public class GetRecommendationsFromClovaController {
+public class GetRecommendationsFromClovaController implements GetRecommendationsFromClovaSwagger {
     private final GetRecommendationsFromClovaService getRecommendationsFromClovaService;
 
     @Authorization

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.QuickStartActivitySelectService;
 import spring.backend.activity.dto.request.QuickStartActivitySelectRequest;
+import spring.backend.activity.dto.response.QuickStartActivitySelectResponse;
 import spring.backend.activity.presentation.swagger.QuickStartActivitySelectSwagger;
 import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.argumentresolver.LoginMember;
@@ -25,8 +26,8 @@ public class QuickStartActivitySelectController implements QuickStartActivitySel
     @Override
     @Authorization
     @PostMapping("/v1/quick-starts/{quickStartId}/activities")
-    public ResponseEntity<RestResponse<Long>> quickStartUserActivitySelect(@AuthorizedMember Member member, @PathVariable Long quickStartId, @Valid @RequestBody QuickStartActivitySelectRequest quickStartActivitySelectRequest) {
-        Long savedActivityIdCreatedByQuickStart = quickStartActivitySelectService.quickStartUserActivitySelect(member, quickStartId, quickStartActivitySelectRequest);
-        return ResponseEntity.ok(new RestResponse<>(savedActivityIdCreatedByQuickStart));
+    public ResponseEntity<RestResponse<QuickStartActivitySelectResponse>> quickStartUserActivitySelect(@AuthorizedMember Member member, @PathVariable Long quickStartId, @Valid @RequestBody QuickStartActivitySelectRequest quickStartActivitySelectRequest) {
+        QuickStartActivitySelectResponse savedActivityIdCreatedByQuickStartResponse = quickStartActivitySelectService.quickStartUserActivitySelect(member, quickStartId, quickStartActivitySelectRequest);
+        return ResponseEntity.ok(new RestResponse<>(savedActivityIdCreatedByQuickStartResponse));
     }
 }

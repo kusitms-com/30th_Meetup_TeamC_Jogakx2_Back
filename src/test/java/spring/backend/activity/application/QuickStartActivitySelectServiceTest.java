@@ -14,6 +14,7 @@ import spring.backend.activity.domain.repository.QuickStartRepository;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.activity.dto.request.QuickStartActivitySelectRequest;
+import spring.backend.activity.dto.response.QuickStartActivitySelectResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.core.exception.DomainException;
@@ -96,7 +97,7 @@ public class QuickStartActivitySelectServiceTest {
         assertEquals(ActivityErrorCode.NOT_EXIST_ACTIVITY_CONDITION.getMessage(), ex.getMessage());
     }
 
-    @DisplayName("빠른시작 활동 선택에 문제가 없는 경우, 저장된 활동의 ID를 반환한다.")
+    @DisplayName("빠른시작 활동 선택에 문제가 없는 경우, 저장된 활동의 QuickStartActivitySelectResponse를 반환한다.")
     @Test
     public void returnSavedActivityIdWhenNothingWrong() {
         // when
@@ -112,27 +113,13 @@ public class QuickStartActivitySelectServiceTest {
         when(activityRepository.save(any(Activity.class))).thenReturn(activity);
 
         // then
-        Long savedActivityId = quickStartActivitySelectService.quickStartUserActivitySelect(member, quickStartId, quickStartActivitySelectRequest);
+        QuickStartActivitySelectResponse quickStartActivitySelectResponse = quickStartActivitySelectService.quickStartUserActivitySelect(member, quickStartId, quickStartActivitySelectRequest);
 
         // then
-        assertEquals(activity.getId(), savedActivityId);
         assertEquals(activity.getQuickStartId(), quickStartId);
+        assertEquals(activity.getId(), quickStartActivitySelectResponse.id());
+        assertEquals(activity.getTitle(), quickStartActivitySelectResponse.title());
+        assertEquals(activity.getKeyword(), quickStartActivitySelectResponse.keyword());
         verify(activityRepository).save(any(Activity.class));
     }
-
-//    @DisplayName("유효한 활동 선택인 경우 저장된 ID를 반환한다")
-//    @Test
-//    public void returnsSavedActivityIdWhenValidActivitySelection() {
-//        // when
-//        Activity activity = Activity.create(member.getId(), null, userActivitySelectRequest.spareTime(), userActivitySelectRequest.type(), userActivitySelectRequest.keyword(), userActivitySelectRequest.title(), userActivitySelectRequest.content(), userActivitySelectRequest.location());
-//        when(activityRepository.save(any(Activity.class))).thenReturn(activity);
-//
-//        // then
-//        Long savedActivityId = userActivitySelectService.userActivitySelect(member, userActivitySelectRequest);
-//
-//        // then
-//        assertEquals(activity.getId(), savedActivityId);
-//        verify(activityRepository).save(any(Activity.class));
-//    }
-
 }

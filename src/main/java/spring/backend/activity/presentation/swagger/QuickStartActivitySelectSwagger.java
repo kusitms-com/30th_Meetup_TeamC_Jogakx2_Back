@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import spring.backend.activity.dto.request.QuickStartActivitySelectRequest;
+import spring.backend.activity.dto.response.QuickStartActivitySelectResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.core.configuration.swagger.ApiErrorCode;
@@ -24,5 +25,5 @@ public interface QuickStartActivitySelectSwagger {
     @ApiErrorCode({
             GlobalErrorCode.class, ActivityErrorCode.class, QuickStartErrorCode.class
     })
-    ResponseEntity<RestResponse<Long>> quickStartUserActivitySelect(@Parameter(hidden = true) Member member, @PathVariable Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest);
+    ResponseEntity<RestResponse<QuickStartActivitySelectResponse>> quickStartUserActivitySelect(@Parameter(hidden = true) Member member, @PathVariable Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest);
 }

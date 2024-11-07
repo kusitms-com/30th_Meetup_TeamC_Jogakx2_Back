@@ -25,5 +25,5 @@ public interface QuickStartActivitySelectSwagger {
     @ApiErrorCode({
             GlobalErrorCode.class, ActivityErrorCode.class, QuickStartErrorCode.class
     })
-    ResponseEntity<RestResponse<QuickStartActivitySelectResponse>> quickStartUserActivitySelect(@Parameter(hidden = true) Member member, @PathVariable Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest);
+    ResponseEntity<RestResponse<QuickStartActivitySelectResponse>> quickStartUserActivitySelect(@Parameter(hidden = true) Member member, Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest);
 }

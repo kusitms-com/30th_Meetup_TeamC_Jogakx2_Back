@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 @Log4j2
 @RequiredArgsConstructor
 public class GetRecommendationsFromClovaService {
+    private static final int MAX_ATTEMPTS = 1;
+
     private static final Pattern TITLE_FULL_LINE_PATTERN = Pattern.compile(".*title :.*");
     private static final Pattern TITLE_PREFIX_PATTERN = Pattern.compile(".*title :");
     private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content :");
@@ -34,6 +36,23 @@ public class GetRecommendationsFromClovaService {
     private final RecommendationProvider recommendationProvider;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(ClovaRecommendationRequest clovaRecommendationRequest) {
+        List<ClovaRecommendationResponse> clovaResponses = fetchRecommendations(clovaRecommendationRequest);
+        int attempt = 1;
+
+        while (containsInvalidKeyword(clovaResponses) && attempt <= MAX_ATTEMPTS) {
+            log.warn("추천활동의 키워드가 올바르지 않습니다. 재시도 횟수: {}/{}", attempt, MAX_ATTEMPTS);
+            clovaResponses = fetchRecommendations(clovaRecommendationRequest);
+            attempt++;
+        }
+
+        if (containsInvalidKeyword(clovaResponses)) {
+            throw ClovaErrorCode.INVALID_KEYWORD_IN_RECOMMENDATIONS.toException();
+        }
+
+        return clovaResponses;
+    }
+
+    public List<ClovaRecommendationResponse> fetchRecommendations(ClovaRecommendationRequest clovaRecommendationRequest) {
         validateClovaRecommendationRequestKeyword(clovaRecommendationRequest);
         String[] recommendations = recommendationProvider.requestToClovaStudio(clovaRecommendationRequest).split(LINE_SEPARATOR);
 
@@ -59,7 +78,7 @@ public class GetRecommendationsFromClovaService {
                 Keyword.Category keywordCategory = null;
                 if (i + 1 < recommendations.length && KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).find()) {
                     String keywordText = KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).replaceFirst("").trim();
-                    keywordCategory = convertClovaResonseKeywordToKewordCategory(keywordText);
+                    keywordCategory = convertClovaResponseKeywordToKeywordCategory(keywordText);
                     i++;
                 }
                 clovaResponses.add(new ClovaRecommendationResponse(order, title, content, keywordCategory));
@@ -70,16 +89,27 @@ public class GetRecommendationsFromClovaService {
         return clovaResponses;
     }
 
+    private boolean containsInvalidKeyword(List<ClovaRecommendationResponse> clovaResponses) {
+        return clovaResponses.stream().anyMatch(clovaResponse ->
+                clovaResponse.getKeywordCategory() == null
+                        || clovaResponse.getKeywordCategory().toString().isEmpty()
+                        || !isValidKeywordCategory(clovaResponse.getKeywordCategory()));
+    }
+
+    private boolean isValidKeywordCategory(Keyword.Category keywordCategory) {
+        return Arrays.stream(Keyword.Category.values()).anyMatch(category -> category == keywordCategory);
+    }
+
     private void validateClovaRecommendationRequestKeyword(ClovaRecommendationRequest clovaRecommendationRequest) {
         if (clovaRecommendationRequest.activityType().equals(Type.ONLINE) && Arrays.toString(clovaRecommendationRequest.keywords()).contains("NATURE")) {
             throw ClovaErrorCode.ONLINE_TYPE_CONTAIN_NATURE.toException();
         }
-        if(clovaRecommendationRequest.activityType().equals(Type.OFFLINE) && Arrays.toString(clovaRecommendationRequest.keywords()).contains("SOCIAL")) {
+        if (clovaRecommendationRequest.activityType().equals(Type.OFFLINE) && Arrays.toString(clovaRecommendationRequest.keywords()).contains("SOCIAL")) {
             throw ClovaErrorCode.OFFLINE_TYPE_CONTAIN_SOCIAL.toException();
         }
     }
 
-    private Keyword.Category convertClovaResonseKeywordToKewordCategory(String keywordText) {
+    private Keyword.Category convertClovaResponseKeywordToKeywordCategory(String keywordText) {
         return switch (keywordText) {
             case SELF_DEVELOPMENT -> Keyword.Category.SELF_DEVELOPMENT;
             case HEALTH -> Keyword.Category.HEALTH;

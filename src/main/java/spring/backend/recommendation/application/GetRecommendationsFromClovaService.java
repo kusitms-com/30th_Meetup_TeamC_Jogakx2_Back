@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -45,12 +46,20 @@ public class GetRecommendationsFromClovaService {
             attempt++;
         }
 
-        if (containsInvalidKeyword(clovaResponses)) {
+        List<ClovaRecommendationResponse> validRecommedations = filteredValidRecommendations(clovaResponses);
+
+        if (validRecommedations.isEmpty()) {
             throw ClovaErrorCode.INVALID_KEYWORD_IN_RECOMMENDATIONS.toException();
         }
 
-        return clovaResponses;
+        return validRecommedations;
     }
+
+    List<ClovaRecommendationResponse> filteredValidRecommendations(List<ClovaRecommendationResponse> clovaResponses) {
+        return clovaResponses.stream()
+                .filter(clovaResponse -> clovaResponse.getKeywordCategory() != null && isValidKeywordCategory(clovaResponse.getKeywordCategory())).collect(Collectors.toList());
+    }
+
 
     public List<ClovaRecommendationResponse> fetchRecommendations(ClovaRecommendationRequest clovaRecommendationRequest) {
         validateClovaRecommendationRequestKeyword(clovaRecommendationRequest);

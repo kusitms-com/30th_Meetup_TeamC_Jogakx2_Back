@@ -25,7 +25,7 @@ public class UserActivitySelectController implements UserActivitySelectSwagger {
     @PostMapping("/v1/activities")
     @Override
     public ResponseEntity<RestResponse<UserActivitySelectResponse>> userActivitySelect(@AuthorizedMember Member member, @Valid @RequestBody UserActivitySelectRequest userActivitySelectRequest) {
-        UserActivitySelectResponse savedActivityId = userActivitySelectService.userActivitySelect(member, userActivitySelectRequest);
-        return ResponseEntity.ok(new RestResponse<>(savedActivityId));
+        UserActivitySelectResponse userActivitySelectResponse = userActivitySelectService.userActivitySelect(member, userActivitySelectRequest);
+        return ResponseEntity.ok(new RestResponse<>(userActivitySelectResponse));
     }
 }

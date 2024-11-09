@@ -101,7 +101,6 @@ public class GetRecommendationsFromClovaService {
     private boolean containsInvalidKeyword(List<ClovaRecommendationResponse> clovaResponses) {
         return clovaResponses.stream().anyMatch(clovaResponse ->
                 clovaResponse.getKeywordCategory() == null
-                        || clovaResponse.getKeywordCategory().toString().isEmpty()
                         || !isValidKeywordCategory(clovaResponse.getKeywordCategory()));
     }
 
@@ -110,10 +109,12 @@ public class GetRecommendationsFromClovaService {
     }
 
     private void validateClovaRecommendationRequestKeyword(ClovaRecommendationRequest clovaRecommendationRequest) {
-        if (clovaRecommendationRequest.activityType().equals(Type.ONLINE) && Arrays.toString(clovaRecommendationRequest.keywords()).contains("NATURE")) {
+        if (clovaRecommendationRequest.activityType().equals(Type.ONLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Keyword.Category.NATURE)
+        ) {
             throw ClovaErrorCode.ONLINE_TYPE_CONTAIN_NATURE.toException();
         }
-        if (clovaRecommendationRequest.activityType().equals(Type.OFFLINE) && Arrays.toString(clovaRecommendationRequest.keywords()).contains("SOCIAL")) {
+        if (clovaRecommendationRequest.activityType().equals(Type.OFFLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Keyword.Category.SOCIAL)
+        ) {
             throw ClovaErrorCode.OFFLINE_TYPE_CONTAIN_SOCIAL.toException();
         }
     }

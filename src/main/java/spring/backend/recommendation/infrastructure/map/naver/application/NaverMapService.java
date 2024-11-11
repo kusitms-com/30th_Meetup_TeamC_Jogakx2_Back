@@ -1,9 +1,11 @@
 package spring.backend.recommendation.infrastructure.map.naver.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import spring.backend.recommendation.application.MapService;
+import spring.backend.recommendation.infrastructure.map.naver.dto.response.NaverMapResponse;
 import spring.backend.recommendation.infrastructure.map.naver.exception.NaverMapErrorCode;
 
 import java.io.*;
@@ -26,14 +28,16 @@ public class NaverMapService implements MapService {
     @Value("${naver.map.base-uri}")
     private String baseUri;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void search(String query) {
+    public NaverMapResponse search(String query) {
         String encodedQuery = encodeSearchQuery(query);
         String apiUrl = baseUri + "?query=" + encodedQuery;
         Map<String, String> requestHeaders = createHeaders();
 
         String responseBody = fetchResponse(apiUrl, requestHeaders);
+        return parseResponse(responseBody);
     }
 
     private Map<String, String> createHeaders() {
@@ -98,6 +102,15 @@ public class NaverMapService implements MapService {
                     e
             );
             throw NaverMapErrorCode.FAILED_TO_READ_RESPONSE.toException();
+        }
+    }
+
+    private NaverMapResponse parseResponse(String responseBody) {
+        try {
+            return objectMapper.readValue(responseBody, NaverMapResponse.class);
+        } catch (IOException e) {
+            log.error("응답을 파싱하는데 실패했습니다. - 에러 메시지: {}", e.getMessage(), e);
+            throw NaverMapErrorCode.FAILED_TO_PARSE_RESPONSE.toException();
         }
     }
 }

@@ -71,6 +71,9 @@ dependencies {
 	// Netty
 	implementation "io.netty:netty-resolver-dns-native-macos:4.1.113.Final:osx-aarch_64"
 
+	// Email
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 }
 
 tasks.named('test') {

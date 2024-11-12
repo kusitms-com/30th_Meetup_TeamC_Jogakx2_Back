@@ -1,10 +1,12 @@
 package spring.backend.recommendation.infrastructure.map.naver.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import spring.backend.recommendation.application.MapService;
+import spring.backend.recommendation.application.PlaceInfoProvider;
 import spring.backend.recommendation.infrastructure.map.naver.dto.response.NaverMapResponse;
 import spring.backend.recommendation.infrastructure.map.naver.exception.NaverMapErrorCode;
 
@@ -16,9 +18,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
+@Component
 @Log4j2
-public class NaverMapService implements MapService {
+@RequiredArgsConstructor
+public class NaverPlaceInfoProvider implements PlaceInfoProvider {
     @Value("${naver.client-id}")
     private String clientId;
 
@@ -28,7 +31,7 @@ public class NaverMapService implements MapService {
     @Value("${naver.map.base-uri}")
     private String baseUri;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public NaverMapResponse search(String query) {

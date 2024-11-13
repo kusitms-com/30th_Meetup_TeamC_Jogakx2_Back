@@ -12,7 +12,7 @@ import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.recommendation.application.GetRecommendationsFromClovaService;
-import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
+import spring.backend.recommendation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.dto.response.ClovaRecommendationResponse;
 import spring.backend.recommendation.presentation.swagger.GetRecommendationsFromClovaSwagger;
 
@@ -27,8 +27,8 @@ public class GetRecommendationsFromClovaController implements GetRecommendations
 
     @Authorization
     @PostMapping
-    public ResponseEntity<RestResponse<List<ClovaRecommendationResponse>>> requestRecommendations(@AuthorizedMember Member member, @Valid @RequestBody ClovaRecommendationRequest clovaRecommendationRequest) {
-        List<ClovaRecommendationResponse> response = getRecommendationsFromClovaService.getRecommendationsFromClova(clovaRecommendationRequest);
+    public ResponseEntity<RestResponse<List<ClovaRecommendationResponse>>> requestRecommendations(@AuthorizedMember Member member, @Valid @RequestBody AIRecommendationRequest aiRecommendationRequest) {
+        List<ClovaRecommendationResponse> response = getRecommendationsFromClovaService.getRecommendationsFromClova(aiRecommendationRequest);
         return ResponseEntity.ok(new RestResponse<>(response));
     }
 }

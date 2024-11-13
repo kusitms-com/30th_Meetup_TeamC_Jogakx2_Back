@@ -1,7 +1,7 @@
 package spring.backend.recommendation.application;
 
-import spring.backend.recommendation.dto.request.ClovaRecommendationRequest;
+import spring.backend.recommendation.dto.request.AIRecommendationRequest;
 
-public interface RecommendationProvider {
-    String requestToClovaStudio(ClovaRecommendationRequest clovaRecommendationRequest);
+public interface RecommendationProvider<T> {
+    T getRecommendations(AIRecommendationRequest aiRecommendationRequest);
 }

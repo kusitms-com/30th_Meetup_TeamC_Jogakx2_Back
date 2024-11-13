@@ -10,6 +10,8 @@ import spring.backend.core.exception.error.BaseErrorCode;
 @RequiredArgsConstructor
 public enum ActivityErrorCode implements BaseErrorCode<DomainException> {
 
+    NOT_EXIST_LOCATION_WHEN_OFFLINE(HttpStatus.BAD_REQUEST, "오프라인의 경우 위치 정보가 필수입니다."),
+    EXIST_LOCATION_WHEN_ONLINE(HttpStatus.BAD_REQUEST, "온라인의 경우 위치 정보를 포함하지 않습니다."),
     ACTIVITY_SAVE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "활동을 저장하는데 실패하였습니다."),
     NOT_EXIST_ACTIVITY(HttpStatus.BAD_REQUEST, "활동이 존재하지 않습니다."),
     MEMBER_ID_MISMATCH(HttpStatus.FORBIDDEN, "활동과 멤버 ID가 일치하지 않습니다."),

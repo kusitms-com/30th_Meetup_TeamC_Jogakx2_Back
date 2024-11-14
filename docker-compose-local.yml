@@ -21,8 +21,24 @@ services:
     networks:
       - cnergy-backend-network
 
+  rabbit:
+    container_name: cnergy-rabbitmq
+    hostname: cnergy-rabbit
+    image: heidiks/rabbitmq-delayed-message-exchange:4.0.2-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=password
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - cnergy-backend-network
+
 volumes:
   redis-data:
+  rabbitmq-data:
 
 networks:
   cnergy-backend-network:

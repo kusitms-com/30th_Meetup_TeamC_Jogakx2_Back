@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
+import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.core.infrastructure.jpa.shared.BaseLongIdEntity;
 
 import java.time.LocalDateTime;
@@ -42,4 +43,17 @@ public class ActivityJpaEntity extends BaseLongIdEntity {
     private LocalDateTime finishedAt;
 
     private Integer savedTime;
+
+    public boolean isFinished() {
+        return finished != null && finished;
+    }
+
+    public void finish() {
+        if (isFinished()) {
+            throw ActivityErrorCode.ALREADY_FINISHED_ACTIVITY.toException();
+        }
+        finished = true;
+        finishedAt = LocalDateTime.now();
+        savedTime = spareTime;
+    }
 }

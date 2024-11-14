@@ -28,9 +28,9 @@ public class ClovaRecommendationProvider implements RecommendationProvider<Clova
     private String apiGatewayKey;
 
     @Override
-    public ClovaResponse getRecommendations(AIRecommendationRequest aiRecommendationRequest) {
+    public ClovaResponse getRecommendations(AIRecommendationRequest clovaRecommendationRequest) {
         try {
-            ClovaRequest request = ClovaRequest.createClovaRequest(aiRecommendationRequest);
+            ClovaRequest request = ClovaRequest.createClovaRequest(clovaRecommendationRequest);
 
             WebClient webClient = WebClient.builder()
                     .defaultHeaders(httpHeaders -> {

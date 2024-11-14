@@ -13,7 +13,7 @@ import spring.backend.auth.dto.response.OAuthResourceResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.auth.infrastructure.OAuthRestClient;
 import spring.backend.auth.infrastructure.kakao.dto.KakaoResourceResponse;
-import spring.backend.core.configuration.property.KakaoOAuthProperty;
+import spring.backend.core.configuration.property.oauth.KakaoOAuthProperty;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;

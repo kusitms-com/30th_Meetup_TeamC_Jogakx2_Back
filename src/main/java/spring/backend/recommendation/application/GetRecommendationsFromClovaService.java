@@ -123,7 +123,6 @@ public class GetRecommendationsFromClovaService {
             log.error("Clova 서비스로부터 null 응답을 수신했습니다.");
             throw ClovaErrorCode.NULL_RESPONSE_FROM_CLOVA.toException();
         }
-
     }
 
     private boolean containsInvalidKeyword(List<ClovaRecommendationResponse> clovaResponses) {

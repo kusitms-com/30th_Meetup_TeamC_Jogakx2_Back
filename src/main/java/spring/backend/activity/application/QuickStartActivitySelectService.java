@@ -20,13 +20,14 @@ import spring.backend.member.domain.entity.Member;
 public class QuickStartActivitySelectService {
     private final ActivityRepository activityRepository;
     private final QuickStartRepository quickStartRepository;
+    private final FinishActivityAutoService finishActivityAutoService;
 
-    public QuickStartActivitySelectResponse quickStartUserActivitySelect(Member member, Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest
-    ) {
+    public QuickStartActivitySelectResponse quickStartUserActivitySelect(Member member, Long quickStartId, QuickStartActivitySelectRequest quickStartActivitySelectRequest) {
         validateQuickStart(quickStartId);
         validateRequest(quickStartActivitySelectRequest);
         Activity activity = Activity.create(member.getId(), quickStartId, quickStartActivitySelectRequest.spareTime(), quickStartActivitySelectRequest.type(), quickStartActivitySelectRequest.keyword(), quickStartActivitySelectRequest.title(), quickStartActivitySelectRequest.content(), quickStartActivitySelectRequest.location());
         Activity savedActivity = activityRepository.save(activity);
+        finishActivityAutoService.finishActivityAuto(savedActivity);
         return new QuickStartActivitySelectResponse(savedActivity.getId(), savedActivity.getTitle(), savedActivity.getKeyword());
     }
 

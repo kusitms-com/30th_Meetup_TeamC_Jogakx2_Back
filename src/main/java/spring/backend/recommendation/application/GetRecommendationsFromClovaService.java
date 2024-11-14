@@ -39,14 +39,14 @@ public class GetRecommendationsFromClovaService {
 
     private final RecommendationProvider<ClovaResponse> recommendationProvider;
 
-    public List<ClovaRecommendationResponse> getRecommendationsFromClova(AIRecommendationRequest aiRecommendationRequest) {
-        validateLocation(aiRecommendationRequest);
-        List<ClovaRecommendationResponse> clovaResponses = fetchRecommendations(aiRecommendationRequest);
+    public List<ClovaRecommendationResponse> getRecommendationsFromClova(AIRecommendationRequest clovaRecommendationRequest) {
+        validateLocation(clovaRecommendationRequest);
+        List<ClovaRecommendationResponse> clovaResponses = fetchRecommendations(clovaRecommendationRequest);
         int attempt = 1;
 
         while (containsInvalidKeyword(clovaResponses) && attempt <= MAX_ATTEMPTS) {
             log.warn("추천활동의 키워드가 올바르지 않습니다. 재시도 횟수: {}/{}", attempt, MAX_ATTEMPTS);
-            clovaResponses = fetchRecommendations(aiRecommendationRequest);
+            clovaResponses = fetchRecommendations(clovaRecommendationRequest);
             attempt++;
         }
 
@@ -64,9 +64,9 @@ public class GetRecommendationsFromClovaService {
                 .filter(clovaResponse -> clovaResponse.getKeywordCategory() != null && isValidKeywordCategory(clovaResponse.getKeywordCategory())).collect(Collectors.toList());
     }
 
-    public List<ClovaRecommendationResponse> fetchRecommendations(AIRecommendationRequest aiRecommendationRequest) {
-        validateClovaRecommendationRequestKeyword(aiRecommendationRequest);
-        ClovaResponse clovaResponse = recommendationProvider.getRecommendations(aiRecommendationRequest);
+    public List<ClovaRecommendationResponse> fetchRecommendations(AIRecommendationRequest clovaRecommendationRequest) {
+        validateClovaRecommendationRequestKeyword(clovaRecommendationRequest);
+        ClovaResponse clovaResponse = recommendationProvider.getRecommendations(clovaRecommendationRequest);
         validateClovaResponse(clovaResponse);
         String parsedClovaResponse = clovaResponse.getResult().getMessage().getContent();
 
@@ -105,14 +105,14 @@ public class GetRecommendationsFromClovaService {
         return clovaResponses;
     }
 
-    private void validateLocation(AIRecommendationRequest aiRecommendationRequest) {
-        if ((aiRecommendationRequest.activityType() == OFFLINE || aiRecommendationRequest.activityType() == ONLINE_AND_OFFLINE) &&
-                (aiRecommendationRequest.location() == null || aiRecommendationRequest.location().isEmpty())) {
+    private void validateLocation(AIRecommendationRequest clovaRecommendationRequest) {
+        if ((clovaRecommendationRequest.activityType() == OFFLINE || clovaRecommendationRequest.activityType() == ONLINE_AND_OFFLINE) &&
+                (clovaRecommendationRequest.location() == null || clovaRecommendationRequest.location().isEmpty())) {
             log.error("[AIRecommendationRequest] location must exist when activityType is OFFLINE or ONLINE_AND_OFFLINE");
             throw ActivityErrorCode.NOT_EXIST_LOCATION_WHEN_OFFLINE.toException();
         }
 
-        if (aiRecommendationRequest.activityType() == ONLINE && aiRecommendationRequest.location() != null && !aiRecommendationRequest.location().isEmpty()) {
+        if (clovaRecommendationRequest.activityType() == ONLINE && clovaRecommendationRequest.location() != null && !clovaRecommendationRequest.location().isEmpty()) {
             log.error("[AIRecommendationRequest] location must not exist when activityType is ONLINE");
             throw ActivityErrorCode.EXIST_LOCATION_WHEN_ONLINE.toException();
         }

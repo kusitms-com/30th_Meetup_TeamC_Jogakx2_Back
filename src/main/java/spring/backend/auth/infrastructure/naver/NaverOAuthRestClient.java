@@ -13,7 +13,7 @@ import spring.backend.auth.dto.response.OAuthResourceResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.auth.infrastructure.OAuthRestClient;
 import spring.backend.auth.infrastructure.naver.dto.NaverResourceResponse;
-import spring.backend.core.configuration.property.NaverOAuthProperty;
+import spring.backend.core.configuration.property.oauth.NaverOAuthProperty;
 
 import java.math.BigInteger;
 import java.net.URI;

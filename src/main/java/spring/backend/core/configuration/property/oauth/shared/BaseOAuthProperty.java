@@ -1,4 +1,4 @@
-package spring.backend.core.configuration.property.shared;
+package spring.backend.core.configuration.property.oauth.shared;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -12,7 +12,7 @@ import spring.backend.auth.dto.response.OAuthAccessTokenResponse;
 import spring.backend.auth.dto.response.OAuthResourceResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.auth.infrastructure.OAuthRestClient;
-import spring.backend.core.configuration.property.GoogleOAuthProperty;
+import spring.backend.core.configuration.property.oauth.GoogleOAuthProperty;
 
 import java.net.URI;
 

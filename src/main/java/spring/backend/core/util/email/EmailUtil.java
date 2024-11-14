@@ -25,7 +25,7 @@ public class EmailUtil {
     private final JavaMailSender mailSender;
 
     public void send(SendEmailRequest sendEmailRequest) {
-        validateEmailAddress(sendEmailRequest);
+        validateEmailRequest(sendEmailRequest);
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(sender);
@@ -52,10 +52,30 @@ public class EmailUtil {
         }
     }
 
+    private void validateEmailRequest(SendEmailRequest request) {
+        validateEmailAddress(request);
+        validateEmailSubject(request);
+        validateEmailText(request);
+    }
+
     private void validateEmailAddress(SendEmailRequest request) {
         if (request.to() == null || !EMAIL_PATTERN.matcher(request.to()).matches()) {
             log.error("[EmailUtil] Invalid email address format: {}", request.to());
             throw MailErrorCode.INVALID_MAIL_ADDRESS.toException();
+        }
+    }
+
+    private void validateEmailSubject(SendEmailRequest request) {
+        if (request.subject() == null || request.subject().isEmpty()) {
+            log.error("[EmailUtil] Invalid email title: {}", request.subject());
+            throw MailErrorCode.NO_MAIL_TITLE.toException();
+        }
+    }
+
+    private void validateEmailText(SendEmailRequest request) {
+        if (request.text() == null || request.text().isEmpty()) {
+            log.error("[EmailUtil] Invalid email subject: {}", request.subject());
+            throw MailErrorCode.NO_MAIL_CONTENT.toException();
         }
     }
 }

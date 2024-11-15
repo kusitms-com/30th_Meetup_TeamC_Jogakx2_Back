@@ -2,6 +2,7 @@ package spring.backend.activity.infrastructure.persistence.jpa.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import spring.backend.activity.dto.response.*;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
 import spring.backend.activity.dto.response.UserMonthlyActivityDetail;
 import spring.backend.activity.dto.response.UserMonthlyActivitySummary;
@@ -29,6 +30,34 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
         order by a.createdAt ASC
     """)
     List<HomeActivityInfoResponse> findTodayActivities(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+    @Override
+    @Query("""
+                select new spring.backend.activity.dto.response.MonthlySavedTimeAndActivityCountResponse(
+                sum(a.savedTime),
+                count(a)
+                )
+                from ActivityJpaEntity a
+                where a.memberId = :memberId
+                and a.createdAt between :startDateTime and :endDateTime
+                and a.finished = true
+    """)
+    MonthlySavedTimeAndActivityCountResponse findMonthlyTotalSavedTimeAndTotalCount(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+    @Override
+    @Query("""
+                select new spring.backend.activity.dto.response.MonthlyActivityCountByKeywordResponse(
+                    a.keyword,
+                    count(a)
+                )
+                from ActivityJpaEntity a
+                where a.memberId = :memberId
+                and a.createdAt between :startDateTime and :endDateTime
+                and a.finished = true
+                group by a.keyword
+                order by count (a) desc
+    """)
+    List<MonthlyActivityCountByKeywordResponse> findMonthlyActivitiesByKeywordSummary(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     @Override
     @Query("""

@@ -29,13 +29,13 @@ public class EmailUtil {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(sender);
-            message.setTo(sendEmailRequest.to());
-            message.setSubject(sendEmailRequest.subject());
-            message.setText(sendEmailRequest.text());
+            message.setTo(sendEmailRequest.receiver());
+            message.setSubject(sendEmailRequest.title());
+            message.setText(sendEmailRequest.content());
             mailSender.send(message);
         } catch (MailParseException e) {
             log.error("[EmailUtil] Failed to parse email for recipient: {}, subject: {}. Error: {}",
-                    sendEmailRequest.to(), sendEmailRequest.subject(), e.getMessage());
+                    sendEmailRequest.receiver(), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.FAILED_TO_PARSE_MAIL.toException();
         } catch (MailAuthenticationException e) {
             log.error("[EmailUtil] Authentication failed for email sender: {}. Error: {}",
@@ -43,11 +43,11 @@ public class EmailUtil {
             throw MailErrorCode.AUTHENTICATION_FAILED.toException();
         } catch (MailSendException e) {
             log.error("[EmailUtil] Error occurred while sending email to recipient: {}, subject: {}. Error: {}",
-                    sendEmailRequest.to(), sendEmailRequest.subject(), e.getMessage());
+                    sendEmailRequest.receiver(), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.ERROR_OCCURRED_SENDING_MAIL.toException();
         } catch (MailException e) {
             log.error("[EmailUtil] General mail error for recipient: {}, subject: {}. Error: {}",
-                    sendEmailRequest.to(), sendEmailRequest.subject(), e.getMessage());
+                    sendEmailRequest.receiver(), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.GENERAL_MAIL_ERROR.toException();
         }
     }
@@ -59,22 +59,22 @@ public class EmailUtil {
     }
 
     private void validateEmailAddress(SendEmailRequest request) {
-        if (request.to() == null || !EMAIL_PATTERN.matcher(request.to()).matches()) {
-            log.error("[EmailUtil] Invalid email address format: {}", request.to());
+        if (request.receiver() == null || !EMAIL_PATTERN.matcher(request.receiver()).matches()) {
+            log.error("[EmailUtil] Invalid email address format: {}", request.receiver());
             throw MailErrorCode.INVALID_MAIL_ADDRESS.toException();
         }
     }
 
     private void validateEmailSubject(SendEmailRequest request) {
-        if (request.subject() == null || request.subject().isEmpty()) {
-            log.error("[EmailUtil] Invalid email title: {}", request.subject());
+        if (request.title() == null || request.title().isEmpty()) {
+            log.error("[EmailUtil] Invalid email title: {}", request.title());
             throw MailErrorCode.NO_MAIL_TITLE.toException();
         }
     }
 
     private void validateEmailText(SendEmailRequest request) {
-        if (request.text() == null || request.text().isEmpty()) {
-            log.error("[EmailUtil] Invalid email subject: {}", request.subject());
+        if (request.content() == null || request.content().isEmpty()) {
+            log.error("[EmailUtil] Invalid email subject: {}", request.title());
             throw MailErrorCode.NO_MAIL_CONTENT.toException();
         }
     }

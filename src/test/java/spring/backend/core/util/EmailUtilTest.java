@@ -18,17 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class EmailUtilTest {
-    @Mock
-    private JavaMailSender javaMailSender;
-
     @InjectMocks
     private EmailUtil emailUtil;
 
-    @Value("${spring.mail.sender}")
-    private String sender;
-
     private SendEmailRequest sendEmailRequest;
-
 
     @DisplayName("SendEmailRequest의 to 값이 올바르지 않은 이메일 형식의 경우 예외를 반환한다.")
     @Test
@@ -56,14 +49,14 @@ public class EmailUtilTest {
 
     @DisplayName("SendEmailRequest의 subject가 비어있는 경우 예외를 반환한다.")
     @Test
-    void throwExceptionWhenSubjectInRequestIsNUll() {
+    void throwExceptionWhenSubjectInRequestIsNull() {
         // GIVEN
         sendEmailRequest = new SendEmailRequest("test@naver.com", "", "Test Content");
 
         // WHEN & THEN
         DomainException ex = assertThrows(DomainException.class, () -> emailUtil.send(sendEmailRequest), "메일 제목이 없습니다.");
         assertThat(ex.getCode()).isEqualTo(MailErrorCode.NO_MAIL_TITLE.name());
-        assertThat(ex.getMessage()).isEqualTo(MailErrorCode.NO_MAIL_CONTENT.getMessage());
+        assertThat(ex.getMessage()).isEqualTo(MailErrorCode.NO_MAIL_TITLE.getMessage());
     }
 
     @DisplayName("SendEmailRequest의 text가 비어있는 경우 예외를 반환한다.")

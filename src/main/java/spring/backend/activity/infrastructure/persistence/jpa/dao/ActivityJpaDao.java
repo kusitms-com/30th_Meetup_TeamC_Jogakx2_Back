@@ -2,6 +2,7 @@ package spring.backend.activity.infrastructure.persistence.jpa.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.dto.response.*;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
 import spring.backend.activity.dto.response.UserMonthlyActivityDetail;
@@ -92,4 +93,42 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
         order by a.createdAt desc
     """)
     List<UserMonthlyActivityDetail> findActivityDetailsByYearAndMonth(UUID memberId, int year, int month);
+
+    @Override
+    @Query("""
+                select new spring.backend.activity.dto.response.ActivityWithTitleAndSavedTimeResponse(
+                    a.title,
+                    a.savedTime,
+                    a.createdAt
+                )
+                from ActivityJpaEntity a
+                where a.memberId = :memberId
+                and a.createdAt between :startDateTime and :endDateTime
+                and a.finished = true
+                and a.keyword.category = :keywordCategory
+                order by a.createdAt DESC
+    """)
+    List<ActivityWithTitleAndSavedTimeResponse> findActivitiesByMemberAndKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+
+    @Override
+    @Query("""
+                select count(a)
+                from ActivityJpaEntity a
+                where a.memberId = :memberId
+                and a.createdAt between :startDateTime and :endDateTime
+                and a.finished = true
+                and a.keyword.category = :keywordCategory
+    """)
+    long countActivitiesByMemberAndKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+
+    @Override
+    @Query("""
+                select sum(a.savedTime)
+                from ActivityJpaEntity a
+                where a.memberId = :memberId
+                and a.createdAt between :startDateTime and :endDateTime
+                and a.finished = true
+                and a.keyword.category = :keywordCategory
+    """)
+    Long totalSavedTimeByKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
 }

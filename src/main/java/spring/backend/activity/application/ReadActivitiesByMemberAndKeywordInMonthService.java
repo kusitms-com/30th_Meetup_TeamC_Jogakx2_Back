@@ -21,12 +21,12 @@ import java.util.List;
 public class ReadActivitiesByMemberAndKeywordInMonthService {
     private final ActivityDao activityDao;
 
-    public ActivitiesByMemberAndKeywordInMonthResponse readActivitiesByMemberAndKeywordInMonth(Member member, ActivitiesByMemberAndKeywordInMonthRequest activitiesByMemberAndKeywordInMonthRequest) {
-        YearMonth yearMonth = YearMonth.of(activitiesByMemberAndKeywordInMonthRequest.year(), activitiesByMemberAndKeywordInMonthRequest.month());
-        List<ActivityWithTitleAndSavedTimeResponse> activities = activityDao.findActivitiesByMemberAndKeywordInMonth(member.getId(), TimeUtil.toFirstDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth), activitiesByMemberAndKeywordInMonthRequest.keywordCategory());
-        long countActivitiesByMemberAndKeywordInMonth = activityDao.countActivitiesByMemberAndKeywordInMonth(member.getId(), TimeUtil.toFirstDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth), activitiesByMemberAndKeywordInMonthRequest.keywordCategory());
-        Long totalSavedTimeByKeywordInMonth = activityDao.totalSavedTimeByKeywordInMonth(member.getId(), TimeUtil.toFirstDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth), activitiesByMemberAndKeywordInMonthRequest.keywordCategory());
-        Keyword keyword = KeywordImageMapper.getImageByCategory(activitiesByMemberAndKeywordInMonthRequest.keywordCategory());
+    public ActivitiesByMemberAndKeywordInMonthResponse readActivitiesByMemberAndKeywordInMonth(Member member,int year, int month, Keyword.Category keywordCategory) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        List<ActivityWithTitleAndSavedTimeResponse> activities = activityDao.findActivitiesByMemberAndKeywordInMonth(member.getId(), TimeUtil.toFirstDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth), keywordCategory);
+        long countActivitiesByMemberAndKeywordInMonth = activityDao.countActivitiesByMemberAndKeywordInMonth(member.getId(), TimeUtil.toFirstDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth), keywordCategory);
+        Long totalSavedTimeByKeywordInMonth = activityDao.totalSavedTimeByKeywordInMonth(member.getId(), TimeUtil.toFirstDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth), keywordCategory);
+        Keyword keyword = KeywordImageMapper.getImageByCategory(keywordCategory);
         return new ActivitiesByMemberAndKeywordInMonthResponse(
                 totalSavedTimeByKeywordInMonth,
                 activities,

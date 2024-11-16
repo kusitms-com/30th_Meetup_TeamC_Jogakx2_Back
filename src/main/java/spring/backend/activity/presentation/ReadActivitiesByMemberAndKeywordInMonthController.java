@@ -1,12 +1,16 @@
 package spring.backend.activity.presentation;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.ReadActivitiesByMemberAndKeywordInMonthService;
+import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.dto.request.ActivitiesByMemberAndKeywordInMonthRequest;
 import spring.backend.activity.dto.response.ActivitiesByMemberAndKeywordInMonthResponse;
 import spring.backend.activity.presentation.swagger.ReadActivitiesByMemberAndKeywordInMonthSwagger;
@@ -18,16 +22,18 @@ import spring.backend.member.domain.entity.Member;
 @RestController
 @RequiredArgsConstructor
 @Validated
-public class ReadActivitiesByMemberAndKeywordInMonthController implements ReadActivitiesByMemberAndKeywordInMonthSwagger {
+public class ReadActivitiesByMemberAndKeywordInMonthController implements ReadActivitiesByMemberAndKeywordInMonthSwagger{
     private final ReadActivitiesByMemberAndKeywordInMonthService readActivitiesByMemberAndKeywordInMonthService;
 
     @Authorization
     @GetMapping("/v1/activities/{year}/{month}/keywords/{keywordCategory}")
     public ResponseEntity<RestResponse<ActivitiesByMemberAndKeywordInMonthResponse>> readActivitiesByMemberAndKeywordInMonth(
             @AuthorizedMember Member member,
-            @Valid ActivitiesByMemberAndKeywordInMonthRequest activitiesByMemberAndKeywordInMonthRequest
+            @PathVariable int year,
+            @PathVariable int month,
+            @PathVariable Keyword.Category keywordCategory
             ) {
-        ActivitiesByMemberAndKeywordInMonthResponse activitiesByMemberAndKeywordInMonthResponse = readActivitiesByMemberAndKeywordInMonthService.readActivitiesByMemberAndKeywordInMonth(member, activitiesByMemberAndKeywordInMonthRequest);
+        ActivitiesByMemberAndKeywordInMonthResponse activitiesByMemberAndKeywordInMonthResponse = readActivitiesByMemberAndKeywordInMonthService.readActivitiesByMemberAndKeywordInMonth(member, year, month, keywordCategory);
         return ResponseEntity.ok(new RestResponse<>(activitiesByMemberAndKeywordInMonthResponse));
     }
 }

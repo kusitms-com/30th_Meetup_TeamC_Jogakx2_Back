@@ -3,6 +3,8 @@ package spring.backend.activity.infrastructure.persistence.jpa.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
+import spring.backend.activity.dto.response.UserMonthlyActivityDetail;
+import spring.backend.activity.dto.response.UserMonthlyActivitySummary;
 import spring.backend.activity.infrastructure.persistence.jpa.entity.ActivityJpaEntity;
 import spring.backend.activity.query.dao.ActivityDao;
 
@@ -27,4 +29,38 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
         order by a.createdAt ASC
     """)
     List<HomeActivityInfoResponse> findTodayActivities(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
+    @Override
+    @Query("""
+        select new spring.backend.activity.dto.response.UserMonthlyActivitySummary(
+            m.createdAt,
+            coalesce(sum(a.savedTime), 0),
+            count(a)
+        )
+        from MemberJpaEntity m
+        left join ActivityJpaEntity a on a.memberId = m.id
+            and a.finished = true
+            and function('year', a.createdAt) = :year
+            and function('month', a.createdAt) = :month
+        where m.id = :memberId
+    """)
+    UserMonthlyActivitySummary findActivitySummaryByYearAndMonth(UUID memberId, int year, int month);
+
+
+    @Override
+    @Query("""
+        select new spring.backend.activity.dto.response.UserMonthlyActivityDetail(
+            a.keyword.category,
+            a.title,
+            a.savedTime,
+            a.createdAt
+        )
+        from ActivityJpaEntity a
+        where a.memberId = :memberId
+        and a.finished = true
+        and function('year', a.createdAt) = :year
+        and function('month', a.createdAt) = :month
+        order by a.createdAt desc
+    """)
+    List<UserMonthlyActivityDetail> findActivityDetailsByYearAndMonth(UUID memberId, int year, int month);
 }

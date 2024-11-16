@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TimeUtil {
@@ -48,5 +50,13 @@ public class TimeUtil {
             return null;
         }
         return time.getMinute();
+    }
+
+    public static LocalDateTime toStartDayOfMonth(YearMonth yearMonth) {
+        return yearMonth.atDay(1).atStartOfDay();
+    }
+
+    public static LocalDateTime toEndDayOfMonth(YearMonth yearMonth) {
+        return yearMonth.atEndOfMonth().atTime(23, 59, 59);
     }
 }

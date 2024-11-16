@@ -1,5 +1,6 @@
 package spring.backend.activity.query.dao;
 
+import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.dto.response.*;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
 import spring.backend.activity.dto.response.UserMonthlyActivityDetail;
@@ -20,4 +21,7 @@ public interface ActivityDao {
     MonthlySavedTimeAndActivityCountResponse findMonthlyTotalSavedTimeAndTotalCount(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     List<MonthlyActivityCountByKeywordResponse> findMonthlyActivitiesByKeywordSummary(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+    List<ActivityWithTitleAndSavedTimeResponse> findActivitiesByMemberAndKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+    long countActivitiesByMemberAndKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+    Long totalSavedTimeByKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
 }

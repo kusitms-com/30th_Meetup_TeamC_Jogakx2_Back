@@ -21,7 +21,7 @@ public class ReadMonthlyActivityOverviewController implements ReadMonthlyActivit
     private final ReadMonthlyActivityOverviewService readMonthlyActivityOverviewService;
 
     @Authorization
-    @GetMapping("/v1/activity")
+    @GetMapping("/v1/activities/overview")
     public ResponseEntity<RestResponse<MonthlyActivityOverviewResponse>> readMonthlyActivityOverview(
             @AuthorizedMember Member member,
             @Valid @ModelAttribute MonthlyActivityOverviewRequest monthlyActivityOverviewRequest

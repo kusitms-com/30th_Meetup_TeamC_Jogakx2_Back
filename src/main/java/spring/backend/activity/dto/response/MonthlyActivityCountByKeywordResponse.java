@@ -8,6 +8,6 @@ public record MonthlyActivityCountByKeywordResponse(
         Keyword keyword,
 
         @Schema(description = "Keyword별 활동 횟수" , example = "2")
-        Long activityCount
+        long activityCount
 ) {
 }

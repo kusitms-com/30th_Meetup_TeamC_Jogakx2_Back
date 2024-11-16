@@ -82,6 +82,7 @@ dependencies {
 
 	// Sentry
 	implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.17.0'
+
 	// Email
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 

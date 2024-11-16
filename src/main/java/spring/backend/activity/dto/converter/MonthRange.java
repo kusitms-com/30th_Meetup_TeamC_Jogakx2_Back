@@ -1,4 +1,4 @@
-package spring.backend.activity.util;
+package spring.backend.activity.dto.converter;
 
 import lombok.Getter;
 
@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 
 @Getter
-public class MonthRangeUtil {
+public class MonthRange {
     private final LocalDateTime start;
     private final LocalDateTime end;
 
-    public MonthRangeUtil(YearMonth yearMonth) {
+    public MonthRange(YearMonth yearMonth) {
         this.start = yearMonth.atDay(1).atStartOfDay();
         this.end = yearMonth.atEndOfMonth().atTime(23, 59, 59);
     }

@@ -22,7 +22,7 @@ public class ReadMonthlyActivityOverviewController implements ReadMonthlyActivit
 
     @Authorization
     @GetMapping("/v1/activity")
-    public ResponseEntity<RestResponse<MonthlyActivityOverviewResponse>> readMonthlyActivityOverviewController(
+    public ResponseEntity<RestResponse<MonthlyActivityOverviewResponse>> readMonthlyActivityOverview(
             @AuthorizedMember Member member,
             @Valid @ModelAttribute MonthlyActivityOverviewRequest monthlyActivityOverviewRequest
     ) {

@@ -16,5 +16,5 @@ public interface ReadMonthlyActivityOverviewSwagger {
             description = "사용자의 월간 활동 개요를 조회합니다.",
             operationId = "/v1/activity"
     )
-    ResponseEntity<RestResponse<MonthlyActivityOverviewResponse>> readMonthlyActivityOverviewController(@Parameter(hidden = true) Member member, MonthlyActivityOverviewRequest monthlyActivityOverviewRequest);
+    ResponseEntity<RestResponse<MonthlyActivityOverviewResponse>> readMonthlyActivityOverview(@Parameter(hidden = true) Member member, MonthlyActivityOverviewRequest monthlyActivityOverviewRequest);
 }

@@ -9,7 +9,7 @@ import spring.backend.activity.dto.response.MonthlyActivityCountByKeywordRespons
 import spring.backend.activity.dto.response.MonthlyActivityOverviewResponse;
 import spring.backend.activity.dto.response.MonthlySavedTimeAndActivityCountResponse;
 import spring.backend.activity.query.dao.ActivityDao;
-import spring.backend.activity.dto.converter.MonthRange;
+import spring.backend.core.util.TimeUtil;
 import spring.backend.member.domain.entity.Member;
 
 import java.time.YearMonth;
@@ -25,9 +25,8 @@ public class ReadMonthlyActivityOverviewService {
 
     public MonthlyActivityOverviewResponse readMonthlyActivityOverview(Member member, MonthlyActivityOverviewRequest monthlyActivityOverviewRequest) {
         YearMonth yearMonth = YearMonth.of(monthlyActivityOverviewRequest.year(), monthlyActivityOverviewRequest.month());
-        MonthRange monthRange = new MonthRange(yearMonth);
-        MonthlySavedTimeAndActivityCountResponse monthlyActivityOverviewResponse = activityDao.findMonthlyTotalSavedTimeAndTotalCount(member.getId(), monthRange.getStart(), monthRange.getEnd());
-        List<MonthlyActivityCountByKeywordResponse> activityByKeywordSummaryResponses = activityDao.findMonthlyActivitiesByKeywordSummary(member.getId(),monthRange.getStart(), monthRange.getEnd());
-        return new MonthlyActivityOverviewResponse(monthlyActivityOverviewResponse, activityByKeywordSummaryResponses);
+        MonthlySavedTimeAndActivityCountResponse monthlyActivityOverviewResponse = activityDao.findMonthlyTotalSavedTimeAndTotalCount(member.getId(), TimeUtil.toStartDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth));
+        List<MonthlyActivityCountByKeywordResponse> activityByKeywordSummaryResponses = activityDao.findMonthlyActivitiesByKeywordSummary(member.getId(),TimeUtil.toStartDayOfMonth(yearMonth), TimeUtil.toEndDayOfMonth(yearMonth));
+        return new MonthlyActivityOverviewResponse(member.getUpdatedAt().getMonth(), monthlyActivityOverviewResponse, activityByKeywordSummaryResponses);
     }
 }

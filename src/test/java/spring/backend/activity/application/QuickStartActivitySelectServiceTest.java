@@ -42,6 +42,9 @@ public class QuickStartActivitySelectServiceTest {
     @Mock
     private QuickStartRepository quickStartRepository;
 
+    @Mock
+    private FinishActivityAutoService finishActivityAutoService;
+
     private Member member;
     private QuickStartActivitySelectRequest quickStartActivitySelectRequest;
     private final Long quickStartId = 1L;

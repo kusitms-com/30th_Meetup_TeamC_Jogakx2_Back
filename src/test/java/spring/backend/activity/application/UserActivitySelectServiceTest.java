@@ -32,6 +32,9 @@ public class UserActivitySelectServiceTest {
     @Mock
     private ActivityRepository activityRepository;
 
+    @Mock
+    private FinishActivityAutoService finishActivityAutoService;
+
     private Member member;
     private UserActivitySelectRequest userActivitySelectRequest;
 

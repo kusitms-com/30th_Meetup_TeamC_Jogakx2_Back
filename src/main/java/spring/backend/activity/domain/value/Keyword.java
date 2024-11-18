@@ -5,6 +5,10 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +33,13 @@ public class Keyword {
         SOCIAL("소셜");
 
         private final String description;
+
+        private static final Map<String, Category> DESCRIPTION_TO_CATEGORY_MAP = Arrays.stream(Category.values())
+                .collect(Collectors.toMap(Category::getDescription, category -> category));
+
+        public static Category from(String description) {
+            return DESCRIPTION_TO_CATEGORY_MAP.get(description);
+        }
     }
 
     public static Keyword create(Category category, String image) {

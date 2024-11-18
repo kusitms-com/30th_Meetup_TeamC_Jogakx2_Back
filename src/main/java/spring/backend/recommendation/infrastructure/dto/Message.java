@@ -45,11 +45,11 @@ public record Message(String role, String content) {
     }
 
     private static String createContentForActivityTypeOnline(int spareTime, Type activityType, String keywords) {
-        return String.format("\"자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n\n 5가지 활동 추천해줘\n\n", spareTime, activityType.getDescription(), keywords);
+        return String.format("\"자투리 시간: %d분\n선호 활동 타입: %s\n활동 키워드: %s\n\n 5가지 활동 추천해줘\n\n", spareTime, activityType, keywords);
     }
 
     private static String createContentForActivityTypeOfflineOrOnlineAndOffline(int spareTime, Type activityType, String keywords, String location) {
-        return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n위치: %s\n\n 5가지 활동 추천해줘\n\n", spareTime, activityType.getDescription(), keywords, location);
+        return String.format("자투리 시간: %d분\n선호활동: %s\n활동 키워드: %s\n위치: %s\n\n 5가지 활동 추천해줘\n\n", spareTime, activityType, keywords, location);
     }
 
     private static boolean isActivityTypeOfflineOrOnlineAndOffline(Type activityType, String location) {

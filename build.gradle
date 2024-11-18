@@ -2,7 +2,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
-	id "io.sentry.jvm.gradle" version "4.13.0"
 }
 
 group = 'spring'
@@ -12,14 +11,6 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
-}
-
-sentry {
-	includeSourceContext = true
-
-	org = "hoyeongjun"
-	projectName = "cnergy-backend"
-	authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 
 configurations {

@@ -12,12 +12,13 @@ import spring.backend.member.domain.entity.Member;
 import spring.backend.recommendation.application.GetRecommendationsFromOpenAIService;
 import spring.backend.recommendation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.dto.response.OpenAIRecommendationResponse;
+import spring.backend.recommendation.presentation.swagger.GetRecommendationsFromOpenAISwagger;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class GetRecommendationsFromOpenAIController {
+public class GetRecommendationsFromOpenAIController implements GetRecommendationsFromOpenAISwagger {
 
     private final GetRecommendationsFromOpenAIService getRecommendationsFromOpenAIService;
 

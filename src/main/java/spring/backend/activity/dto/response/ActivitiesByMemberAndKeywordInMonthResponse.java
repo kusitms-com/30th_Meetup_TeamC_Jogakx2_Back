@@ -15,7 +15,7 @@ public record ActivitiesByMemberAndKeywordInMonthResponse(
         @Schema(description = "활동 키워드별 활동 총 개수")
         long totalActivityCountByKeywordInMonth,
 
-        @Schema(description = "키워드 카테고리", example = "NATURE")
+        @Schema(description = "키워드", example = "NATURE")
         Keyword keyword
 ) {
 }

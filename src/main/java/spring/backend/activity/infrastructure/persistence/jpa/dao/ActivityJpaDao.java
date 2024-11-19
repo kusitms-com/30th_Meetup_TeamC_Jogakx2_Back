@@ -34,8 +34,8 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
     @Override
     @Query("""
                 select new spring.backend.activity.dto.response.MonthlySavedTimeAndActivityCountResponse(
-                sum(a.savedTime),
-                count(a)
+                coalesce(sum(a.savedTime), 0),
+                coalesce(count(a), 0)
                 )
                 from ActivityJpaEntity a
                 where a.memberId = :memberId
@@ -48,7 +48,7 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
     @Query("""
                 select new spring.backend.activity.dto.response.MonthlyActivityCountByKeywordResponse(
                     a.keyword,
-                    count(a)
+                    coalesce(count(a), 0)
                 )
                 from ActivityJpaEntity a
                 where a.memberId = :memberId

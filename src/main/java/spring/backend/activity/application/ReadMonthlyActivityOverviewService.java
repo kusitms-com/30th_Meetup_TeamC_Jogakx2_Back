@@ -30,6 +30,6 @@ public class ReadMonthlyActivityOverviewService {
         LocalDateTime endDayOfMonth = TimeUtil.toEndDayOfMonth(yearMonth);
         MonthlySavedTimeAndActivityCountResponse monthlySavedTimeAndActivityCountResponse = activityDao.findMonthlyTotalSavedTimeAndTotalCount(member.getId(), startDayOfMonth, endDayOfMonth);
         List<MonthlyActivityCountByKeywordResponse> activityByKeywordSummaryResponses = activityDao.findMonthlyActivitiesByKeywordSummary(member.getId(), startDayOfMonth, endDayOfMonth);
-        return new MonthlyActivityOverviewResponse(member.getUpdatedAt().getYear() ,member.getUpdatedAt().getMonth(), monthlySavedTimeAndActivityCountResponse, activityByKeywordSummaryResponses);
+        return new MonthlyActivityOverviewResponse(member.getUpdatedAt().getYear(), member.getUpdatedAt().getMonth(), monthlySavedTimeAndActivityCountResponse, activityByKeywordSummaryResponses);
     }
 }

@@ -16,6 +16,8 @@ public interface ActivityDao {
     UserMonthlyActivitySummary findActivitySummaryByYearAndMonth(UUID memberId, int year, int month);
 
     List<UserMonthlyActivityDetail> findActivityDetailsByYearAndMonth(UUID memberId, int year, int month);
+
     MonthlySavedTimeAndActivityCountResponse findMonthlyTotalSavedTimeAndTotalCount(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
     List<MonthlyActivityCountByKeywordResponse> findMonthlyActivitiesByKeywordSummary(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 }

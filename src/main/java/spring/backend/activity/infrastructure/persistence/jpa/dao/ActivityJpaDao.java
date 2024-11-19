@@ -112,7 +112,7 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
 
     @Override
     @Query("""
-                select count(a)
+                select coalesce(count(a), 0)
                 from ActivityJpaEntity a
                 where a.memberId = :memberId
                 and a.createdAt between :startDateTime and :endDateTime
@@ -123,12 +123,12 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
 
     @Override
     @Query("""
-                select sum(a.savedTime)
+                select coalesce(sum(a.savedTime), 0)
                 from ActivityJpaEntity a
                 where a.memberId = :memberId
                 and a.createdAt between :startDateTime and :endDateTime
                 and a.finished = true
                 and a.keyword.category = :keywordCategory
     """)
-    Long totalSavedTimeByKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+    long totalSavedTimeByKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
 }

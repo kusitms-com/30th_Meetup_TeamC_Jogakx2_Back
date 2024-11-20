@@ -21,7 +21,10 @@ public interface ActivityDao {
     MonthlySavedTimeAndActivityCountResponse findMonthlyTotalSavedTimeAndTotalCount(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     List<MonthlyActivityCountByKeywordResponse> findMonthlyActivitiesByKeywordSummary(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+
     List<ActivityWithTitleAndSavedTimeResponse> findActivitiesByMemberAndKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+
     long countActivitiesByMemberAndKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+
     long totalSavedTimeByKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
 }

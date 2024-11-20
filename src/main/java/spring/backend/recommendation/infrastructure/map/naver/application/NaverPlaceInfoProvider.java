@@ -21,7 +21,7 @@ import java.util.Map;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class NaverPlaceInfoProvider implements PlaceInfoProvider {
+public class NaverPlaceInfoProvider implements PlaceInfoProvider<NaverMapResponse> {
     @Value("${naver.client-id}")
     private String clientId;
 

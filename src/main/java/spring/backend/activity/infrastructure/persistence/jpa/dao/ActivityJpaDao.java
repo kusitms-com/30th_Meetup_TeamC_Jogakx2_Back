@@ -112,23 +112,16 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
 
     @Override
     @Query("""
-                select coalesce(count(a), 0)
+                select new spring.backend.activity.dto.response.TotalSavedTimeAndActivityCountByKeywordInMonth(
+                    coalesce(sum(a.savedTime), 0),
+                    coalesce(count(a), 0)
+                )
                 from ActivityJpaEntity a
                 where a.memberId = :memberId
                 and a.createdAt between :startDateTime and :endDateTime
                 and a.finished = true
                 and a.keyword.category = :keywordCategory
     """)
-    long countActivitiesByMemberAndKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
+    TotalSavedTimeAndActivityCountByKeywordInMonth findTotalSavedTimeAndActivityCountByKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
 
-    @Override
-    @Query("""
-                select coalesce(sum(a.savedTime), 0)
-                from ActivityJpaEntity a
-                where a.memberId = :memberId
-                and a.createdAt between :startDateTime and :endDateTime
-                and a.finished = true
-                and a.keyword.category = :keywordCategory
-    """)
-    long totalSavedTimeByKeywordInMonth(UUID memberId, LocalDateTime startDateTime, LocalDateTime endDateTime, Keyword.Category keywordCategory);
 }

@@ -9,6 +9,7 @@ import spring.backend.recommendation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.dto.response.ClovaRecommendationResponse;
 import spring.backend.recommendation.infrastructure.clova.dto.response.ClovaResponse;
 import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
+import spring.backend.recommendation.infrastructure.map.kakao.dto.response.KakaoMapResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ public class GetRecommendationsFromClovaService {
 
     private static final Pattern TITLE_FULL_LINE_PATTERN = Pattern.compile(".*title :.*");
     private static final Pattern TITLE_PREFIX_PATTERN = Pattern.compile(".*title :");
+    private static final Pattern PLACE_NAME_PREFIX_PATTERN = Pattern.compile(".*placeName :");
     private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content :");
     private static final Pattern KEYWORD_PREFIX_PATTERN = Pattern.compile(".*keyword :");
     private static final String LINE_SEPARATOR = "\n";
@@ -38,6 +40,7 @@ public class GetRecommendationsFromClovaService {
     private static final String SOCIAL = "소셜";
 
     private final RecommendationProvider<ClovaResponse> recommendationProvider;
+    private final PlaceInfoProvider<KakaoMapResponse> kakaomapPlaceInfoProvider;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(AIRecommendationRequest clovaRecommendationRequest) {
         validateLocation(clovaRecommendationRequest);
@@ -59,17 +62,16 @@ public class GetRecommendationsFromClovaService {
         return validRecommendations;
     }
 
-    List<ClovaRecommendationResponse> filteredValidRecommendations(List<ClovaRecommendationResponse> clovaResponses) {
+    private List<ClovaRecommendationResponse> filteredValidRecommendations(List<ClovaRecommendationResponse> clovaResponses) {
         return clovaResponses.stream()
                 .filter(clovaResponse -> clovaResponse.getKeywordCategory() != null && isValidKeywordCategory(clovaResponse.getKeywordCategory())).collect(Collectors.toList());
     }
 
-    public List<ClovaRecommendationResponse> fetchRecommendations(AIRecommendationRequest clovaRecommendationRequest) {
+    private List<ClovaRecommendationResponse> fetchRecommendations(AIRecommendationRequest clovaRecommendationRequest) {
         validateClovaRecommendationRequestKeyword(clovaRecommendationRequest);
         ClovaResponse clovaResponse = recommendationProvider.getRecommendations(clovaRecommendationRequest);
         validateClovaResponse(clovaResponse);
         String parsedClovaResponse = clovaResponse.getResult().getMessage().getContent();
-
         String[] recommendations = parsedClovaResponse.split(LINE_SEPARATOR);
 
         List<ClovaRecommendationResponse> clovaResponses = new ArrayList<>();
@@ -85,6 +87,21 @@ public class GetRecommendationsFromClovaService {
                     i++;
                 }
 
+                String placeName = "", placeUrl = "", mapx = "", mapy = "";
+
+                if (i + 1 < recommendations.length && PLACE_NAME_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).find()) {
+                    placeName = PLACE_NAME_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).replaceFirst("").trim();
+                    KakaoMapResponse placeInfo = kakaomapPlaceInfoProvider.search(placeName);
+
+                    if (placeInfo.documents() != null && !placeInfo.documents().isEmpty()) {
+                        mapx = placeInfo.documents().get(0).x();
+                        mapy = placeInfo.documents().get(0).y();
+                        placeUrl = placeInfo.documents().get(0).place_url();
+                    }
+
+                    i++;
+                }
+
                 String content = "";
                 if (i + 1 < recommendations.length && CONTENT_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).find()) {
                     content = CONTENT_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).replaceFirst("").trim();
@@ -97,7 +114,7 @@ public class GetRecommendationsFromClovaService {
                     keywordCategory = convertClovaResponseKeywordToKeywordCategory(keywordText);
                     i++;
                 }
-                clovaResponses.add(new ClovaRecommendationResponse(order, title, content, keywordCategory));
+                clovaResponses.add(new ClovaRecommendationResponse(order, title, placeName, mapx, mapy, placeUrl, content, keywordCategory));
                 order++;
             }
         }

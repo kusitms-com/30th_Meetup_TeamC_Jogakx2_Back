@@ -3,7 +3,7 @@ package spring.backend.recommendation.presentation.swagger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import reactor.core.publisher.Mono;
+import org.springframework.http.ResponseEntity;
 import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.core.presentation.RestResponse;
@@ -23,5 +23,5 @@ public interface GetRecommendationsFromOpenAISwagger {
             operationId = "/v1/recommendations/open-ai"
     )
     @ApiErrorCode({GlobalErrorCode.class, OpenAIErrorCode.class})
-    Mono<RestResponse<List<OpenAIRecommendationResponse>>> GetRecommendationsFromOpenAI(@Parameter(hidden = true) Member member, AIRecommendationRequest request);
+    ResponseEntity<RestResponse<List<OpenAIRecommendationResponse>>> GetRecommendationsFromOpenAI(@Parameter(hidden = true) Member member, AIRecommendationRequest request);
 }

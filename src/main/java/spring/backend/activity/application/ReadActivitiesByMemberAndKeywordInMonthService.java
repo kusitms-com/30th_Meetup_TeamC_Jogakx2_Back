@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.activity.domain.value.Keyword;
-import spring.backend.activity.dto.request.ActivitiesByMemberAndKeywordInMonthRequest;
 import spring.backend.activity.dto.response.ActivitiesByMemberAndKeywordInMonthResponse;
 import spring.backend.activity.dto.response.ActivityWithTitleAndSavedTimeResponse;
 import spring.backend.activity.infrastructure.mapper.KeywordImageMapper;
@@ -24,7 +23,7 @@ public class ReadActivitiesByMemberAndKeywordInMonthService {
 
     public ActivitiesByMemberAndKeywordInMonthResponse readActivitiesByMemberAndKeywordInMonth(Member member, int year, int month, Keyword.Category keywordCategory) {
         YearMonth yearMonth = YearMonth.of(year, month);
-        LocalDateTime firstDayOfMonth = TimeUtil.toFirstDayOfMonth(yearMonth);
+        LocalDateTime firstDayOfMonth = TimeUtil.toStartDayOfMonth(yearMonth);
         LocalDateTime endDayOfMonth = TimeUtil.toEndDayOfMonth(yearMonth);
         List<ActivityWithTitleAndSavedTimeResponse> activities = activityDao.findActivitiesByMemberAndKeywordInMonth(member.getId(), firstDayOfMonth, endDayOfMonth, keywordCategory);
         long countActivitiesByMemberAndKeywordInMonth = activityDao.countActivitiesByMemberAndKeywordInMonth(member.getId(), firstDayOfMonth, endDayOfMonth, keywordCategory);

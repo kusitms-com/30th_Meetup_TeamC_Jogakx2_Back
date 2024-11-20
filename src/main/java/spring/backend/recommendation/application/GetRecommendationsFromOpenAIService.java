@@ -10,12 +10,10 @@ import spring.backend.recommendation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.dto.response.OpenAIRecommendationResponse;
 import spring.backend.recommendation.infrastructure.dto.Message;
 import spring.backend.recommendation.infrastructure.openai.dto.response.OpenAIResponse;
+import spring.backend.recommendation.infrastructure.openai.dto.response.OpenAIResponse.Choice;
 import spring.backend.recommendation.infrastructure.openai.exception.OpenAIErrorCode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -27,141 +25,150 @@ public class GetRecommendationsFromOpenAIService {
 
     private static final String LINE_SEPARATOR = "\n";
     private static final Pattern RECOMMENDATION_FIELD_PATTERN = Pattern.compile("^(title|content|keyword|platform|url):\\s*(.*)$");
-    private static final int ONLINE_REQUIRED_SIZE = 5;
-    private static final int ONLINE_OFFLINE_ONLINE_REQUIRED_SIZE = 2;
+    private static final Pattern LINK_SEARCH_QUERY_PATTERN = Pattern.compile("'(.*?)'");
     private static final String TITLE_KEY = "title";
     private static final String CONTENT_KEY = "content";
     private static final String KEYWORD_KEY = "keyword";
     private static final String PLATFORM_KEY = "platform";
     private static final String URL_KEY = "url";
-
-    private final Map<String, BiConsumer<String, String>> FIELD_SETTERS = Map.of(
-            TITLE_KEY, (key, value) -> title = value,
-            CONTENT_KEY, (key, value) -> content = value,
-            KEYWORD_KEY, (key, value) -> keyword = value,
-            PLATFORM_KEY, (key, value) -> platform = value,
-            URL_KEY, (key, value) -> url = value
-    );
-    private String title;
-    private String content;
-    private String keyword;
-    private String platform;
-    private String url;
+    private static final String YOUTUBE_PLATFORM = "youtube";
+    private static final int ONLINE_REQUIRED_SIZE = 5;
+    private static final int ONLINE_OFFLINE_OPENAI_REQUIRED_SIZE = 2;
+    private static final int MAX_RETRY_ATTEMPTS = 2;
 
     private final RecommendationProvider<Mono<OpenAIResponse>> openAIRecommendationProvider;
+    private final SearchYouTubeService searchYouTubeService;
 
-    public Mono<List<OpenAIRecommendationResponse>> getRecommendationsFromOpenAI(AIRecommendationRequest request) {
-        return openAIRecommendationProvider.getRecommendations(request)
-                .flatMap(this::extractRecommendationContent)
-                .switchIfEmpty(Mono.error(OpenAIErrorCode.NOT_FOUND_RECOMMENDATION.toException()))
-                .flatMap(rawData -> parseRecommendations(rawData, request.activityType()))
-                .flatMap(recommendations -> checkAndRetryRecommendations(recommendations, request));
+    public List<OpenAIRecommendationResponse> getRecommendationsFromOpenAI(AIRecommendationRequest request) {
+        for (int attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
+            try {
+                OpenAIResponse openAIResponse = openAIRecommendationProvider.getRecommendations(request).block();
+                if (openAIResponse == null) {
+                    throw OpenAIErrorCode.NOT_FOUND_RECOMMENDATION.toException();
+                }
+
+                String rawData = extractRecommendationContent(openAIResponse);
+                List<OpenAIRecommendationResponse> recommendations = parseRecommendations(rawData, request.activityType());
+
+                if (attempt == 1 && (recommendations.isEmpty() || isKeywordMissing(recommendations))) {
+                    log.warn("[GetRecommendationsFromOpenAIService] First attempt failed : {}", recommendations);
+                    continue;
+                }
+
+                return recommendations;
+
+            } catch (Exception e) {
+                if (attempt == MAX_RETRY_ATTEMPTS) {
+                    log.error("[GetRecommendationsFromOpenAIService] Maximum retry attempts exceeded.", e);
+                    throw OpenAIErrorCode.FAILED_RECOMMENDATION_GENERATION.toException();
+                }
+                log.warn("[GetRecommendationsFromOpenAIService] Invalid response received. Retrying attempt: {}", attempt + 1, e);
+            }
+        }
+        throw OpenAIErrorCode.FAILED_RECOMMENDATION_GENERATION.toException();
     }
 
-    private Mono<String> extractRecommendationContent(OpenAIResponse openAIResponse) {
-        return Mono.justOrEmpty(openAIResponse)
+    private String extractRecommendationContent(OpenAIResponse openAIResponse) {
+        return Optional.ofNullable(openAIResponse)
                 .map(OpenAIResponse::choices)
-                .flatMap(choices -> Mono.justOrEmpty(choices.get(0)))
-                .flatMap(choice -> Mono.justOrEmpty(choice.message()))
-                .map(Message::content);
+                .map(choices -> choices.get(0))
+                .map(Choice::message)
+                .map(Message::content)
+                .orElse(null);
     }
 
-    private Mono<List<OpenAIRecommendationResponse>> parseRecommendations(String rawData, Type activityType) {
-        return Mono.fromCallable(() -> {
-            String[] lines = rawData.split(LINE_SEPARATOR);
-            List<OpenAIRecommendationResponse> recommendations = new ArrayList<>();
-            int order = 1;
+    private List<OpenAIRecommendationResponse> parseRecommendations(String rawData, Type activityType) {
+        if (rawData == null || rawData.isEmpty()) {
+            throw OpenAIErrorCode.NOT_FOUND_RECOMMENDATION.toException();
+        }
 
-            for (String line : lines) {
-                Matcher matcher = RECOMMENDATION_FIELD_PATTERN.matcher(line);
-                if (matcher.matches()) {
-                    String key = matcher.group(1);
-                    String value = matcher.group(2).trim();
-                    setRecommendationField(key, value);
-                }
+        String[] lines = rawData.split(LINE_SEPARATOR);
+        List<OpenAIRecommendationResponse> recommendations = new ArrayList<>();
+        int order = 1;
 
-                if (isAllFieldsFilled()) {
-                    Category category = Category.from(keyword);
-                    if (!isValidCategory(category)) {
-                        log.warn("[GetRecommendationsFromOpenAIService] Invalid Category.");
-                        continue;
-                    }
+        Map<String, String> recommendationFields = new HashMap<>();
 
-                    OpenAIRecommendationResponse response = OpenAIRecommendationResponse.of(order++, title, content, category, url);
-                    recommendations.add(response);
-                    resetRecommendationFields();
-                }
+        for (String line : lines) {
+            Matcher matcher = RECOMMENDATION_FIELD_PATTERN.matcher(line);
+
+            if (matcher.matches()) {
+                recommendationFields.put(matcher.group(1).toLowerCase(), matcher.group(2).trim());
             }
 
-            return filterAndLimitRecommendations(recommendations, activityType);
-        }).onErrorResume(e -> {
-            log.error("[GetRecommendationsFromOpenAIService] Recommendation parsing error: {}", e.getMessage());
-            return Mono.error(e);
-        });
+            if (hasAllRequiredFields(recommendationFields)) {
+                String keyword = recommendationFields.get(KEYWORD_KEY);
+                Category category = Category.from(keyword);
+
+                if (isInvalidCategory(category)) {
+                    log.warn("[GetRecommendationsFromOpenAIService] Invalid Category.");
+                    recommendationFields.clear();
+                    continue;
+                }
+
+                String title = recommendationFields.get(TITLE_KEY);
+                String platform = recommendationFields.get(PLATFORM_KEY);
+                String url = recommendationFields.get(URL_KEY);
+                String youtubeUrl = processYoutubeUrl(title, platform, url);
+
+                recommendations.add(OpenAIRecommendationResponse.of(
+                        order++,
+                        title,
+                        recommendationFields.get(CONTENT_KEY),
+                        category,
+                        youtubeUrl
+                ));
+
+                recommendationFields.clear();
+            }
+        }
+
+        return filterAndLimitRecommendations(recommendations, activityType);
     }
 
     private List<OpenAIRecommendationResponse> filterAndLimitRecommendations(List<OpenAIRecommendationResponse> recommendations, Type activityType) {
-        recommendations = filterRecommendations(recommendations);
-        if (recommendations.isEmpty()) {
-            throw OpenAIErrorCode.NOT_EXIST_CATEGORY.toException();
-        }
-        return limitRecommendations(recommendations, activityType);
-    }
-
-    private List<OpenAIRecommendationResponse> filterRecommendations(List<OpenAIRecommendationResponse> recommendations) {
         return recommendations.stream()
                 .filter(r -> r.keywordCategory() != null)
+                .limit(getRequiredSize(activityType))
                 .collect(Collectors.toList());
-    }
-
-    private List<OpenAIRecommendationResponse> limitRecommendations(List<OpenAIRecommendationResponse> recommendations, Type activityType) {
-        int requiredSize = getRequiredSize(activityType);
-        return recommendations.size() > requiredSize ? recommendations.subList(0, requiredSize) : recommendations;
-    }
-
-    private Mono<List<OpenAIRecommendationResponse>> checkAndRetryRecommendations(List<OpenAIRecommendationResponse> recommendations, AIRecommendationRequest request) {
-        if (isRetryRequired(recommendations, request.activityType())) {
-            return retryRecommendations(request);
-        }
-        return Mono.just(recommendations);
-    }
-
-    private boolean isRetryRequired(List<OpenAIRecommendationResponse> recommendations, Type activityType) {
-        return recommendations.isEmpty() || recommendations.size() != getRequiredSize(activityType);
-    }
-
-    private Mono<List<OpenAIRecommendationResponse>> retryRecommendations(AIRecommendationRequest request) {
-        return getRecommendationsFromOpenAI(request);
     }
 
     private int getRequiredSize(Type activityType) {
         return switch (activityType) {
             case ONLINE -> ONLINE_REQUIRED_SIZE;
-            case ONLINE_AND_OFFLINE -> ONLINE_OFFLINE_ONLINE_REQUIRED_SIZE;
+            case ONLINE_AND_OFFLINE -> ONLINE_OFFLINE_OPENAI_REQUIRED_SIZE;
             default -> 0;
         };
     }
 
-    private boolean isAllFieldsFilled() {
-        return title != null && content != null && keyword != null && platform != null && url != null;
+    private boolean isInvalidCategory(Category category) {
+        return category == null;
     }
 
-    private boolean isValidCategory(Category category) {
-        return category != null;
+    private boolean isKeywordMissing(List<OpenAIRecommendationResponse> recommendations) {
+        return recommendations.stream()
+                .anyMatch(r -> isInvalidCategory(r.keywordCategory()));
     }
 
-    private void setRecommendationField(String key, String value) {
-        BiConsumer<String, String> fieldSetter = FIELD_SETTERS.get(key);
-        if (fieldSetter != null) {
-            fieldSetter.accept(key, value);
+    private boolean hasAllRequiredFields(Map<String, String> recommendationFields) {
+        return recommendationFields.containsKey(TITLE_KEY)
+                && recommendationFields.containsKey(CONTENT_KEY)
+                && recommendationFields.containsKey(KEYWORD_KEY)
+                && recommendationFields.containsKey(PLATFORM_KEY)
+                && recommendationFields.containsKey(URL_KEY);
+    }
+
+    private String processYoutubeUrl(String title, String platform, String url) {
+        if (YOUTUBE_PLATFORM.equalsIgnoreCase(platform)) {
+            String youtubeUrl = searchYouTubeService.searchYoutube(extractYoutubeUrlFromTitle(title));
+            if (youtubeUrl != null) {
+                return youtubeUrl;
+            }
         }
+        return url;
     }
 
-    private void resetRecommendationFields() {
-        title = null;
-        content = null;
-        keyword = null;
-        platform = null;
-        url = null;
+    private String extractYoutubeUrlFromTitle(String title) {
+        Matcher matcher = LINK_SEARCH_QUERY_PATTERN.matcher(title);
+        return matcher.find() ? matcher.group(1) : null;
     }
 }

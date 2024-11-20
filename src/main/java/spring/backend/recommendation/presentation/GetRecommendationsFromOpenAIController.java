@@ -1,10 +1,10 @@
 package spring.backend.recommendation.presentation;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
@@ -24,8 +24,8 @@ public class GetRecommendationsFromOpenAIController implements GetRecommendation
 
     @Authorization
     @PostMapping("/v1/recommendations/open-ai")
-    public Mono<RestResponse<List<OpenAIRecommendationResponse>>> GetRecommendationsFromOpenAI(@AuthorizedMember Member member, @RequestBody AIRecommendationRequest request) {
-        return getRecommendationsFromOpenAIService.getRecommendationsFromOpenAI(request)
-                .map(RestResponse::new);
+    public ResponseEntity<RestResponse<List<OpenAIRecommendationResponse>>> GetRecommendationsFromOpenAI(@AuthorizedMember Member member, @RequestBody AIRecommendationRequest request) {
+        List<OpenAIRecommendationResponse> recommendationsFromOpenAI = getRecommendationsFromOpenAIService.getRecommendationsFromOpenAI(request);
+        return ResponseEntity.ok(new RestResponse<>(recommendationsFromOpenAI));
     }
 }

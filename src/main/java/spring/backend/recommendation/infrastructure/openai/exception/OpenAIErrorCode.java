@@ -12,7 +12,7 @@ import spring.backend.core.exception.error.BaseErrorCode;
 public enum OpenAIErrorCode implements BaseErrorCode<DomainException> {
 
     NOT_FOUND_RECOMMENDATION(HttpStatus.NOT_FOUND, "OpenAI에서의 추천이 존재하지 않습니다."),
-    NOT_EXIST_CATEGORY(HttpStatus.BAD_REQUEST, "추천의 카테고리가 존재하지 않습니다.");
+    FAILED_RECOMMENDATION_GENERATION(HttpStatus.INTERNAL_SERVER_ERROR, "추천 생성 중 에러가 발생하였습니다.");
 
     private final HttpStatus httpStatus;
 

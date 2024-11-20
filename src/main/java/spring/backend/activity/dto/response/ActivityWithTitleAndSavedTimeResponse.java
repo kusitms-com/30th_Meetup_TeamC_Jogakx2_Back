@@ -1,6 +1,5 @@
 package spring.backend.activity.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ public record ActivityWithTitleAndSavedTimeResponse(
         int savedTime,
 
         @Schema(description = "활동 날짜", example = "2021-07-01T00:00:00")
-        @JsonProperty("dateOfActivity")
-        LocalDateTime createdAt
+        LocalDateTime dateOfActivity
 ) {
 }

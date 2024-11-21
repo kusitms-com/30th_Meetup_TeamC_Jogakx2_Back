@@ -1,5 +1,7 @@
 package spring.backend.recommendation.infrastructure.map.kakao.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public record KakaoMapResponse(
@@ -7,31 +9,42 @@ public record KakaoMapResponse(
         Meta meta
 ) {
     public record Document(
-            String address_name,
-            String category_group_code,
-            String category_group_name,
-            String category_name,
+            @JsonProperty("address_name")
+            String addressName,
+            @JsonProperty("category_group_code")
+            String categoryGroupCode,
+            @JsonProperty("category_group_name")
+            String categoryGroupName,
+            @JsonProperty("category_name")
+            String categoryName,
             String distance,
             String id,
             String phone,
-            String place_name,
-            String place_url,
-            String road_address_name,
+            @JsonProperty("place_name")
+            String placeName,
+            @JsonProperty("place_url")
+            String placeUrl,
+            @JsonProperty("road_address_name")
+            String roadAddressName,
             String x,
             String y
     ) {
     }
 
     public record Meta(
-            boolean is_end,
-            int pageable_count,
-            int total_count,
+            @JsonProperty("is_end")
+            boolean isEnd,
+            @JsonProperty("pageable_count")
+            int pageableCount,
+            @JsonProperty("total_count")
+            int totalCount,
             SameName sameName
     ) {
         public record SameName(
                 List<String> region,
                 List<String> keyword,
-                List<String> selected_region
+                @JsonProperty("selected_region")
+                List<String> selectedRegion
         ) {
         }
     }

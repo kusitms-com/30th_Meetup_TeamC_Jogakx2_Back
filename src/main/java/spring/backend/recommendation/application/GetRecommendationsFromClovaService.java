@@ -96,7 +96,7 @@ public class GetRecommendationsFromClovaService {
                     if (placeInfo.documents() != null && !placeInfo.documents().isEmpty()) {
                         mapx = placeInfo.documents().get(0).x();
                         mapy = placeInfo.documents().get(0).y();
-                        placeUrl = placeInfo.documents().get(0).place_url();
+                        placeUrl = placeInfo.documents().get(0).placeUrl();
                     }
 
                     i++;

@@ -13,19 +13,23 @@ import spring.backend.recommendation.infrastructure.map.kakao.exception.KakaoMap
 @Log4j2
 public class KakaoPlaceInfoProvider implements PlaceInfoProvider<KakaoMapResponse> {
 
-    @Value("${kakao.rest-api-key}")
-    private String restApiKey;
-
-    private static final String BASE_URL = "https://dapi.kakao.com";
-    private static final String SEARCH_PATH = "/v2/local/search/keyword.json";
+    private final String restApiKey;
+    private final String searchPath;
     private static final String QUERY = "query";
     private static final String AUTHORIZATION = "Authorization";
     private static final String KAKAO_AK = "KakaoAK ";
 
     private final WebClient webClient;
 
-    public KakaoPlaceInfoProvider() {
-        this.webClient = WebClient.create(BASE_URL);
+    public KakaoPlaceInfoProvider(
+            @Value("${kakao.rest-api-key}") String restApiKey,
+            @Value("${kakao.base-url}") String baseUrl,
+            @Value("${kakao.search-path}") String searchPath
+
+    ) {
+        this.restApiKey = restApiKey;
+        this.searchPath = searchPath;
+        this.webClient = WebClient.create(baseUrl);
     }
 
     @Override
@@ -33,7 +37,7 @@ public class KakaoPlaceInfoProvider implements PlaceInfoProvider<KakaoMapRespons
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
-                            .path(SEARCH_PATH)
+                            .path(searchPath)
                             .queryParam(QUERY, query)
                             .build())
                     .header(AUTHORIZATION, KAKAO_AK + restApiKey)

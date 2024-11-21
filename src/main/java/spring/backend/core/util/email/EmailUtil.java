@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import spring.backend.core.util.email.dto.request.SendEmailRequest;
 import spring.backend.core.util.email.exception.MailErrorCode;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 @Component
@@ -29,13 +30,13 @@ public class EmailUtil {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(sender);
-            message.setTo(sendEmailRequest.receiver());
+            message.setTo(sendEmailRequest.receivers());
             message.setSubject(sendEmailRequest.title());
             message.setText(sendEmailRequest.content());
             mailSender.send(message);
         } catch (MailParseException e) {
             log.error("[EmailUtil] Failed to parse email for recipient: {}, subject: {}. Error: {}",
-                    sendEmailRequest.receiver(), sendEmailRequest.title(), e.getMessage());
+                    Arrays.toString(sendEmailRequest.receivers()), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.FAILED_TO_PARSE_MAIL.toException();
         } catch (MailAuthenticationException e) {
             log.error("[EmailUtil] Authentication failed for email sender: {}. Error: {}",
@@ -43,11 +44,11 @@ public class EmailUtil {
             throw MailErrorCode.AUTHENTICATION_FAILED.toException();
         } catch (MailSendException e) {
             log.error("[EmailUtil] Error occurred while sending email to recipient: {}, subject: {}. Error: {}",
-                    sendEmailRequest.receiver(), sendEmailRequest.title(), e.getMessage());
+                    Arrays.toString(sendEmailRequest.receivers()), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.ERROR_OCCURRED_SENDING_MAIL.toException();
         } catch (MailException e) {
             log.error("[EmailUtil] General mail error for recipient: {}, subject: {}. Error: {}",
-                    sendEmailRequest.receiver(), sendEmailRequest.title(), e.getMessage());
+                    Arrays.toString(sendEmailRequest.receivers()), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.GENERAL_MAIL_ERROR.toException();
         }
     }
@@ -59,8 +60,8 @@ public class EmailUtil {
     }
 
     private void validateEmailAddress(SendEmailRequest request) {
-        if (request.receiver() == null || !EMAIL_PATTERN.matcher(request.receiver()).matches()) {
-            log.error("[EmailUtil] Invalid email address format: {}", request.receiver());
+        if (request.receivers() == null || Arrays.stream(request.receivers()).anyMatch(email -> !EMAIL_PATTERN.matcher(email).matches())) {
+            log.error("[EmailUtil] Invalid email address format: {}", Arrays.toString(request.receivers()));
             throw MailErrorCode.INVALID_MAIL_ADDRESS.toException();
         }
     }

@@ -4,10 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import spring.backend.core.exception.DomainException;
 import spring.backend.core.util.email.EmailUtil;
 import spring.backend.core.util.email.dto.request.SendEmailRequest;
@@ -27,7 +24,7 @@ public class EmailUtilTest {
     @Test
     void throwExceptionWhenToInRequestIsInvalid() {
         // GIVEN
-        sendEmailRequest = new SendEmailRequest("test", "Test Subject", "Test Content");
+        sendEmailRequest = new SendEmailRequest(new String[]{"test", "test2"}, "Test Subject", "Test Content");
 
         // WHEN & THEN
         DomainException ex = assertThrows(DomainException.class, () -> emailUtil.send(sendEmailRequest), "올바르지 않은 이메일 주소입니다.");
@@ -51,7 +48,7 @@ public class EmailUtilTest {
     @Test
     void throwExceptionWhenSubjectInRequestIsNull() {
         // GIVEN
-        sendEmailRequest = new SendEmailRequest("test@naver.com", "", "Test Content");
+        sendEmailRequest = new SendEmailRequest(new String[]{"test@naver.com", "test2@naver.com"}, "", "Test Content");
 
         // WHEN & THEN
         DomainException ex = assertThrows(DomainException.class, () -> emailUtil.send(sendEmailRequest), "메일 제목이 없습니다.");
@@ -63,7 +60,7 @@ public class EmailUtilTest {
     @Test
     void throwExceptionWhenTextInRequestIsNull() {
         // GIVEN
-        sendEmailRequest = new SendEmailRequest("test@naver.com", "Test Subject", "");
+        sendEmailRequest = new SendEmailRequest(new String[]{"test@naver.com", "test2@naver.com"}, "Test Subject", "");
 
         // WHEN & THEN
         DomainException ex = assertThrows(DomainException.class, () -> emailUtil.send(sendEmailRequest), "메일 내용이 없습니다.");

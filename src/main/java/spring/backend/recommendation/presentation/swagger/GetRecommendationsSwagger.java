@@ -9,19 +9,18 @@ import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.recommendation.dto.request.AIRecommendationRequest;
-import spring.backend.recommendation.dto.response.OpenAIRecommendationResponse;
+import spring.backend.recommendation.dto.response.RecommendationResponse;
+import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 import spring.backend.recommendation.infrastructure.openai.exception.OpenAIErrorCode;
 
-import java.util.List;
-
 @Tag(name = "Recommendation", description = "추천")
-public interface GetRecommendationsFromOpenAISwagger {
+public interface GetRecommendationsSwagger {
 
     @Operation(
-            summary = "[ONLINE, ONLINE_AND_OFFLINE] 사용자 추천 요청 API",
-            description = "[ONLINE, ONLINE_AND_OFFLINE] 사용자가 활동 추천을 요청합니다.",
-            operationId = "/v1/recommendations/open-ai"
+            summary = "사용자 추천 요청 API",
+            description = "사용자가 활동 추천을 요청합니다.",
+            operationId = "/v1/recommendations"
     )
-    @ApiErrorCode({GlobalErrorCode.class, OpenAIErrorCode.class})
-    ResponseEntity<RestResponse<List<OpenAIRecommendationResponse>>> GetRecommendationsFromOpenAI(@Parameter(hidden = true) Member member, AIRecommendationRequest request);
+    @ApiErrorCode({GlobalErrorCode.class, ClovaErrorCode.class, OpenAIErrorCode.class})
+    ResponseEntity<RestResponse<RecommendationResponse>> getRecommendations(@Parameter(hidden = true) Member member, AIRecommendationRequest request);
 }

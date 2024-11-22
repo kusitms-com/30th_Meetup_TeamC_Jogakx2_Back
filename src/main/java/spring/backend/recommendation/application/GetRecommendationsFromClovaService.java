@@ -31,13 +31,14 @@ public class GetRecommendationsFromClovaService {
     private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content :");
     private static final Pattern KEYWORD_PREFIX_PATTERN = Pattern.compile(".*keyword :");
     private static final String LINE_SEPARATOR = "\n";
-    private static final String SELF_DEVELOPMENT = "자기개발";
-    private static final String HEALTH = "건강";
-    private static final String NATURE = "자연";
-    private static final String CULTURE_ART = "문화/예술";
-    private static final String ENTERTAINMENT = "엔터테인먼트";
-    private static final String RELAXATION = "휴식";
-    private static final String SOCIAL = "소셜";
+    private static final String SELF_DEVELOPMENT = "SELF_DEVELOPMENT";
+    private static final String HEALTH = "HEALTH";
+    private static final String NATURE = "NATURE";
+    private static final String CULTURE_ART = "CULTURE_ART";
+    private static final String ENTERTAINMENT = "ENTERTAINMENT";
+    private static final String RELAXATION = "RELAXATION";
+    private static final String SOCIAL = "SOCIAL";
+    private static final int ONLINE_AND_OFFLINE_RECOMMENDATION_COUNT = 3;
 
     private final RecommendationProvider<ClovaResponse> recommendationProvider;
     private final PlaceInfoProvider<KakaoMapResponse> kakaomapPlaceInfoProvider;
@@ -59,7 +60,14 @@ public class GetRecommendationsFromClovaService {
             throw ClovaErrorCode.INVALID_KEYWORD_IN_RECOMMENDATIONS.toException();
         }
 
+        if (clovaRecommendationRequest.activityType() == ONLINE_AND_OFFLINE) {
+            return validRecommendations.stream()
+                    .limit(ONLINE_AND_OFFLINE_RECOMMENDATION_COUNT)
+                    .collect(Collectors.toList());
+        }
+
         return validRecommendations;
+
     }
 
     private List<ClovaRecommendationResponse> filteredValidRecommendations(List<ClovaRecommendationResponse> clovaResponses) {

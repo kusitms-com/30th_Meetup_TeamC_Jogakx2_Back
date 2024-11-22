@@ -18,7 +18,7 @@ public class ClovaStudioPrompt {
             "1. **입력된 활동 keyword와 location을 고려하여 근처의 특정한 활동 장소를 주소와 함께 추천.**\n" +
             "2. **keyword 선택:**\n" +
             "    - 추천 활동 키워드는 반드시 무조건 사용자가 입력한 활동 키워드들에 해당하는 활동만 추천.\n" +
-            "    - keyword는 SELF_DEVELOPMENT, ENTERTAINMENT, RELAXATION, CULTURE_ART, HEALTH, NATURE 중 하나만 선택.\n" +
+            "    - keyword는 SELF_DEVELOPMENT, ENTERTAINMENT, RELAXATION, CULTURE_ART, HEALTH, NATURE 중 하나로 반환.\n" +
             "\n" +
             "**활동 키워드별 정의와 예시:**\n" +
             "\n" +

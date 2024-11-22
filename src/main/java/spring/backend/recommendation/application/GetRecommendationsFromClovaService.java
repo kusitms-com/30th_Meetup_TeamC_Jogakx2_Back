@@ -31,13 +31,6 @@ public class GetRecommendationsFromClovaService {
     private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content :");
     private static final Pattern KEYWORD_PREFIX_PATTERN = Pattern.compile(".*keyword :");
     private static final String LINE_SEPARATOR = "\n";
-    private static final String SELF_DEVELOPMENT = "SELF_DEVELOPMENT";
-    private static final String HEALTH = "HEALTH";
-    private static final String NATURE = "NATURE";
-    private static final String CULTURE_ART = "CULTURE_ART";
-    private static final String ENTERTAINMENT = "ENTERTAINMENT";
-    private static final String RELAXATION = "RELAXATION";
-    private static final String SOCIAL = "SOCIAL";
     private static final int ONLINE_AND_OFFLINE_RECOMMENDATION_COUNT = 3;
 
     private final RecommendationProvider<ClovaResponse> recommendationProvider;
@@ -119,7 +112,9 @@ public class GetRecommendationsFromClovaService {
                 Keyword.Category keywordCategory = null;
                 if (i + 1 < recommendations.length && KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).find()) {
                     String keywordText = KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).replaceFirst("").trim();
+                    log.info("keywordText: {}", keywordText);
                     keywordCategory = convertClovaResponseKeywordToKeywordCategory(keywordText);
+                    log.info("keywordCategory: {}", keywordCategory);
                     i++;
                 }
                 clovaResponses.add(new ClovaRecommendationResponse(order, title, placeName, mapx, mapy, placeUrl, content, keywordCategory));
@@ -172,15 +167,13 @@ public class GetRecommendationsFromClovaService {
     }
 
     private Keyword.Category convertClovaResponseKeywordToKeywordCategory(String keywordText) {
-        return switch (keywordText) {
-            case SELF_DEVELOPMENT -> Keyword.Category.SELF_DEVELOPMENT;
-            case HEALTH -> Keyword.Category.HEALTH;
-            case NATURE -> Keyword.Category.NATURE;
-            case CULTURE_ART -> Keyword.Category.CULTURE_ART;
-            case ENTERTAINMENT -> Keyword.Category.ENTERTAINMENT;
-            case RELAXATION -> Keyword.Category.RELAXATION;
-            case SOCIAL -> Keyword.Category.SOCIAL;
-            default -> null;
-        };
+        try {
+            return Keyword.Category.valueOf(keywordText);
+        } catch (IllegalArgumentException e) {
+            return Arrays.stream(Keyword.Category.values())
+                    .filter(category -> category.getDescription().equals(keywordText))
+                    .findFirst()
+                    .orElse(null);
+        }
     }
 }

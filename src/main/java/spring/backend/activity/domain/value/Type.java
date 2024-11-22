@@ -11,4 +11,12 @@ public enum Type {
     ONLINE_AND_OFFLINE("온라인과 오프라인 모두");
 
     private final String description;
+
+    public boolean includesOffline() {
+        return this == OFFLINE || this == ONLINE_AND_OFFLINE;
+    }
+
+    public boolean includesOnline() {
+        return this == ONLINE || this == ONLINE_AND_OFFLINE;
+    }
 }

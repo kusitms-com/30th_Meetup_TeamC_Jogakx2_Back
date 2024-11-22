@@ -53,7 +53,7 @@ public class HandleOAuthLoginService {
                 .build();
 
         Member member = createMemberWithOAuthService.createMemberWithOAuth(createMemberWithOAuthRequest);
-
-        return new LoginResponse(jwtService.provideAccessToken(member), refreshTokenService.saveRefreshToken(member), member.getRole());
+        refreshTokenService.saveRefreshToken(member);
+        return new LoginResponse(jwtService.provideAccessToken(member),  member.getRole());
     }
 }

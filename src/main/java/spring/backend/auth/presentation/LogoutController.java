@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.auth.application.RefreshTokenService;
+import spring.backend.auth.presentation.swagger.LogoutSwagger;
 import spring.backend.core.application.JwtService;
 
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-public class LogoutController {
+public class LogoutController implements LogoutSwagger {
     private final RefreshTokenService refreshTokenService;
     private final JwtService jwtService;
 

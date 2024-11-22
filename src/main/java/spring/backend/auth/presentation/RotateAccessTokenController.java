@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.auth.application.RotateAccessTokenService;
 import spring.backend.auth.dto.response.RotateAccessTokenResponse;
+import spring.backend.auth.presentation.swagger.RotateAccessTokenSwagger;
 import spring.backend.core.presentation.RestResponse;
 
 @RestController
 @RequestMapping("/v1/token/rotate")
 @RequiredArgsConstructor
 @Log4j2
-public class RotateAccessTokenController {
+public class RotateAccessTokenController implements RotateAccessTokenSwagger {
     private final RotateAccessTokenService rotateTokenService;
 
     @PostMapping

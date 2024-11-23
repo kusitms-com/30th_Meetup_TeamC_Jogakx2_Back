@@ -14,7 +14,7 @@ public interface ValidateNicknameSwagger {
 
     @Operation(
             summary = "닉네임 중복 검증 API",
-            description = "닉네임이 조건에 충족하지 않거나 중복일 경우, 에러를 발생합니다.",
+            description = "닉네임이 조건에 충족하지 않거나 중복일 경우 false를 반환합니다.",
             operationId = "/v1/members/check-nickname"
     )
     @ApiErrorCode({GlobalErrorCode.class, MemberErrorCode.class})

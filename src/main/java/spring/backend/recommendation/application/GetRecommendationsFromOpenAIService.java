@@ -7,6 +7,7 @@ import reactor.core.publisher.Mono;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Keyword.Category;
 import spring.backend.activity.domain.value.Type;
+import spring.backend.core.converter.ImageConverter;
 import spring.backend.recommendation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.dto.response.OpenAIRecommendationResponse;
 import spring.backend.recommendation.infrastructure.dto.Message;
@@ -39,6 +40,7 @@ public class GetRecommendationsFromOpenAIService {
 
     private final RecommendationProvider<Mono<OpenAIResponse>> openAIRecommendationProvider;
     private final SearchYouTubeService searchYouTubeService;
+    private final ImageConverter imageConverter;
 
     public List<OpenAIRecommendationResponse> getRecommendationsFromOpenAI(AIRecommendationRequest request) {
         for (int attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
@@ -109,7 +111,7 @@ public class GetRecommendationsFromOpenAIService {
                 String title = recommendationFields.get(TITLE_KEY);
                 String platform = recommendationFields.get(PLATFORM_KEY);
                 String url = recommendationFields.get(URL_KEY);
-                Keyword keyword = Keyword.getKeywordByCategory(category);
+                Keyword keyword = Keyword.create(category, imageConverter.convertToImageUrl(category));
                 String youtubeUrl = processYoutubeUrl(title, platform, url);
 
                 recommendations.add(OpenAIRecommendationResponse.of(

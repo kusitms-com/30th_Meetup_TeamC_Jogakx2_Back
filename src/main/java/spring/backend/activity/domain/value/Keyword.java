@@ -26,7 +26,6 @@ public class Keyword {
             Keyword.Category.SOCIAL, "images/social.png"
     );
 
-
     @Enumerated(EnumType.STRING)
     private Category category;
 

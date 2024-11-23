@@ -23,5 +23,5 @@ public class ClovaRecommendationResponse {
     @Schema(description = "추천 부제목")
     private String content;
     @Schema(description = "추천 키워드")
-    private Keyword.Category keywordCategory;
+    private Keyword keyword;
 }

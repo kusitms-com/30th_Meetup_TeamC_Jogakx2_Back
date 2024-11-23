@@ -8,10 +8,11 @@ import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.service.ChangeEmailNotificationService;
+import spring.backend.member.presentation.swagger.ChangeEmailNotificationSwagger;
 
 @RestController
 @RequiredArgsConstructor
-public class ChangeEmailNotificationController {
+public class ChangeEmailNotificationController implements ChangeEmailNotificationSwagger {
 
     private final ChangeEmailNotificationService changeEmailNotificationService;
 

@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.auth.dto.request.OnboardingSignUpRequest;
+import spring.backend.auth.dto.response.OnboardingSignUpResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.repository.MemberRepository;
@@ -21,12 +22,13 @@ public class OnboardingSignUpService {
 
     private final MemberRepository memberRepository;
 
-    public Member onboardingSignUp(Member member, OnboardingSignUpRequest request) {
+    public OnboardingSignUpResponse onboardingSignUp(Member member, OnboardingSignUpRequest request) {
         validateMember(member);
         validateRequest(request);
         validateBirthYear(request);
         member.convertGuestToMember(request.nickname(), request.birthYear(), request.gender(), request.profileImage());
-        return memberRepository.save(member);
+        memberRepository.save(member);
+        return OnboardingSignUpResponse.of(member.getEmail(), member.getNickname(), member.getBirthYear(), member.getGender(), member.getProfileImage(), member.getCreatedAt());
     }
 
     private void validateMember(Member member) {

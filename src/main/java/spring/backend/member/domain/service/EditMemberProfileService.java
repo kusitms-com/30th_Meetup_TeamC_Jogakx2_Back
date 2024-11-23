@@ -19,10 +19,9 @@ public class EditMemberProfileService {
     private final ValidateNicknameService validateNicknameService;
 
     @Transactional
-    public boolean edit(Member member, EditMemberProfileRequest editMemberProfileRequest) {
+    public void edit(Member member, EditMemberProfileRequest editMemberProfileRequest) {
         validateNicknameService.validateNickname(editMemberProfileRequest.nickname());
         member.editMemberProfile(editMemberProfileRequest.nickname(), editMemberProfileRequest.profileImage());
         memberRepository.save(member);
-        return true;
     }
 }

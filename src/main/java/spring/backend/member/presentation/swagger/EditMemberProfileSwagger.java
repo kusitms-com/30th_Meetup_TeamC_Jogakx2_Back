@@ -7,6 +7,7 @@ import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.dto.request.EditMemberProfileRequest;
+import spring.backend.member.exception.MemberErrorCode;
 
 @Tag(name = "Member", description = "멤버")
 public interface EditMemberProfileSwagger {
@@ -16,6 +17,6 @@ public interface EditMemberProfileSwagger {
             description = "사용자의 프로필을 수정합니다.",
             operationId = "/v1/member/profile"
     )
-    @ApiErrorCode({GlobalErrorCode.class})
+    @ApiErrorCode({GlobalErrorCode.class, MemberErrorCode.class})
     void editMemberProfile(@Parameter(hidden = true) Member member, EditMemberProfileRequest request);
 }

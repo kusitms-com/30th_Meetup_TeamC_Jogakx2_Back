@@ -5,14 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import spring.backend.auth.dto.request.OnboardingSignUpRequest;
+import spring.backend.auth.dto.response.OnboardingSignUpResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.exception.MemberErrorCode;
-
-import java.util.UUID;
 
 @Tag(name = "Auth", description = "인증/인가")
 public interface OnboardingSignUpSwagger {
@@ -23,5 +22,5 @@ public interface OnboardingSignUpSwagger {
             operationId = "/v1/members/onboard"
     )
     @ApiErrorCode({GlobalErrorCode.class, AuthenticationErrorCode.class, MemberErrorCode.class})
-    ResponseEntity<RestResponse<UUID>> onboardingSignUp(@Parameter(hidden = true) Member member, OnboardingSignUpRequest request);
+    ResponseEntity<RestResponse<OnboardingSignUpResponse>> onboardingSignUp(@Parameter(hidden = true) Member member, OnboardingSignUpRequest request);
 }

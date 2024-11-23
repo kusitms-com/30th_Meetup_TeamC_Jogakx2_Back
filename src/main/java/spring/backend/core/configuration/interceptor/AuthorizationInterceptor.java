@@ -1,52 +1,75 @@
 package spring.backend.core.configuration.interceptor;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.application.JwtService;
 
-import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class AuthorizationInterceptor implements HandlerInterceptor {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    public static final String AUTHORIZATION_BEARER_PREFIX = "Bearer";
+    public static final String AUTHORIZATION_BEARER_PREFIX = "Bearer ";
 
     private final JwtService jwtService;
 
+    private static final List<String> PASS_THROUGH_PATTERNS = Arrays.asList(
+            "/swagger-ui", "/v3/api-docs", "/v1/oauth", "/v1/token/rotate"
+    );
+
+
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (HttpMethod.OPTIONS.name().equals(request.getMethod())) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
+        if (isPassThroughRequest(request.getRequestURI())) {
             return true;
         }
-        String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
-        if (handler instanceof HandlerMethod) {
-            HandlerMethod handlerMethod = (HandlerMethod) handler;
-            Annotation authorizationAnnotation = handlerMethod.getMethodAnnotation(Authorization.class);
-            if (authorizationAnnotation != null) {
-                String token = extractToken(authorizationHeader);
-                jwtService.validateTokenExpiration(token);
-            }
+        String accessToken = extractToken(request);
+        log.info("accessToken: {}", accessToken);
+        if (accessToken == null) {
+            log.error("쿠키에 토큰이 존재하지 않습니다.");
+            throw AuthenticationErrorCode.NOT_EXIST_TOKEN.toException();
         }
+        jwtService.validateTokenExpiration(accessToken);
         return true;
     }
 
-    private String extractToken(String authorizationHeader) {
-        if (authorizationHeader == null) {
-            throw AuthenticationErrorCode.NOT_EXIST_HEADER.toException();
+    private boolean isPassThroughRequest(String uri) {
+        return PASS_THROUGH_PATTERNS.stream().anyMatch(uri::contains);
+    }
+
+    private String extractToken(HttpServletRequest request) {
+        if (isSwaggerRequest(request)) {
+            String authHeader = request.getHeader(AUTHORIZATION_HEADER);
+            if (authHeader != null && authHeader.startsWith(AUTHORIZATION_BEARER_PREFIX)) {
+                return authHeader.substring(7);
+            }
         }
-        try {
-            return authorizationHeader.split(AUTHORIZATION_BEARER_PREFIX)[1].replace(" ", "");
-        } catch (Exception e) {
-            throw AuthenticationErrorCode.NOT_EXIST_TOKEN.toException();
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("access_token".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
         }
+        return null;
+    }
+
+    private boolean isSwaggerRequest(HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        return referer != null && referer.contains("/swagger-ui");
     }
 }

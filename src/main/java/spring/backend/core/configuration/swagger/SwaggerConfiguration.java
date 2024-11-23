@@ -33,13 +33,13 @@ public class SwaggerConfiguration {
   @Bean
   public OpenAPI openAPI(){
     SecurityScheme securityScheme = new SecurityScheme()
-        .type(Type.HTTP).scheme("bearer").bearerFormat("JWT")
-        .in(In.HEADER).name("Authorization");
+            .type(Type.HTTP).scheme("bearer").bearerFormat("JWT")
+            .in(In.HEADER).name("Authorization");
     SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
     return new OpenAPI()
-        .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-        .security(Arrays.asList(securityRequirement));
+            .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+            .security(Arrays.asList(securityRequirement));
   }
 
   @Bean
@@ -60,25 +60,25 @@ public class SwaggerConfiguration {
     for (Class<? extends BaseErrorCode> type : types) {
       BaseErrorCode[] errorCodes = type.getEnumConstants();
       Arrays.stream(errorCodes).map(
-          baseErrorCode -> ExampleHolder.builder()
-              .holder(getSwaggerExample(baseErrorCode))
-              .code(baseErrorCode.getHttpStatus().value())
-              .name(baseErrorCode.name())
-              .build()
+              baseErrorCode -> ExampleHolder.builder()
+                      .holder(getSwaggerExample(baseErrorCode))
+                      .code(baseErrorCode.getHttpStatus().value())
+                      .name(baseErrorCode.name())
+                      .build()
       ).forEach(exampleHolders::add);
     }
 
     Map<Integer, List<ExampleHolder>> statusWithExampleHolders = new HashMap<>(
-        exampleHolders.stream()
-            .collect(Collectors.groupingBy(ExampleHolder::getCode)));
+            exampleHolders.stream()
+                    .collect(Collectors.groupingBy(ExampleHolder::getCode)));
 
     addExamplesToResponses(responses, statusWithExampleHolders);
   }
 
   private Example getSwaggerExample(BaseErrorCode baseErrorCode) {
     ErrorResponse errorResponse = ErrorResponse.createSwaggerErrorResponse()
-        .baseErrorCode(baseErrorCode)
-        .build();
+            .baseErrorCode(baseErrorCode)
+            .build();
     Example example = new Example();
     example.setValue(errorResponse);
     return example;
@@ -86,16 +86,16 @@ public class SwaggerConfiguration {
 
   private void addExamplesToResponses(ApiResponses responses, Map<Integer, List<ExampleHolder>> statusWithExampleHolders) {
     statusWithExampleHolders.forEach(
-        (status, value) -> {
-          Content content = new Content();
-          MediaType mediaType = new MediaType();
-          ApiResponse apiResponse = new ApiResponse();
-          value.forEach(exampleHolder -> mediaType.addExamples(exampleHolder.getName(),
-              exampleHolder.getHolder()));
-          content.addMediaType("application/json", mediaType);
-          apiResponse.setContent(content);
-          responses.addApiResponse(status.toString(), apiResponse);
-        }
+            (status, value) -> {
+              Content content = new Content();
+              MediaType mediaType = new MediaType();
+              ApiResponse apiResponse = new ApiResponse();
+              value.forEach(exampleHolder -> mediaType.addExamples(exampleHolder.getName(),
+                      exampleHolder.getHolder()));
+              content.addMediaType("application/json", mediaType);
+              apiResponse.setContent(content);
+              responses.addApiResponse(status.toString(), apiResponse);
+            }
     );
   }
 }

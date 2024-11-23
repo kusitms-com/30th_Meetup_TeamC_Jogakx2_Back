@@ -6,13 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import spring.backend.core.exception.DomainException;
 import spring.backend.member.domain.repository.MemberRepository;
 import spring.backend.member.domain.value.Role;
-import spring.backend.member.exception.MemberErrorCode;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,11 +32,8 @@ class ValidateNicknameServiceTest {
         // Given
         String nickname = " ";
 
-        // When
-        DomainException blankException = assertThrows(DomainException.class, () -> validateNicknameService.validateNickname(nickname));
-
-        // Then
-        assertEquals(MemberErrorCode.NOT_EXIST_NICKNAME.name(), blankException.getCode());
+        // When & Then
+        assertFalse(validateNicknameService.validateNickname(nickname));
     }
 
     @Test
@@ -48,11 +42,8 @@ class ValidateNicknameServiceTest {
         // Given
         String nickname = "1234567";
 
-        // When
-        DomainException longLengthException = assertThrows(DomainException.class, () -> validateNicknameService.validateNickname(nickname));
-
-        // Then
-        assertEquals(MemberErrorCode.INVALID_NICKNAME_LENGTH.name(), longLengthException.getCode());
+        // When & Then
+        assertFalse(validateNicknameService.validateNickname(nickname));
     }
 
     @Test
@@ -61,11 +52,8 @@ class ValidateNicknameServiceTest {
         // Given
         String nickname = "조각ㅈㄱ";
 
-        // When
-        DomainException formatException = assertThrows(DomainException.class, () -> validateNicknameService.validateNickname(nickname));
-
-        // Then
-        assertEquals(MemberErrorCode.INVALID_NICKNAME_FORMAT.name(), formatException.getCode());
+        // When & Then
+        assertFalse(validateNicknameService.validateNickname(nickname));
     }
 
     @Test
@@ -75,11 +63,8 @@ class ValidateNicknameServiceTest {
         String nickname = "등록된이름";
         when(memberRepository.existsByNicknameAndRole(nickname, Role.MEMBER)).thenReturn(true);
 
-        // When
-        DomainException alreadyRegisteredException = assertThrows(DomainException.class, () -> validateNicknameService.validateNickname(nickname));
-
-        // Then
-        assertEquals(MemberErrorCode.ALREADY_REGISTERED_NICKNAME.name(), alreadyRegisteredException.getCode());
+        // When & Then
+        assertFalse(validateNicknameService.validateNickname(nickname));
 
         // Mock 객체 정상 동작 확인
         verify(memberRepository).existsByNicknameAndRole(nickname, Role.MEMBER);

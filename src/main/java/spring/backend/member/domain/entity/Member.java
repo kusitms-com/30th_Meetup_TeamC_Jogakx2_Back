@@ -93,4 +93,9 @@ public class Member {
                 .nickname(nickname)
                 .build();
     }
+
+    public void editMemberProfile(String nickname, String profileImage) {
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+    }
 }

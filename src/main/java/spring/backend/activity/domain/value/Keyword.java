@@ -16,16 +16,6 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 public class Keyword {
 
-    private static final Map<Category, String> categoryImageMap = Map.of(
-            Keyword.Category.SELF_DEVELOPMENT, "images/self_development.png",
-            Keyword.Category.HEALTH, "images/health.png",
-            Keyword.Category.NATURE, "images/nature.png",
-            Keyword.Category.CULTURE_ART, "images/culture_art.png",
-            Keyword.Category.ENTERTAINMENT, "images/entertainment.png",
-            Keyword.Category.RELAXATION, "images/relaxation.png",
-            Keyword.Category.SOCIAL, "images/social.png"
-    );
-
     @Enumerated(EnumType.STRING)
     private Category category;
 
@@ -54,12 +44,5 @@ public class Keyword {
 
     public static Keyword create(Category category, String image) {
         return new Keyword(category, image);
-    }
-
-    public static Keyword getKeywordByCategory(Category category) {
-        if (category == null) {
-            return null;
-        }
-        return Keyword.create(category, categoryImageMap.get(category));
     }
 }

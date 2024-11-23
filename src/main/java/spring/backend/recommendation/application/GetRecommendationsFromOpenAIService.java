@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Keyword.Category;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.recommendation.dto.request.AIRecommendationRequest;
@@ -96,8 +97,8 @@ public class GetRecommendationsFromOpenAIService {
             }
 
             if (hasAllRequiredFields(recommendationFields)) {
-                String keyword = recommendationFields.get(KEYWORD_KEY);
-                Category category = Category.from(keyword);
+                String keywordText = recommendationFields.get(KEYWORD_KEY);
+                Category category = Category.from(keywordText);
 
                 if (isInvalidCategory(category)) {
                     log.warn("[GetRecommendationsFromOpenAIService] Invalid Category.");
@@ -108,13 +109,14 @@ public class GetRecommendationsFromOpenAIService {
                 String title = recommendationFields.get(TITLE_KEY);
                 String platform = recommendationFields.get(PLATFORM_KEY);
                 String url = recommendationFields.get(URL_KEY);
+                Keyword keyword = Keyword.getKeywordByCategory(category);
                 String youtubeUrl = processYoutubeUrl(title, platform, url);
 
                 recommendations.add(OpenAIRecommendationResponse.of(
                         order++,
                         title,
                         recommendationFields.get(CONTENT_KEY),
-                        category,
+                        keyword,
                         youtubeUrl
                 ));
 
@@ -127,7 +129,7 @@ public class GetRecommendationsFromOpenAIService {
 
     private List<OpenAIRecommendationResponse> filterAndLimitRecommendations(List<OpenAIRecommendationResponse> recommendations, Type activityType) {
         return recommendations.stream()
-                .filter(r -> r.keywordCategory() != null)
+                .filter(r -> r.keyword() != null)
                 .limit(getRequiredSize(activityType))
                 .collect(Collectors.toList());
     }
@@ -146,7 +148,7 @@ public class GetRecommendationsFromOpenAIService {
 
     private boolean isKeywordMissing(List<OpenAIRecommendationResponse> recommendations) {
         return recommendations.stream()
-                .anyMatch(r -> isInvalidCategory(r.keywordCategory()));
+                .anyMatch(r -> isInvalidCategory(r.keyword().getCategory()));
     }
 
     private boolean hasAllRequiredFields(Map<String, String> recommendationFields) {

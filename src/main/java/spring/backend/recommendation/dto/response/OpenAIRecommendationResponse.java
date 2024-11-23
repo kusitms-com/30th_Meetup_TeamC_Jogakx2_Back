@@ -1,7 +1,7 @@
 package spring.backend.recommendation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import spring.backend.activity.domain.value.Keyword.Category;
+import spring.backend.activity.domain.value.Keyword;
 
 public record OpenAIRecommendationResponse(
 
@@ -14,13 +14,16 @@ public record OpenAIRecommendationResponse(
         @Schema(description = "꾸밈글", example = "휴식에는 역시 명상이 최고!")
         String content,
 
-        @Schema(description = "활동 키워드", example = "[\"NATURE\",\"CULTURE_ART\"]")
-        Category keywordCategory,
+        @Schema(description = "활동 키워드", example = "{\n" +
+                "          \"category\": \"SELF_DEVELOPMENT\",\n" +
+                "          \"image\": \"images/self_development.png\"\n" +
+                "        }")
+        Keyword keyword,
 
         @Schema(description = "외부 링크", example = "https://www.youtube.com")
         String url
 ) {
-    public static OpenAIRecommendationResponse of(int order, String title, String content, Category category, String url) {
-        return new OpenAIRecommendationResponse(order, title, content, category, url);
+    public static OpenAIRecommendationResponse of(int order, String title, String content, Keyword keyword, String url) {
+        return new OpenAIRecommendationResponse(order, title, content, keyword, url);
     }
 }

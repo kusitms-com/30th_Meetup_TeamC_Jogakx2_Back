@@ -65,7 +65,7 @@ public class GetRecommendationsFromClovaService {
 
     private List<ClovaRecommendationResponse> filteredValidRecommendations(List<ClovaRecommendationResponse> clovaResponses) {
         return clovaResponses.stream()
-                .filter(clovaResponse -> clovaResponse.getKeywordCategory() != null && isValidKeywordCategory(clovaResponse.getKeywordCategory())).collect(Collectors.toList());
+                .filter(clovaResponse -> clovaResponse.getKeyword() != null && isValidKeywordCategory(clovaResponse.getKeyword().getCategory())).collect(Collectors.toList());
     }
 
     private List<ClovaRecommendationResponse> fetchRecommendations(AIRecommendationRequest clovaRecommendationRequest) {
@@ -109,15 +109,13 @@ public class GetRecommendationsFromClovaService {
                     i++;
                 }
 
-                Keyword.Category keywordCategory = null;
+                Keyword keyword = null;
                 if (i + 1 < recommendations.length && KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).find()) {
                     String keywordText = KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).replaceFirst("").trim();
-                    log.info("keywordText: {}", keywordText);
-                    keywordCategory = convertClovaResponseKeywordToKeywordCategory(keywordText);
-                    log.info("keywordCategory: {}", keywordCategory);
+                    keyword = Keyword.getKeywordByCategory(convertClovaResponseKeywordToKeywordCategory(keywordText));
                     i++;
                 }
-                clovaResponses.add(new ClovaRecommendationResponse(order, title, placeName, mapx, mapy, placeUrl, content, keywordCategory));
+                clovaResponses.add(new ClovaRecommendationResponse(order, title, placeName, mapx, mapy, placeUrl, content, keyword));
                 order++;
             }
         }
@@ -147,8 +145,8 @@ public class GetRecommendationsFromClovaService {
 
     private boolean containsInvalidKeyword(List<ClovaRecommendationResponse> clovaResponses) {
         return clovaResponses.stream().anyMatch(clovaResponse ->
-                clovaResponse.getKeywordCategory() == null
-                        || !isValidKeywordCategory(clovaResponse.getKeywordCategory()));
+                clovaResponse.getKeyword() == null
+                        || !isValidKeywordCategory(clovaResponse.getKeyword().getCategory()));
     }
 
     private boolean isValidKeywordCategory(Keyword.Category keywordCategory) {

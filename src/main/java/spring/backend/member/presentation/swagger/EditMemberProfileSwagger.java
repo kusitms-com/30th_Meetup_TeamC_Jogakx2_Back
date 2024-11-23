@@ -19,6 +19,6 @@ public interface EditMemberProfileSwagger {
             description = "사용자의 프로필을 수정합니다.",
             operationId = "/v1/member/profile"
     )
-    @ApiErrorCode({GlobalErrorCode.class})
+    @ApiErrorCode({GlobalErrorCode.class, MemberErrorCode.class})
     ResponseEntity<RestResponse<Boolean>> editMemberProfile(@Parameter(hidden = true) Member member, EditMemberProfileRequest request);
 }

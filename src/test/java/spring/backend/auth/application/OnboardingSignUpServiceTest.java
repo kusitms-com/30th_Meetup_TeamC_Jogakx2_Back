@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import spring.backend.auth.dto.request.OnboardingSignUpRequest;
+import spring.backend.auth.dto.response.OnboardingSignUpResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.exception.DomainException;
 import spring.backend.member.domain.entity.Member;
@@ -76,10 +77,11 @@ class OnboardingSignUpServiceTest {
         when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         // When
-        Member result = onboardingSignUpService.onboardingSignUp(member, request);
+        OnboardingSignUpResponse onboardingSignUpResponse = onboardingSignUpService.onboardingSignUp(member, request);
 
         // Then
-        assertNotNull(result);
+        assertNotNull(onboardingSignUpResponse);
+
         verify(member).convertGuestToMember("조각조각", 2001, Gender.MALE, "http://test.jpg");
         verify(memberRepository).save(member);
     }

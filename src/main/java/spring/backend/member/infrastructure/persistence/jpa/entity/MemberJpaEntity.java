@@ -40,6 +40,8 @@ public class MemberJpaEntity extends BaseEntity {
 
     private String profileImage;
 
+    private boolean emailNotification;
+
     public static MemberJpaEntity toJpaEntity(Member member) {
         return MemberJpaEntity.builder()
                 .id(member.getId())
@@ -50,6 +52,7 @@ public class MemberJpaEntity extends BaseEntity {
                 .birthYear(member.getBirthYear())
                 .gender(member.getGender())
                 .profileImage(member.getProfileImage())
+                .emailNotification(member.isEmailNotification())
                 .createdAt(member.getCreatedAt())
                 .updatedAt(member.getUpdatedAt())
                 .deleted(Optional.ofNullable(member.getDeleted()).orElse(false))

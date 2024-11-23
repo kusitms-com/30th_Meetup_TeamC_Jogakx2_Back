@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import spring.backend.activity.domain.value.Keyword;
+import spring.backend.activity.domain.value.Keyword.Category;
 import spring.backend.activity.exception.ActivityErrorCode;
+import spring.backend.core.converter.ImageConverter;
 import spring.backend.recommendation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.dto.response.ClovaRecommendationResponse;
 import spring.backend.recommendation.infrastructure.clova.dto.response.ClovaResponse;
@@ -35,6 +37,7 @@ public class GetRecommendationsFromClovaService {
 
     private final RecommendationProvider<ClovaResponse> recommendationProvider;
     private final PlaceInfoProvider<KakaoMapResponse> kakaomapPlaceInfoProvider;
+    private final ImageConverter imageConverter;
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(AIRecommendationRequest clovaRecommendationRequest) {
         validateLocation(clovaRecommendationRequest);
@@ -112,7 +115,8 @@ public class GetRecommendationsFromClovaService {
                 Keyword keyword = null;
                 if (i + 1 < recommendations.length && KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).find()) {
                     String keywordText = KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).replaceFirst("").trim();
-                    keyword = Keyword.getKeywordByCategory(convertClovaResponseKeywordToKeywordCategory(keywordText));
+                    Category category = convertClovaResponseKeywordToKeywordCategory(keywordText);
+                    keyword = Keyword.create(category, imageConverter.convertToImageUrl(category));
                     i++;
                 }
                 clovaResponses.add(new ClovaRecommendationResponse(order, title, placeName, mapx, mapy, placeUrl, content, keyword));
@@ -149,26 +153,26 @@ public class GetRecommendationsFromClovaService {
                         || !isValidKeywordCategory(clovaResponse.getKeyword().getCategory()));
     }
 
-    private boolean isValidKeywordCategory(Keyword.Category keywordCategory) {
-        return Arrays.stream(Keyword.Category.values()).anyMatch(category -> category == keywordCategory);
+    private boolean isValidKeywordCategory(Category keywordCategory) {
+        return Arrays.stream(Category.values()).anyMatch(category -> category == keywordCategory);
     }
 
     private void validateClovaRecommendationRequestKeyword(AIRecommendationRequest clovaRecommendationRequest) {
-        if (clovaRecommendationRequest.activityType().equals(ONLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Keyword.Category.NATURE)
+        if (clovaRecommendationRequest.activityType().equals(ONLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Category.NATURE)
         ) {
             throw ClovaErrorCode.ONLINE_TYPE_CONTAIN_NATURE.toException();
         }
-        if (clovaRecommendationRequest.activityType().equals(OFFLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Keyword.Category.SOCIAL)
+        if (clovaRecommendationRequest.activityType().equals(OFFLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Category.SOCIAL)
         ) {
             throw ClovaErrorCode.OFFLINE_TYPE_CONTAIN_SOCIAL.toException();
         }
     }
 
-    private Keyword.Category convertClovaResponseKeywordToKeywordCategory(String keywordText) {
+    private Category convertClovaResponseKeywordToKeywordCategory(String keywordText) {
         try {
-            return Keyword.Category.valueOf(keywordText);
+            return Category.valueOf(keywordText);
         } catch (IllegalArgumentException e) {
-            return Arrays.stream(Keyword.Category.values())
+            return Arrays.stream(Category.values())
                     .filter(category -> category.getDescription().equals(keywordText))
                     .findFirst()
                     .orElse(null);

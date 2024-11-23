@@ -8,6 +8,7 @@ import spring.backend.activity.dto.response.ActivitiesByMemberAndKeywordInMonthR
 import spring.backend.activity.dto.response.ActivityWithTitleAndSavedTimeResponse;
 import spring.backend.activity.dto.response.TotalSavedTimeAndActivityCountByKeywordInMonth;
 import spring.backend.activity.query.dao.ActivityDao;
+import spring.backend.core.converter.ImageConverter;
 import spring.backend.core.util.TimeUtil;
 import spring.backend.member.domain.entity.Member;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ReadActivitiesByMemberAndKeywordInMonthService {
     private final ActivityDao activityDao;
+    private final ImageConverter imageConverter;
 
     public ActivitiesByMemberAndKeywordInMonthResponse readActivitiesByMemberAndKeywordInMonth(Member member, int year, int month, Keyword.Category keywordCategory) {
         YearMonth yearMonth = YearMonth.of(year, month);
@@ -27,7 +29,7 @@ public class ReadActivitiesByMemberAndKeywordInMonthService {
         LocalDateTime endDayOfMonth = TimeUtil.toEndDayOfMonth(yearMonth);
         List<ActivityWithTitleAndSavedTimeResponse> activities = activityDao.findActivitiesByMemberAndKeywordInMonth(member.getId(), firstDayOfMonth, endDayOfMonth, keywordCategory);
         TotalSavedTimeAndActivityCountByKeywordInMonth totalSavedTimeAndActivityCountByKeywordInMonth = activityDao.findTotalSavedTimeAndActivityCountByKeywordInMonth(member.getId(), firstDayOfMonth, endDayOfMonth, keywordCategory);
-        Keyword keyword = Keyword.getKeywordByCategory(keywordCategory);
+        Keyword keyword = Keyword.create(keywordCategory, imageConverter.convertToImageUrl(keywordCategory));
         return new ActivitiesByMemberAndKeywordInMonthResponse(
                 totalSavedTimeAndActivityCountByKeywordInMonth.totalSavedTimeByKeywordInMonth(),
                 totalSavedTimeAndActivityCountByKeywordInMonth.totalActivityCountByKeywordInMonth(),

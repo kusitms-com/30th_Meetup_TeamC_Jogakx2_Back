@@ -31,6 +31,9 @@ public class Member {
 
     private String profileImage;
 
+    @Builder.Default
+    private boolean emailNotification = true;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -47,6 +50,7 @@ public class Member {
                 .birthYear(memberJpaEntity.getBirthYear())
                 .gender(memberJpaEntity.getGender())
                 .profileImage(memberJpaEntity.getProfileImage())
+                .emailNotification(memberJpaEntity.isEmailNotification())
                 .createdAt(memberJpaEntity.getCreatedAt())
                 .updatedAt(memberJpaEntity.getUpdatedAt())
                 .deleted(memberJpaEntity.getDeleted())
@@ -70,6 +74,15 @@ public class Member {
         this.birthYear = birthYear;
         this.gender = gender;
         this.profileImage = profileImage;
+    }
+
+    public void changeEmailNotification(boolean isEmailNotification) {
+        if (this.emailNotification == isEmailNotification) {
+            throw isEmailNotification
+                    ? MemberErrorCode.ALREADY_ENABLE_EMAIL_NOTIFICATION.toException()
+                    : MemberErrorCode.ALREADY_DISABLE_EMAIL_NOTIFICATION.toException();
+        }
+        this.emailNotification = isEmailNotification;
     }
 
     public static Member createGuestMember(Provider provider, String email, String nickname) {

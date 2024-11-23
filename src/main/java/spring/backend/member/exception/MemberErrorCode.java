@@ -19,7 +19,9 @@ public enum MemberErrorCode implements BaseErrorCode<DomainException> {
     INVALID_NICKNAME_LENGTH(HttpStatus.BAD_REQUEST, "닉네임은 1자에서 6자 사이여야 합니다."),
     INVALID_NICKNAME_FORMAT(HttpStatus.BAD_REQUEST, "닉네임은 한글, 영문, 숫자 조합이어야 합니다."),
     ALREADY_REGISTERED_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임이 이미 사용 중입니다."),
-    NOT_AUTHORIZED_MEMBER(HttpStatus.FORBIDDEN, "회원가입을 완료한 사용자가 아닙니다.");
+    NOT_AUTHORIZED_MEMBER(HttpStatus.FORBIDDEN, "회원가입을 완료한 사용자가 아닙니다."),
+    ALREADY_ENABLE_EMAIL_NOTIFICATION(HttpStatus.BAD_REQUEST, "이메일 알림이 이미 활성화되어 있습니다."),
+    ALREADY_DISABLE_EMAIL_NOTIFICATION(HttpStatus.BAD_REQUEST, "이메일 알림이 이미 비활성화되어 있습니다.");
 
     private final HttpStatus httpStatus;
 

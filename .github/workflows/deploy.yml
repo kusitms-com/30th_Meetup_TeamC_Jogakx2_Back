@@ -97,5 +97,7 @@ jobs:
           script: |
             export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
             export GITHUB_SHA=${{ github.sha }}
+            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+            export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
             sudo chmod +x ./deploy.sh
             ./deploy.sh

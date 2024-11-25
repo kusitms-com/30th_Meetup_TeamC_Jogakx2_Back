@@ -95,9 +95,9 @@ jobs:
           password: ${{ secrets.NCP_PASSWORD }}
           port: ${{ secrets.NCP_PORT }}
           script: |
-            export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
-            export GITHUB_SHA=${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
-            export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
+            echo "NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}" > .env
+            echo "GITHUB_SHA=${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}" >> .env
+            echo "RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}" >> .env
+            echo "RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}" >> .env
             sudo chmod +x ./deploy.sh
             ./deploy.sh

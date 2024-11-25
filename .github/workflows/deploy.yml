@@ -81,7 +81,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/cnergy-backend:${{ github.sha }}
+          tags: ${{ secrets.NCP_CONTAINER_REGISTRY }}/cnergy-backend:${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           platforms: linux/amd64,linux/arm64
 
       - name: Docker Compose 파일 NCP 서버로 전송
@@ -96,7 +96,7 @@ jobs:
           port: ${{ secrets.NCP_PORT }}
           script: |
             export NCP_CONTAINER_REGISTRY=${{ secrets.NCP_CONTAINER_REGISTRY }}
-            export GITHUB_SHA=${{ github.sha }}
+            export GITHUB_SHA=${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
             export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
             export RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS }}
             sudo chmod +x ./deploy.sh

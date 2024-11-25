@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import spring.backend.activity.domain.value.Keyword;
+import spring.backend.activity.infrastructure.persistence.jpa.value.KeywordJpaValue;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.core.infrastructure.jpa.shared.BaseLongIdEntity;
@@ -30,7 +30,7 @@ public class ActivityJpaEntity extends BaseLongIdEntity {
     private Type type;
 
     @Embedded
-    private Keyword keyword;
+    private KeywordJpaValue keyword;
 
     private String title;
 

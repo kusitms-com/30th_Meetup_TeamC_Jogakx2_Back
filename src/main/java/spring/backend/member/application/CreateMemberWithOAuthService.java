@@ -24,7 +24,7 @@ public class CreateMemberWithOAuthService {
         }
         List<Member> members = memberRepository.findAllByEmail(request.getEmail());
         if (members == null || members.isEmpty()) {
-            Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail(), request.getNickname());
+            Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail());
             Member savedMember = memberRepository.save(newMember);
 
             if (savedMember == null) {
@@ -49,7 +49,7 @@ public class CreateMemberWithOAuthService {
                 .filter(m -> m.isSameProvider(request.getProvider()))
                 .findFirst()
                 .orElseGet(() -> {
-                    Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail(), request.getNickname());
+                    Member newMember = Member.createGuestMember(request.getProvider(), request.getEmail());
                     Member savedMember = memberRepository.save(newMember);
 
                     if (savedMember == null) {

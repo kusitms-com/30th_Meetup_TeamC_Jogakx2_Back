@@ -1,25 +1,22 @@
 package spring.backend.activity.domain.value;
 
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Embeddable
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 public class Keyword {
 
-    @Enumerated(EnumType.STRING)
-    private Category category;
+    private final Category category;
 
-    private String image;
+    private final String image;
 
     @Getter
     @RequiredArgsConstructor

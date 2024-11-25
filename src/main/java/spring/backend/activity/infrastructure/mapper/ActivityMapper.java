@@ -2,7 +2,9 @@ package spring.backend.activity.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
 import spring.backend.activity.domain.entity.Activity;
+import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.infrastructure.persistence.jpa.entity.ActivityJpaEntity;
+import spring.backend.activity.infrastructure.persistence.jpa.value.KeywordJpaValue;
 
 import java.util.Optional;
 
@@ -16,7 +18,7 @@ public class ActivityMapper {
                 .quickStartId(activity.getQuickStartId())
                 .spareTime(activity.getSpareTime())
                 .type(activity.getType())
-                .keyword(activity.getKeyword())
+                .keyword(toDomainValue(activity.getKeyword()))
                 .title(activity.getTitle())
                 .content(activity.getContent())
                 .location(activity.getLocation())
@@ -36,7 +38,7 @@ public class ActivityMapper {
                 .quickStartId(activity.getQuickStartId())
                 .spareTime(activity.getSpareTime())
                 .type(activity.getType())
-                .keyword(activity.getKeyword())
+                .keyword(toJpaValue(activity.getKeyword()))
                 .title(activity.getTitle())
                 .content(activity.getContent())
                 .location(activity.getLocation())
@@ -47,5 +49,13 @@ public class ActivityMapper {
                 .updatedAt(activity.getUpdatedAt())
                 .deleted(Optional.ofNullable(activity.getDeleted()).orElse(false))
                 .build();
+    }
+
+    private Keyword toDomainValue(KeywordJpaValue keywordJpaValue) {
+        return Keyword.create(keywordJpaValue.getCategory(), keywordJpaValue.getImage());
+    }
+
+    private KeywordJpaValue toJpaValue(Keyword keyword) {
+        return KeywordJpaValue.create(keyword.getCategory(), keyword.getImage());
     }
 }

@@ -1,7 +1,7 @@
 package spring.backend.activity.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import spring.backend.activity.domain.value.Keyword;
+import spring.backend.activity.infrastructure.persistence.jpa.value.KeywordJpaValue;
 
 public record HomeActivityInfoResponse(
 
@@ -9,7 +9,7 @@ public record HomeActivityInfoResponse(
         Long id,
 
         @Schema(description = "활동 키워드", example = "{\"category\": \"SELF_DEVELOPMENT\", \"image\": \"https://example.com/image.jpg\"}")
-        Keyword keyword,
+        KeywordJpaValue keyword,
 
         @Schema(description = "활동 제목", example = "마음의 편안을 가져다주는 명상음악 20분 듣기")
         String title,

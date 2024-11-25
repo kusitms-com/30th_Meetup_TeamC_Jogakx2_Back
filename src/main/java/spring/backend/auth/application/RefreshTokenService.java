@@ -42,6 +42,12 @@ public class RefreshTokenService {
     }
 
     public void deleteRefreshToken(UUID memberId) {
+
+        if (refreshTokenRepository.findByMemberId(memberId) == null) {
+            log.error("memberId에 해당하는 리프레시 토큰이 저장소에 존재하지 않습니다.");
+            throw AuthenticationErrorCode.NOT_EXIST_REFRESH_TOKEN.toException();
+        }
+
         refreshTokenRepository.deleteByMemberId(memberId);
     }
 

@@ -85,12 +85,11 @@ public class Member {
         this.emailNotification = isEmailNotification;
     }
 
-    public static Member createGuestMember(Provider provider, String email, String nickname) {
+    public static Member createGuestMember(Provider provider, String email) {
         return Member.builder()
                 .provider(provider)
                 .role(Role.GUEST)
                 .email(email)
-                .nickname(nickname)
                 .build();
     }
 

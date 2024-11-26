@@ -3,9 +3,11 @@ package spring.backend.core.infrastructure.jpa.shared;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import spring.backend.core.infrastructure.persistence.interceptor.SequentialUUID;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,7 +20,7 @@ import java.util.UUID;
 public class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @SequentialUUID
     protected UUID id;
 
     @CreatedDate

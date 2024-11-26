@@ -37,8 +37,10 @@ public interface QuickStartJpaDao extends JpaRepository<QuickStartJpaEntity, Lon
         )
         from QuickStartJpaEntity q
         where q.memberId = :memberId
-        and q.startTime > CURRENT_TIMESTAMP
-        order by q.startTime ASC
+        and (q.startTime > current_time or q.startTime <= current_time)
+        order by
+            case when q.startTime > current_time then 0 else 1 end,
+            q.startTime asc
     """)
     List<QuickStartResponse> findUpcomingQuickStarts(UUID memberId);
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import spring.backend.activity.domain.entity.QuickStart;
 import spring.backend.activity.domain.repository.QuickStartRepository;
 import spring.backend.core.util.email.EmailUtil;
@@ -26,6 +28,8 @@ public class SendQuickStartEmailsScheduler {
     private final MemberRepository memberRepository;
 
     private final EmailUtil emailUtil;
+
+    private final TemplateEngine templateEngine;
 
     @Scheduled(cron = "0 0/15 * * * ?")
     public void sendQuickStartEmails() {
@@ -51,7 +55,7 @@ public class SendQuickStartEmailsScheduler {
         if (!receivers.isEmpty()) {
             SendEmailRequest request = SendEmailRequest.builder()
                     .title("Test Title")
-                    .content("Test Content")
+                    .content(generateEmailContent())
                     .receivers(receivers.toArray(new String[0]))
                     .build();
 
@@ -64,5 +68,10 @@ public class SendQuickStartEmailsScheduler {
         } else {
             log.warn("[SendQuickStartEmailsScheduler] No valid receivers found in the time range: {} - {}", lowerBound, upperBound);
         }
+    }
+
+    private String generateEmailContent() {
+        Context context = new Context();
+        return templateEngine.process("mail", context);
     }
 }

@@ -1,10 +1,16 @@
 package spring.backend.core.util.email;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.*;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailParseException;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import spring.backend.core.util.email.dto.request.SendEmailRequest;
 import spring.backend.core.util.email.exception.MailErrorCode;
@@ -28,11 +34,14 @@ public class EmailUtil {
     public void send(SendEmailRequest sendEmailRequest) {
         validateEmailRequest(sendEmailRequest);
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom(sender);
-            message.setTo(sendEmailRequest.receivers());
-            message.setSubject(sendEmailRequest.title());
-            message.setText(sendEmailRequest.content());
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+            helper.setFrom(sender);
+            helper.setTo(sendEmailRequest.receivers());
+            helper.setSubject(sendEmailRequest.title());
+            helper.setText(sendEmailRequest.content(), true);
+
             mailSender.send(message);
         } catch (MailParseException e) {
             log.error("[EmailUtil] Failed to parse email for recipient: {}, subject: {}. Error: {}",
@@ -46,7 +55,7 @@ public class EmailUtil {
             log.error("[EmailUtil] Error occurred while sending email to recipient: {}, subject: {}. Error: {}",
                     Arrays.toString(sendEmailRequest.receivers()), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.ERROR_OCCURRED_SENDING_MAIL.toException();
-        } catch (MailException e) {
+        } catch (MailException | MessagingException e) {
             log.error("[EmailUtil] General mail error for recipient: {}, subject: {}. Error: {}",
                     Arrays.toString(sendEmailRequest.receivers()), sendEmailRequest.title(), e.getMessage());
             throw MailErrorCode.GENERAL_MAIL_ERROR.toException();

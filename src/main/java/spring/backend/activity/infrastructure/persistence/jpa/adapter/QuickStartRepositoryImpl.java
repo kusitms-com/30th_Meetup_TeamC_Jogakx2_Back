@@ -10,12 +10,6 @@ import spring.backend.activity.infrastructure.mapper.QuickStartMapper;
 import spring.backend.activity.infrastructure.persistence.jpa.entity.QuickStartJpaEntity;
 import spring.backend.activity.infrastructure.persistence.jpa.repository.QuickStartJpaRepository;
 
-import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Repository
 @RequiredArgsConstructor
 @Log4j2
@@ -43,15 +37,5 @@ public class QuickStartRepositoryImpl implements QuickStartRepository {
             log.error("[QuickStartRepositoryImpl] Failed to save quickStart", e);
             throw QuickStartErrorCode.QUICK_START_SAVE_FAILED.toException();
         }
-    }
-
-    @Override
-    public List<QuickStart> findQuickStartsWithinTimeRange(LocalTime lowerBound, LocalTime upperBound) {
-        List<QuickStartJpaEntity> quickStartJpaEntities = quickStartJpaRepository.findQuickStartsWithinTimeRange(lowerBound, upperBound);
-        return Optional.ofNullable(quickStartJpaEntities)
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(quickStartMapper::toDomainEntity)
-                .collect(Collectors.toList());
     }
 }

@@ -29,7 +29,7 @@ public class ReadActivitiesByMemberAndKeywordInMonthService {
         LocalDateTime endDayOfMonth = TimeUtil.toEndDayOfMonth(yearMonth);
         List<ActivityWithTitleAndSavedTimeResponse> activities = activityDao.findActivitiesByMemberAndKeywordInMonth(member.getId(), firstDayOfMonth, endDayOfMonth, keywordCategory);
         TotalSavedTimeAndActivityCountByKeywordInMonth totalSavedTimeAndActivityCountByKeywordInMonth = activityDao.findTotalSavedTimeAndActivityCountByKeywordInMonth(member.getId(), firstDayOfMonth, endDayOfMonth, keywordCategory);
-        Keyword keyword = Keyword.create(keywordCategory, imageConverter.convertToImageUrl(keywordCategory));
+        Keyword keyword = Keyword.create(keywordCategory, imageConverter.convertToTransparent30ImageUrl(keywordCategory));
         return new ActivitiesByMemberAndKeywordInMonthResponse(
                 totalSavedTimeAndActivityCountByKeywordInMonth.totalSavedTimeByKeywordInMonth(),
                 totalSavedTimeAndActivityCountByKeywordInMonth.totalActivityCountByKeywordInMonth(),

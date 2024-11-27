@@ -17,4 +17,11 @@ public class ImageProperty {
     private String entertainmentImageUrl;
     private String relaxationImageUrl;
     private String socialImageUrl;
+
+    private String transparent30SelfDevelopmentImageUrl;
+    private String transparent30HealthImageUrl;
+    private String transparent30CultureArtImageUrl;
+    private String transparent30EntertainmentImageUrl;
+    private String transparent30RelaxationImageUrl;
+    private String transparent30SocialImageUrl;
 }

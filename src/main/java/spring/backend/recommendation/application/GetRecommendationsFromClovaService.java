@@ -16,6 +16,7 @@ import spring.backend.recommendation.infrastructure.map.kakao.dto.response.Kakao
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -27,11 +28,11 @@ import static spring.backend.activity.domain.value.Type.*;
 public class GetRecommendationsFromClovaService {
     private static final int MAX_ATTEMPTS = 1;
 
-    private static final Pattern TITLE_FULL_LINE_PATTERN = Pattern.compile(".*title :.*");
-    private static final Pattern TITLE_PREFIX_PATTERN = Pattern.compile(".*title :");
-    private static final Pattern PLACE_NAME_PREFIX_PATTERN = Pattern.compile(".*placeName :");
-    private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content :");
-    private static final Pattern KEYWORD_PREFIX_PATTERN = Pattern.compile(".*keyword :");
+    private static final Pattern TITLE_FULL_LINE_PATTERN = Pattern.compile(".*title\\s*:.*");
+    private static final Pattern TITLE_PREFIX_PATTERN = Pattern.compile(".*title\\s*:");
+    private static final Pattern PLACE_NAME_PREFIX_PATTERN = Pattern.compile(".*placeName\\s*:");
+    private static final Pattern CONTENT_PREFIX_PATTERN = Pattern.compile(".*content\\s*:");
+    private static final Pattern KEYWORD_PREFIX_PATTERN = Pattern.compile(".*keyword\\s*:");
     private static final String LINE_SEPARATOR = "\n";
     private static final int ONLINE_AND_OFFLINE_RECOMMENDATION_COUNT = 3;
 
@@ -72,8 +73,9 @@ public class GetRecommendationsFromClovaService {
     }
 
     private List<ClovaRecommendationResponse> fetchRecommendations(AIRecommendationRequest clovaRecommendationRequest) {
-        validateClovaRecommendationRequestKeyword(clovaRecommendationRequest);
-        ClovaResponse clovaResponse = recommendationProvider.getRecommendations(clovaRecommendationRequest);
+        AIRecommendationRequest filteredClovaRecommendationRequest = filteredValidRecommendations(clovaRecommendationRequest);
+        validateClovaRecommendationRequestKeyword(filteredClovaRecommendationRequest);
+        ClovaResponse clovaResponse = recommendationProvider.getRecommendations(filteredClovaRecommendationRequest);
         validateClovaResponse(clovaResponse);
         String parsedClovaResponse = clovaResponse.getResult().getMessage().getContent();
         String[] recommendations = parsedClovaResponse.split(LINE_SEPARATOR);
@@ -115,7 +117,8 @@ public class GetRecommendationsFromClovaService {
                 Keyword keyword = null;
                 if (i + 1 < recommendations.length && KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).find()) {
                     String keywordText = KEYWORD_PREFIX_PATTERN.matcher(recommendations[i + 1].trim()).replaceFirst("").trim();
-                    Category category = convertClovaResponseKeywordToKeywordCategory(keywordText);
+                    String parsedKeywordText = parsedKeywordText(keywordText);
+                    Category category = convertClovaResponseKeywordToKeywordCategory(parsedKeywordText);
                     keyword = Keyword.create(category, imageConverter.convertToImageUrl(category));
                     i++;
                 }
@@ -125,6 +128,47 @@ public class GetRecommendationsFromClovaService {
         }
 
         return clovaResponses;
+    }
+
+    private String parsedKeywordText(String keywordText) {
+        if (keywordText == null || keywordText.isEmpty()) {
+            return null;
+        }
+
+        List<String> validKeywords = Arrays.stream(keywordText.split(","))
+                .filter(this::isValidKeyword)
+                .toList();
+
+        if (validKeywords.isEmpty()) {
+            return null;
+        }
+
+        int randomIdx = new Random().nextInt(validKeywords.size());
+        return validKeywords.get(randomIdx);
+    }
+
+    private boolean isValidKeyword(String keyword) {
+        return Arrays.stream(Keyword.Category.values())
+                .map(Keyword.Category::getDescription)
+                .collect(Collectors.toSet())
+                .contains(keyword.trim());
+    }
+
+    private AIRecommendationRequest filteredValidRecommendations(AIRecommendationRequest clovaRecommendationRequest) {
+        if (clovaRecommendationRequest.keywords() == null) {
+            return clovaRecommendationRequest;
+        }
+
+        Keyword.Category[] filteredKeywords = Arrays.stream(clovaRecommendationRequest.keywords())
+                .filter(category -> category != Keyword.Category.SOCIAL)
+                .toArray(Keyword.Category[]::new);
+
+        return new AIRecommendationRequest(
+                clovaRecommendationRequest.spareTime(),
+                clovaRecommendationRequest.activityType(),
+                filteredKeywords,
+                clovaRecommendationRequest.location()
+        );
     }
 
     private void validateLocation(AIRecommendationRequest clovaRecommendationRequest) {
@@ -158,10 +202,6 @@ public class GetRecommendationsFromClovaService {
     }
 
     private void validateClovaRecommendationRequestKeyword(AIRecommendationRequest clovaRecommendationRequest) {
-        if (clovaRecommendationRequest.activityType().equals(ONLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Category.NATURE)
-        ) {
-            throw ClovaErrorCode.ONLINE_TYPE_CONTAIN_NATURE.toException();
-        }
         if (clovaRecommendationRequest.activityType().equals(OFFLINE) && Arrays.asList(clovaRecommendationRequest.keywords()).contains(Category.SOCIAL)
         ) {
             throw ClovaErrorCode.OFFLINE_TYPE_CONTAIN_SOCIAL.toException();
@@ -169,6 +209,9 @@ public class GetRecommendationsFromClovaService {
     }
 
     private Category convertClovaResponseKeywordToKeywordCategory(String keywordText) {
+        if (keywordText == null || keywordText.isEmpty()) {
+            return null;
+        }
         try {
             return Category.valueOf(keywordText);
         } catch (IllegalArgumentException e) {

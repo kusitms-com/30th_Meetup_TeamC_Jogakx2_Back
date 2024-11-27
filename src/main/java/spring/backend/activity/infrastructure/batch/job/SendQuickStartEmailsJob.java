@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import spring.backend.activity.infrastructure.persistence.jpa.entity.QuickStartJpaEntity;
+import spring.backend.activity.infrastructure.persistence.jpa.repository.QuickStartJpaRepository;
 import spring.backend.core.util.email.EmailUtil;
 import spring.backend.core.util.email.dto.request.SendEmailRequest;
 import spring.backend.member.infrastructure.persistence.jpa.entity.MemberJpaEntity;
@@ -23,7 +25,10 @@ import spring.backend.member.infrastructure.persistence.jpa.repository.MemberJpa
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -36,13 +41,17 @@ public class SendQuickStartEmailsJob {
 
     private final PlatformTransactionManager platformTransactionManager;
 
+    private final QuickStartJpaRepository quickStartJpaRepository;
+
     private final MemberJpaRepository memberJpaRepository;
 
     private final EmailUtil emailUtil;
 
     private final TemplateEngine templateEngine;
 
-//    @Scheduled(cron = "0 0/15 * * * ?")
+    private static final int TIME_INTERVAL_MINUTES = 15;
+
+    //    @Scheduled(cron = "0 0/15 * * * ?")
     public void sendQuickStartEmailsJobScheduler() {
         try {
             JobParameters jobParameters = new JobParametersBuilder()
@@ -72,9 +81,9 @@ public class SendQuickStartEmailsJob {
         return (contribution, chunkContext) -> {
             try {
                 List<MemberJpaEntity> receivers = collectEmailReceiversWithinTimeRange();
-
                 if (!receivers.isEmpty()) {
-                    sendEmailsToReceivers(receivers);
+                    List<QuickStartJpaEntity> earliestQuickStarts = collectEarliestQuickStartsForMembers(receivers);
+                    sendEmailsToReceivers(receivers, earliestQuickStarts);
                 } else {
                     log.warn("[SendQuickStartEmailsJob] No valid receiver found in the time range.");
                 }
@@ -86,34 +95,64 @@ public class SendQuickStartEmailsJob {
     }
 
     private List<MemberJpaEntity> collectEmailReceiversWithinTimeRange() {
-        final int TIME_INTERVAL_MINUTES = 15;
-        LocalTime now = LocalTime.now();
-        LocalTime lowerBound = now.plusMinutes(1).withSecond(0).withNano(0);
-        LocalTime upperBound = lowerBound.plusMinutes(TIME_INTERVAL_MINUTES - 1);
+        LocalTime lowerBound = getLowerBound();
+        LocalTime upperBound = getUpperBound(lowerBound);
 
-        log.info("[SendQuickStartEmailsJob] Searching for receivers between {} and {}", lowerBound, upperBound);
-
-        return memberJpaRepository.findMembersForQuickStartsInTimeRange(lowerBound, upperBound);
+        return memberJpaRepository.findMembersForQuickStartsInTimeRange(getLowerBound(), upperBound);
     }
 
-    private void sendEmailsToReceivers(List<MemberJpaEntity> receivers) {
+    private List<QuickStartJpaEntity> collectEarliestQuickStartsForMembers(List<MemberJpaEntity> receivers) {
+        LocalTime lowerBound = getLowerBound();
+        LocalTime upperBound = getUpperBound(lowerBound);
+
+        List<UUID> receiverIds = receivers.stream()
+                .map(MemberJpaEntity::getId)
+                .collect(Collectors.toList());
+        return quickStartJpaRepository.findEarliestQuickStartsForMembers(receiverIds, lowerBound, upperBound);
+    }
+
+    private void sendEmailsToReceivers(List<MemberJpaEntity> receivers, List<QuickStartJpaEntity> earliestQuickStarts) {
         for (MemberJpaEntity receiver : receivers) {
-            SendEmailRequest request = SendEmailRequest.builder()
-                    .title("Test Title")
-                    .content(generateEmailContent())
-                    .receiver(receiver.getEmail())
-                    .build();
-            try {
-                emailUtil.send(request);
-                log.info("[SendQuickStartEmailsJob] Successfully sent email to {}", receiver);
-            } catch (Exception e) {
-                log.error("[SendQuickStartEmailsJob] Failed to send email to {}", receiver, e);
+            QuickStartJpaEntity earliestQuickStart = findEarliestQuickStartForReceiver(receiver, earliestQuickStarts);
+            if (earliestQuickStart != null) {
+                String title = generateEmailTitle(receiver, earliestQuickStart);
+                SendEmailRequest request = SendEmailRequest.builder()
+                        .title(title)
+                        .content(generateEmailContent())
+                        .receiver(receiver.getEmail())
+                        .build();
+                try {
+                    emailUtil.send(request);
+                    log.info("[SendQuickStartEmailsJob] Successfully sent email to {}", receiver);
+                } catch (Exception e) {
+                    log.error("[SendQuickStartEmailsJob] Failed to send email to {}", receiver, e);
+                }
             }
         }
+    }
+
+    private QuickStartJpaEntity findEarliestQuickStartForReceiver(MemberJpaEntity receiver, List<QuickStartJpaEntity> earliestQuickStarts) {
+        return earliestQuickStarts.stream()
+                .filter(q -> q.getMemberId().equals(receiver.getId()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private String generateEmailTitle(MemberJpaEntity receiver, QuickStartJpaEntity earliestQuickStart) {
+        return "%s 님, %s의 시간 조각을 모으러 갈 시간이에요 ⏰".formatted(receiver.getNickname(), earliestQuickStart.getName());
     }
 
     private String generateEmailContent() {
         Context context = new Context();
         return templateEngine.process("mail", context);
+    }
+
+    private LocalTime getLowerBound() {
+        LocalTime now = LocalTime.now();
+        return now.plusMinutes(1).withSecond(0).withNano(0);
+    }
+
+    private LocalTime getUpperBound(LocalTime lowerBound) {
+        return lowerBound.plusMinutes(TIME_INTERVAL_MINUTES - 1);
     }
 }

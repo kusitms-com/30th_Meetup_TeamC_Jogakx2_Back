@@ -12,11 +12,11 @@ public interface QuickStartJpaRepository extends JpaRepository<QuickStartJpaEnti
     @Query("""
         select q
         from QuickStartJpaEntity q
-        where q.startTime between :lowerBound and :upperBound
-        and q.id in (
-            select min(q2.id)
+        where q.startTime = (
+            select MIN(q2.startTime)
             from QuickStartJpaEntity q2
             where q2.memberId = q.memberId
+            and q2.startTime between :lowerBound and :upperBound
             group by q2.memberId
         )
     """)

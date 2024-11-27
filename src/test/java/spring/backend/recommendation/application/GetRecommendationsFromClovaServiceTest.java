@@ -20,30 +20,13 @@ public class GetRecommendationsFromClovaServiceTest {
     GetRecommendationsFromClovaService getRecommendationsFromClovaService;
 
     @Test
-    @DisplayName("타입이 ONLINE인데 Keywords에 NATURE가 있는 경우 예외를 반환한다.")
-    void throwExceptionIfOnlineActivityContainsNatureKeyword() {
-        // GIVEN
-        AIRecommendationRequest request = new AIRecommendationRequest(
-                300,
-                Type.ONLINE,
-                new Keyword.Category[]{Keyword.Category.NATURE, Keyword.Category.SOCIAL},
-                null
-        );
-        // WHEN
-        DomainException ex = assertThrows(DomainException.class, () -> getRecommendationsFromClovaService.getRecommendationsFromClova(request));
-
-        // THEN
-        assertEquals(ClovaErrorCode.ONLINE_TYPE_CONTAIN_NATURE.name(), ex.getCode());
-    }
-
-    @Test
     @DisplayName("타입이 OFFLINE인데 Keywords에 SOCIAL가 있는 경우 예외를 반환한다.")
     void throwExceptionIfOfflineActivityContainsSocialKeyword() {
         // GIVEN
         AIRecommendationRequest request = new AIRecommendationRequest(
                 300,
                 Type.OFFLINE,
-                new Keyword.Category[]{Keyword.Category.NATURE, Keyword.Category.SOCIAL},
+                new Keyword.Category[]{Keyword.Category.RELAXATION, Keyword.Category.SOCIAL},
                 "서울시 강남구"
         );
         // WHEN

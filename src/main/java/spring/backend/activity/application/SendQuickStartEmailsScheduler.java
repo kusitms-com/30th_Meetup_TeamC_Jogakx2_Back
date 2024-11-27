@@ -14,9 +14,7 @@ import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.repository.MemberRepository;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +31,17 @@ public class SendQuickStartEmailsScheduler {
 
     @Scheduled(cron = "0 0/15 * * * ?")
     public void sendQuickStartEmails() {
-        List<String> receivers = new ArrayList<>();
+        Set<String> receivers = collectEmailReceiversWithinTimeRange();
 
+        if (!receivers.isEmpty()) {
+            sendEmails(receivers);
+        } else {
+            log.warn("[SendQuickStartEmailsScheduler] No valid receiver found in the time range.");
+        }
+    }
+
+    private Set<String> collectEmailReceiversWithinTimeRange() {
+        Set<String> receivers = new HashSet<>();
         final int TIME_INTERVAL_MINUTES = 15;
         LocalTime now = LocalTime.now();
         LocalTime lowerBound = now.plusMinutes(1).withSecond(0).withNano(0);
@@ -52,21 +59,22 @@ public class SendQuickStartEmailsScheduler {
                 .filter(Objects::nonNull)
                 .forEach(receivers::add);
 
-        if (!receivers.isEmpty()) {
+        return receivers;
+    }
+
+    private void sendEmails(Set<String> receivers) {
+        for (String receiver : receivers) {
             SendEmailRequest request = SendEmailRequest.builder()
                     .title("Test Title")
                     .content(generateEmailContent())
-                    .receivers(receivers.toArray(new String[0]))
+                    .receiver(receiver)
                     .build();
-
             try {
                 emailUtil.send(request);
-                log.info("[SendQuickStartEmailsScheduler] Successfully sent email to {} receivers", receivers.size());
+                log.info("[SendQuickStartEmailsScheduler] Successfully sent email to {}", receiver);
             } catch (Exception e) {
-                log.error("[SendQuickStartEmailsScheduler] Failed to send email to {} receivers", receivers.size(), e);
+                log.error("[SendQuickStartEmailsScheduler] Failed to send email to {}", receiver, e);
             }
-        } else {
-            log.warn("[SendQuickStartEmailsScheduler] No valid receivers found in the time range: {} - {}", lowerBound, upperBound);
         }
     }
 

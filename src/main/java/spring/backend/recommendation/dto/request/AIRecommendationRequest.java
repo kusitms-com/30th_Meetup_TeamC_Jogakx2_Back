@@ -19,7 +19,7 @@ public record AIRecommendationRequest(
         Type activityType,
 
         @NotNull(message = "키워드는 필수 입력 항목입니다.")
-        @Schema(description = "활동 키워드", example = "[\"NATURE\",\"CULTURE_ART\"]")
+        @Schema(description = "활동 키워드", example = "[\"RELAXATION\",\"CULTURE_ART\"]")
         Keyword.Category[] keywords,
 
         @Schema(description = "위치(activityType이 OFFLINE, ONLINE_AND_OFFLINE인 경우에만 필요합니다.)", example = "서울시 강남구")

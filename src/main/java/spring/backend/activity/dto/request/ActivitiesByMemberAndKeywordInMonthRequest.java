@@ -15,8 +15,8 @@ public record ActivitiesByMemberAndKeywordInMonthRequest(
         int month,
 
         @NotNull(message = "키워드 카테고리는 필수 값입니다.")
-        @Schema(description = "키워드 카테고리 (예: NATURE, HEALTH, SELF_DEVELOPMENT, CULTURE_ART, ENTERTAINMENT, RELAXATION, SOCIAL)", example = "NATURE", allowableValues = {
-                "SELF_DEVELOPMENT", "HEALTH", "NATURE", "CULTURE_ART",
+        @Schema(description = "키워드 카테고리 (예: HEALTH, SELF_DEVELOPMENT, CULTURE_ART, ENTERTAINMENT, RELAXATION, SOCIAL)", example = "RELAXATION", allowableValues = {
+                "SELF_DEVELOPMENT", "HEALTH", "CULTURE_ART",
                 "ENTERTAINMENT", "RELAXATION", "SOCIAL"
         })
         Keyword.Category keywordCategory

@@ -23,7 +23,6 @@ public class Keyword {
     public enum Category {
         SELF_DEVELOPMENT("자기개발"),
         HEALTH("건강"),
-        NATURE("자연"),
         CULTURE_ART("문화/예술"),
         ENTERTAINMENT("엔터테인먼트"),
         RELAXATION("휴식"),

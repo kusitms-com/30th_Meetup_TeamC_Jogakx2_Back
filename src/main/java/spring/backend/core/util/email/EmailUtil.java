@@ -11,6 +11,7 @@ import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import spring.backend.core.util.email.dto.request.SendEmailRequest;
 import spring.backend.core.util.email.exception.MailErrorCode;
@@ -30,6 +31,7 @@ public class EmailUtil {
 
     private final JavaMailSender mailSender;
 
+    @Async("mailExecutor")
     public void send(SendEmailRequest sendEmailRequest) {
         validateEmailRequest(sendEmailRequest);
         try {

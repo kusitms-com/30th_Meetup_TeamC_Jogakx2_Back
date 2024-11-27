@@ -4,7 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record SendEmailRequest(
-        String[] receivers,
+        String receiver,
         String title,
         String content
 ) {

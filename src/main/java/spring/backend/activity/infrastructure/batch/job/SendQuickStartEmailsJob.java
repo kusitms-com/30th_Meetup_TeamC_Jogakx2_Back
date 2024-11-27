@@ -14,6 +14,8 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import spring.backend.activity.infrastructure.persistence.jpa.entity.QuickStartJpaEntity;
 import spring.backend.activity.infrastructure.persistence.jpa.repository.QuickStartJpaRepository;
 import spring.backend.core.util.email.EmailUtil;
@@ -23,10 +25,7 @@ import spring.backend.member.infrastructure.persistence.jpa.repository.MemberJpa
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -44,6 +43,8 @@ public class SendQuickStartEmailsJob {
     private final MemberJpaRepository memberJpaRepository;
 
     private final EmailUtil emailUtil;
+
+    private final TemplateEngine templateEngine;
 
 //    @Scheduled(cron = "0 0/15 * * * ?")
     public void sendQuickStartEmailsJobScheduler() {
@@ -73,7 +74,7 @@ public class SendQuickStartEmailsJob {
 
     public Tasklet sendQuickStartEmailsTasklet() {
         return (contribution, chunkContext) -> {
-            List<String> receivers = new ArrayList<>();
+            Set<String> receivers;
             try {
                 final int TIME_INTERVAL_MINUTES = 15;
                 LocalTime now = LocalTime.now();
@@ -84,34 +85,50 @@ public class SendQuickStartEmailsJob {
 
                 List<QuickStartJpaEntity> quickStarts = quickStartJpaRepository.findQuickStartsWithinTimeRange(lowerBound, upperBound);
 
-                quickStarts.stream()
-                        .map(QuickStartJpaEntity::getMemberId)
-                        .map(memberJpaRepository::findById)
-                        .filter(Optional::isPresent)
-                        .map(Optional::get)
-                        .map(MemberJpaEntity::getEmail)
-                        .forEach(receivers::add);
+                receivers = collectReceiversFromQuickStarts(quickStarts);
 
                 if (!receivers.isEmpty()) {
-                    SendEmailRequest request = SendEmailRequest.builder()
-                            .title("Test Title")
-                            .content("Test Content")
-                            .receivers(receivers.toArray(new String[0]))
-                            .build();
-
-                    try {
-                        emailUtil.send(request);
-                        log.info("[SendQuickStartEmailsJob] Successfully sent email to {} receivers", receivers.size());
-                    } catch (Exception e) {
-                        log.error("[SendQuickStartEmailsJob] Failed to send email to {} receivers", receivers.size(), e);
-                    }
+                    sendEmailsToReceivers(receivers);
                 } else {
-                    log.warn("[SendQuickStartEmailsJob] No valid receivers found in the time range: {} - {}", lowerBound, upperBound);
+                    log.warn("[SendQuickStartEmailsJob] No valid receiver found in the time range: {} - {}", lowerBound, upperBound);
                 }
             } catch (Exception e) {
                 log.error("[SendQuickStartEmailsJob] Error during tasklet execution", e);
             }
             return RepeatStatus.FINISHED;
         };
+    }
+
+    private Set<String> collectReceiversFromQuickStarts(List<QuickStartJpaEntity> quickStarts) {
+        Set<String> receivers = new HashSet<>();
+        quickStarts.stream()
+                .map(QuickStartJpaEntity::getMemberId)
+                .map(memberJpaRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(MemberJpaEntity::getEmail)
+                .forEach(receivers::add);
+        return receivers;
+    }
+
+    private void sendEmailsToReceivers(Set<String> receivers) {
+        for (String receiver : receivers) {
+            SendEmailRequest request = SendEmailRequest.builder()
+                    .title("Test Title")
+                    .content(generateEmailContent())
+                    .receiver(receiver)
+                    .build();
+            try {
+                emailUtil.send(request);
+                log.info("[SendQuickStartEmailsJob] Successfully sent email to {}", receiver);
+            } catch (Exception e) {
+                log.error("[SendQuickStartEmailsJob] Failed to send email to {}", receiver, e);
+            }
+        }
+    }
+
+    private String generateEmailContent() {
+        Context context = new Context();
+        return templateEngine.process("mail", context);
     }
 }

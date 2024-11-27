@@ -6,22 +6,18 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import spring.backend.activity.domain.entity.QuickStart;
-import spring.backend.activity.domain.repository.QuickStartRepository;
 import spring.backend.core.util.email.EmailUtil;
 import spring.backend.core.util.email.dto.request.SendEmailRequest;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.repository.MemberRepository;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class SendQuickStartEmailsScheduler {
-
-    private final QuickStartRepository quickStartRepository;
 
     private final MemberRepository memberRepository;
 
@@ -31,7 +27,7 @@ public class SendQuickStartEmailsScheduler {
 
     @Scheduled(cron = "0 0/15 * * * ?")
     public void sendQuickStartEmails() {
-        Set<String> receivers = collectEmailReceiversWithinTimeRange();
+        List<Member> receivers = collectEmailReceiversWithinTimeRange();
 
         if (!receivers.isEmpty()) {
             sendEmails(receivers);
@@ -40,34 +36,23 @@ public class SendQuickStartEmailsScheduler {
         }
     }
 
-    private Set<String> collectEmailReceiversWithinTimeRange() {
-        Set<String> receivers = new HashSet<>();
+    private List<Member> collectEmailReceiversWithinTimeRange() {
         final int TIME_INTERVAL_MINUTES = 15;
         LocalTime now = LocalTime.now();
         LocalTime lowerBound = now.plusMinutes(1).withSecond(0).withNano(0);
         LocalTime upperBound = lowerBound.plusMinutes(TIME_INTERVAL_MINUTES - 1);
 
-        log.info("[SendQuickStartEmailsScheduler] Searching for QuickStarts between {} and {}", lowerBound, upperBound);
+        log.info("[SendQuickStartEmailsScheduler] Searching for receivers between {} and {}", lowerBound, upperBound);
 
-        List<QuickStart> quickStarts = quickStartRepository.findQuickStartsWithinTimeRange(lowerBound, upperBound);
-
-        quickStarts.stream()
-                .map(QuickStart::getMemberId)
-                .map(memberRepository::findById)
-                .filter(Objects::nonNull)
-                .map(Member::getEmail)
-                .filter(Objects::nonNull)
-                .forEach(receivers::add);
-
-        return receivers;
+        return memberRepository.findMembersForQuickStartsInTimeRange(lowerBound, upperBound);
     }
 
-    private void sendEmails(Set<String> receivers) {
-        for (String receiver : receivers) {
+    private void sendEmails(List<Member> receivers) {
+        for (Member receiver : receivers) {
             SendEmailRequest request = SendEmailRequest.builder()
                     .title("Test Title")
                     .content(generateEmailContent())
-                    .receiver(receiver)
+                    .receiver(receiver.getEmail())
                     .build();
             try {
                 emailUtil.send(request);

@@ -16,8 +16,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import spring.backend.activity.infrastructure.persistence.jpa.entity.QuickStartJpaEntity;
-import spring.backend.activity.infrastructure.persistence.jpa.repository.QuickStartJpaRepository;
 import spring.backend.core.util.email.EmailUtil;
 import spring.backend.core.util.email.dto.request.SendEmailRequest;
 import spring.backend.member.infrastructure.persistence.jpa.entity.MemberJpaEntity;
@@ -37,8 +35,6 @@ public class SendQuickStartEmailsJob {
     private final JobLauncher jobLauncher;
 
     private final PlatformTransactionManager platformTransactionManager;
-
-    private final QuickStartJpaRepository quickStartJpaRepository;
 
     private final MemberJpaRepository memberJpaRepository;
 
@@ -74,23 +70,13 @@ public class SendQuickStartEmailsJob {
 
     public Tasklet sendQuickStartEmailsTasklet() {
         return (contribution, chunkContext) -> {
-            Set<String> receivers;
             try {
-                final int TIME_INTERVAL_MINUTES = 15;
-                LocalTime now = LocalTime.now();
-                LocalTime lowerBound = now.plusMinutes(1).withSecond(0).withNano(0);
-                LocalTime upperBound = lowerBound.plusMinutes(TIME_INTERVAL_MINUTES - 1);
-
-                log.info("[SendQuickStartEmailsJob] Searching for QuickStarts between {} and {}", lowerBound, upperBound);
-
-                List<QuickStartJpaEntity> quickStarts = quickStartJpaRepository.findQuickStartsWithinTimeRange(lowerBound, upperBound);
-
-                receivers = collectReceiversFromQuickStarts(quickStarts);
+                List<MemberJpaEntity> receivers = collectEmailReceiversWithinTimeRange();
 
                 if (!receivers.isEmpty()) {
                     sendEmailsToReceivers(receivers);
                 } else {
-                    log.warn("[SendQuickStartEmailsJob] No valid receiver found in the time range: {} - {}", lowerBound, upperBound);
+                    log.warn("[SendQuickStartEmailsJob] No valid receiver found in the time range.");
                 }
             } catch (Exception e) {
                 log.error("[SendQuickStartEmailsJob] Error during tasklet execution", e);
@@ -99,24 +85,23 @@ public class SendQuickStartEmailsJob {
         };
     }
 
-    private Set<String> collectReceiversFromQuickStarts(List<QuickStartJpaEntity> quickStarts) {
-        Set<String> receivers = new HashSet<>();
-        quickStarts.stream()
-                .map(QuickStartJpaEntity::getMemberId)
-                .map(memberJpaRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(MemberJpaEntity::getEmail)
-                .forEach(receivers::add);
-        return receivers;
+    private List<MemberJpaEntity> collectEmailReceiversWithinTimeRange() {
+        final int TIME_INTERVAL_MINUTES = 15;
+        LocalTime now = LocalTime.now();
+        LocalTime lowerBound = now.plusMinutes(1).withSecond(0).withNano(0);
+        LocalTime upperBound = lowerBound.plusMinutes(TIME_INTERVAL_MINUTES - 1);
+
+        log.info("[SendQuickStartEmailsJob] Searching for receivers between {} and {}", lowerBound, upperBound);
+
+        return memberJpaRepository.findMembersForQuickStartsInTimeRange(lowerBound, upperBound);
     }
 
-    private void sendEmailsToReceivers(Set<String> receivers) {
-        for (String receiver : receivers) {
+    private void sendEmailsToReceivers(List<MemberJpaEntity> receivers) {
+        for (MemberJpaEntity receiver : receivers) {
             SendEmailRequest request = SendEmailRequest.builder()
                     .title("Test Title")
                     .content(generateEmailContent())
-                    .receiver(receiver)
+                    .receiver(receiver.getEmail())
                     .build();
             try {
                 emailUtil.send(request);

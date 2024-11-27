@@ -11,6 +11,7 @@ import spring.backend.member.infrastructure.mapper.MemberMapper;
 import spring.backend.member.infrastructure.persistence.jpa.entity.MemberJpaEntity;
 import spring.backend.member.infrastructure.persistence.jpa.repository.MemberJpaRepository;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -63,5 +64,14 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public boolean existsByNicknameAndRole(String nickname, Role role) {
         return memberJpaRepository.existsByNicknameAndRole(nickname, role);
+    }
+
+    @Override
+    public List<Member> findMembersForQuickStartsInTimeRange(LocalTime lowerBound, LocalTime upperBound) {
+        List<MemberJpaEntity> memberJpaEntities = memberJpaRepository.findMembersForQuickStartsInTimeRange(lowerBound, upperBound);
+        if (memberJpaEntities == null || memberJpaEntities.isEmpty()) {
+            return null;
+        }
+        return memberJpaEntities.stream().map(memberMapper::toDomainEntity).collect(Collectors.toList());
     }
 }

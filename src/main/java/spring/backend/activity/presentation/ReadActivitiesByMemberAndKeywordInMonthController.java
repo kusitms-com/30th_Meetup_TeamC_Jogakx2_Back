@@ -3,7 +3,6 @@ package spring.backend.activity.presentation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.ReadActivitiesByMemberAndKeywordInMonthService;

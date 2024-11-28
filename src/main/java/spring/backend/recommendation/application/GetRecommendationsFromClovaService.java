@@ -39,6 +39,7 @@ public class GetRecommendationsFromClovaService {
     private final RecommendationProvider<ClovaResponse> recommendationProvider;
     private final PlaceInfoProvider<KakaoMapResponse> kakaomapPlaceInfoProvider;
     private final ImageConverter imageConverter;
+    private final Random RANDOM = new Random();
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(AIRecommendationRequest clovaRecommendationRequest) {
         validateLocation(clovaRecommendationRequest);
@@ -136,6 +137,7 @@ public class GetRecommendationsFromClovaService {
         }
 
         List<String> validKeywords = Arrays.stream(keywordText.split(","))
+                .map(String::trim)
                 .filter(this::isValidKeyword)
                 .toList();
 
@@ -143,7 +145,8 @@ public class GetRecommendationsFromClovaService {
             return null;
         }
 
-        int randomIdx = new Random().nextInt(validKeywords.size());
+        RANDOM.setSeed(System.nanoTime());
+        int randomIdx = RANDOM.nextInt(validKeywords.size());
         return validKeywords.get(randomIdx);
     }
 

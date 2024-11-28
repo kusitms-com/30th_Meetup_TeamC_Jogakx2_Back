@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.dto.response.*;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
-import spring.backend.activity.dto.response.UserMonthlyActivityDetail;
-import spring.backend.activity.dto.response.UserMonthlyActivitySummary;
+import spring.backend.activity.presentation.dto.response.UserMonthlyActivityDetail;
+import spring.backend.activity.presentation.dto.response.UserMonthlyActivitySummary;
 import spring.backend.activity.infrastructure.persistence.jpa.entity.ActivityJpaEntity;
 import spring.backend.activity.query.dao.ActivityDao;
 

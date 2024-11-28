@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.ReadQuickStartsService;
-import spring.backend.activity.dto.response.QuickStartsResponse;
+import spring.backend.activity.presentation.dto.response.QuickStartsResponse;
 import spring.backend.activity.presentation.swagger.ReadQuickStartsSwagger;
 import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;

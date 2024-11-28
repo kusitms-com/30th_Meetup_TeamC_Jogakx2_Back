@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.activity.domain.entity.Activity;
 import spring.backend.activity.domain.repository.ActivityRepository;
-import spring.backend.activity.dto.request.UserActivitySelectRequest;
-import spring.backend.activity.dto.response.UserActivitySelectResponse;
+import spring.backend.activity.presentation.dto.request.UserActivitySelectRequest;
+import spring.backend.activity.presentation.dto.response.UserActivitySelectResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.member.domain.entity.Member;
 

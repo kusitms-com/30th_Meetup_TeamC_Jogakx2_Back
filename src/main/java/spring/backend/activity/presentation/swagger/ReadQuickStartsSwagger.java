@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import spring.backend.activity.dto.response.QuickStartsResponse;
+import spring.backend.activity.presentation.dto.response.QuickStartsResponse;
 import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;

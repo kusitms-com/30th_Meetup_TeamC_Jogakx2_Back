@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import spring.backend.activity.domain.entity.QuickStart;
 import spring.backend.activity.domain.repository.QuickStartRepository;
 import spring.backend.activity.domain.value.Type;
-import spring.backend.activity.dto.request.QuickStartRequest;
+import spring.backend.activity.presentation.dto.request.QuickStartRequest;
 import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.core.exception.DomainException;
 import spring.backend.core.util.TimeUtil;

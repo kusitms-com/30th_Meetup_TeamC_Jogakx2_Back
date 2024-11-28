@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.activity.application.UpdateQuickStartService;
-import spring.backend.activity.dto.request.QuickStartRequest;
+import spring.backend.activity.presentation.dto.request.QuickStartRequest;
 import spring.backend.activity.presentation.swagger.UpdateQuickStartSwagger;
 import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;

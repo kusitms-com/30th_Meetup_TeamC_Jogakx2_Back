@@ -12,7 +12,6 @@ import spring.backend.activity.dto.request.QuickStartActivitySelectRequest;
 import spring.backend.activity.dto.response.QuickStartActivitySelectResponse;
 import spring.backend.activity.presentation.swagger.QuickStartActivitySelectSwagger;
 import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
-import spring.backend.core.configuration.argumentresolver.LoginMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;

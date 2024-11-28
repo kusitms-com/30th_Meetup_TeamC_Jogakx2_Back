@@ -3,7 +3,7 @@ package spring.backend.auth.application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import spring.backend.auth.dto.response.RotateAccessTokenResponse;
+import spring.backend.auth.presentation.dto.response.RotateAccessTokenResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.core.application.JwtService;
 import spring.backend.member.domain.entity.Member;

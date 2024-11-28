@@ -1,4 +1,4 @@
-package spring.backend.auth.dto.response;
+package spring.backend.auth.presentation.dto.response;
 
 public record RotateAccessTokenResponse(String accessToken) {
 }

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.quickstart.dto.response.QuickStartResponse;
-import spring.backend.quickstart.dto.response.QuickStartsResponse;
+import spring.backend.quickstart.presentation.dto.response.QuickStartsResponse;
 import spring.backend.quickstart.query.dao.QuickStartDao;
 import spring.backend.member.domain.entity.Member;
 

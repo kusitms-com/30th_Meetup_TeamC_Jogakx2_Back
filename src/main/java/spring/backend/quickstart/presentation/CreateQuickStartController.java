@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import spring.backend.quickstart.domain.service.CreateQuickStartService;
-import spring.backend.quickstart.dto.request.QuickStartRequest;
+import spring.backend.quickstart.presentation.dto.request.QuickStartRequest;
 import spring.backend.quickstart.presentation.swagger.CreateQuickStartSwagger;
 import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;

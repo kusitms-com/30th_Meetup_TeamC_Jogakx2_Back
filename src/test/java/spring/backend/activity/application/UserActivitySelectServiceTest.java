@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import spring.backend.activity.domain.entity.Activity;
 import spring.backend.activity.domain.repository.ActivityRepository;
+import spring.backend.activity.domain.service.FinishActivityAutoService;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.activity.dto.request.UserActivitySelectRequest;

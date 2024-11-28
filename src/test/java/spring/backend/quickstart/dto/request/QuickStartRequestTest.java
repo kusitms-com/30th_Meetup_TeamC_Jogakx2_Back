@@ -1,4 +1,4 @@
-package spring.backend.activity.dto.request;
+package spring.backend.quickstart.dto.request;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

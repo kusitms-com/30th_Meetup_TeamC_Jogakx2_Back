@@ -1,11 +1,11 @@
-package spring.backend.activity.domain.repository;
+package spring.backend.quickstart.domain.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import spring.backend.activity.domain.entity.QuickStart;
 import spring.backend.activity.domain.value.Type;
+import spring.backend.quickstart.domain.entity.QuickStart;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;

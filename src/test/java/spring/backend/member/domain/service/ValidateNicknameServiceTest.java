@@ -1,4 +1,4 @@
-package spring.backend.member.application;
+package spring.backend.member.domain.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

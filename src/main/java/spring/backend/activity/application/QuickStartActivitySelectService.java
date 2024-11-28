@@ -6,11 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.activity.domain.entity.Activity;
 import spring.backend.activity.domain.repository.ActivityRepository;
-import spring.backend.activity.domain.repository.QuickStartRepository;
+import spring.backend.quickstart.domain.repository.QuickStartRepository;
+import spring.backend.activity.domain.service.FinishActivityAutoService;
 import spring.backend.activity.dto.request.QuickStartActivitySelectRequest;
 import spring.backend.activity.dto.response.QuickStartActivitySelectResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
-import spring.backend.activity.exception.QuickStartErrorCode;
+import spring.backend.quickstart.exception.QuickStartErrorCode;
 import spring.backend.member.domain.entity.Member;
 
 @Service

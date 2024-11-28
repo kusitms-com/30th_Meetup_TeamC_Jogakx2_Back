@@ -1,0 +1,5 @@
+dependencies {
+    // Lombok (code simplification)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

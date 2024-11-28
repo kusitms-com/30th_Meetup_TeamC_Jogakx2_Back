@@ -39,7 +39,7 @@ public class GetRecommendationsFromClovaService {
     private final RecommendationProvider<ClovaResponse> recommendationProvider;
     private final PlaceInfoProvider<KakaoMapResponse> kakaomapPlaceInfoProvider;
     private final ImageConverter imageConverter;
-    private final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
 
     public List<ClovaRecommendationResponse> getRecommendationsFromClova(AIRecommendationRequest clovaRecommendationRequest) {
         validateLocation(clovaRecommendationRequest);

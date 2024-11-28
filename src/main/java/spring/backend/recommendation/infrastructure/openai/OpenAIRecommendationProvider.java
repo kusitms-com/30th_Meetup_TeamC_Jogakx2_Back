@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClientException;
 import reactor.core.publisher.Mono;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.recommendation.application.RecommendationProvider;
-import spring.backend.recommendation.dto.request.AIRecommendationRequest;
+import spring.backend.recommendation.presentation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.infrastructure.dto.Message;
 import spring.backend.recommendation.infrastructure.openai.dto.request.OpenAIPrompt;
 import spring.backend.recommendation.infrastructure.openai.dto.response.OpenAIResponse;

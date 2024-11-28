@@ -8,8 +8,8 @@ import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
-import spring.backend.recommendation.dto.request.AIRecommendationRequest;
-import spring.backend.recommendation.dto.response.RecommendationResponse;
+import spring.backend.recommendation.presentation.dto.request.AIRecommendationRequest;
+import spring.backend.recommendation.presentation.dto.response.RecommendationResponse;
 import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 import spring.backend.recommendation.infrastructure.openai.exception.OpenAIErrorCode;
 

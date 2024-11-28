@@ -1,4 +1,4 @@
-package spring.backend.activity.application;
+package spring.backend.quickstart.domain.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,15 +7,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import spring.backend.activity.domain.entity.QuickStart;
-import spring.backend.activity.domain.repository.QuickStartRepository;
 import spring.backend.activity.domain.value.Type;
-import spring.backend.activity.dto.request.QuickStartRequest;
-import spring.backend.activity.exception.QuickStartErrorCode;
 import spring.backend.core.exception.DomainException;
 import spring.backend.core.util.TimeUtil;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Role;
+import spring.backend.quickstart.domain.entity.QuickStart;
+import spring.backend.quickstart.domain.repository.QuickStartRepository;
+import spring.backend.quickstart.dto.request.QuickStartRequest;
+import spring.backend.quickstart.exception.QuickStartErrorCode;
 
 import java.time.LocalTime;
 

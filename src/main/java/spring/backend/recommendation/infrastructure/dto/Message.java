@@ -5,7 +5,7 @@ import lombok.Builder;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.activity.exception.ActivityErrorCode;
-import spring.backend.recommendation.dto.request.AIRecommendationRequest;
+import spring.backend.recommendation.presentation.dto.request.AIRecommendationRequest;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

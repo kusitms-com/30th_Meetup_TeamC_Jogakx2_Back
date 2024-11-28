@@ -12,10 +12,10 @@ import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.recommendation.application.GetRecommendationsFromClovaService;
 import spring.backend.recommendation.application.GetRecommendationsFromOpenAIService;
-import spring.backend.recommendation.dto.request.AIRecommendationRequest;
-import spring.backend.recommendation.dto.response.ClovaRecommendationResponse;
-import spring.backend.recommendation.dto.response.OpenAIRecommendationResponse;
-import spring.backend.recommendation.dto.response.RecommendationResponse;
+import spring.backend.recommendation.presentation.dto.request.AIRecommendationRequest;
+import spring.backend.recommendation.presentation.dto.response.ClovaRecommendationResponse;
+import spring.backend.recommendation.presentation.dto.response.OpenAIRecommendationResponse;
+import spring.backend.recommendation.presentation.dto.response.RecommendationResponse;
 import spring.backend.recommendation.presentation.swagger.GetRecommendationsSwagger;
 
 import java.util.ArrayList;

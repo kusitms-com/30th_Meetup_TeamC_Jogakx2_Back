@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.recommendation.application.RecommendationProvider;
-import spring.backend.recommendation.dto.request.AIRecommendationRequest;
+import spring.backend.recommendation.presentation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.infrastructure.clova.dto.request.ClovaRequest;
 import spring.backend.recommendation.infrastructure.clova.dto.response.ClovaResponse;
 

@@ -1,4 +1,4 @@
-package spring.backend.recommendation.dto.response;
+package spring.backend.recommendation.presentation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

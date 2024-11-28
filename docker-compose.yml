@@ -1,0 +1,63 @@
+services:
+  blue:
+    image: "${NCP_CONTAINER_REGISTRY}/cnergy-backend:${GITHUB_SHA}"
+    container_name: cnergy-backend-blue
+    env_file:
+      - .env
+    environment:
+      TZ: Asia/Seoul
+    ports:
+      - '8080:8080'
+    depends_on:
+      - redis
+    networks:
+      - cnergy-backend-network
+
+  green:
+    image: "${NCP_CONTAINER_REGISTRY}/cnergy-backend:${GITHUB_SHA}"
+    container_name: cnergy-backend-green
+    env_file:
+      - .env
+    environment:
+      TZ: Asia/Seoul
+    ports:
+      - '8081:8080'
+    depends_on:
+      - redis
+    networks:
+      - cnergy-backend-network
+
+  redis:
+    image: redis:6.0.9
+    container_name: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    networks:
+      - cnergy-backend-network
+
+  rabbit:
+    container_name: cnergy-rabbitmq
+    hostname: cnergy-rabbit
+    image: heidiks/rabbitmq-delayed-message-exchange:4.0.2-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file:
+      - .env
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - cnergy-backend-network
+
+volumes:
+  redis-data:
+  rabbitmq-data:
+
+networks:
+  cnergy-backend-network:
+      driver: bridge

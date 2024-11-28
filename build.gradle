@@ -23,17 +23,15 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+apply from: "gradle/db.gradle"
+apply from: "gradle/email.gradle"
+apply from: "gradle/jwt.gradle"
+apply from: "gradle/lombok.gradle"
+apply from: "gradle/monitor.gradle"
+apply from: "gradle/rabbitmq.gradle"
+apply from: "gradle/spring.gradle"
+apply from: "gradle/swagger.gradle"
+apply from: "gradle/test.gradle"
+apply from: "gradle/webflux.gradle"
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+

@@ -14,7 +14,7 @@ import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Role;
 import spring.backend.quickstart.domain.entity.QuickStart;
 import spring.backend.quickstart.domain.repository.QuickStartRepository;
-import spring.backend.quickstart.dto.request.QuickStartRequest;
+import spring.backend.quickstart.presentation.dto.request.QuickStartRequest;
 import spring.backend.quickstart.exception.QuickStartErrorCode;
 
 import java.time.LocalTime;

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import spring.backend.activity.domain.value.Type;
+import spring.backend.quickstart.presentation.dto.request.QuickStartRequest;
 
 import java.util.Set;
 

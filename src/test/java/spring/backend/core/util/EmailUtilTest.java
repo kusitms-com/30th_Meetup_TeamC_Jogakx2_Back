@@ -24,7 +24,7 @@ public class EmailUtilTest {
     @Test
     void throwExceptionWhenToInRequestIsInvalid() {
         // GIVEN
-        sendEmailRequest = new SendEmailRequest(new String[]{"test", "test2"}, "Test Subject", "Test Content");
+        sendEmailRequest = new SendEmailRequest("test", "Test Subject", "Test Content");
 
         // WHEN & THEN
         DomainException ex = assertThrows(DomainException.class, () -> emailUtil.send(sendEmailRequest), "올바르지 않은 이메일 주소입니다.");
@@ -48,7 +48,7 @@ public class EmailUtilTest {
     @Test
     void throwExceptionWhenSubjectInRequestIsNull() {
         // GIVEN
-        sendEmailRequest = new SendEmailRequest(new String[]{"test@naver.com", "test2@naver.com"}, "", "Test Content");
+        sendEmailRequest = new SendEmailRequest("test@naver.com", "", "Test Content");
 
         // WHEN & THEN
         DomainException ex = assertThrows(DomainException.class, () -> emailUtil.send(sendEmailRequest), "메일 제목이 없습니다.");
@@ -60,7 +60,7 @@ public class EmailUtilTest {
     @Test
     void throwExceptionWhenTextInRequestIsNull() {
         // GIVEN
-        sendEmailRequest = new SendEmailRequest(new String[]{"test@naver.com", "test2@naver.com"}, "Test Subject", "");
+        sendEmailRequest = new SendEmailRequest("test@naver.com", "Test Subject", "");
 
         // WHEN & THEN
         DomainException ex = assertThrows(DomainException.class, () -> emailUtil.send(sendEmailRequest), "메일 내용이 없습니다.");

@@ -1,7 +1,7 @@
 package spring.backend.auth.infrastructure;
 
-import spring.backend.auth.dto.response.OAuthAccessTokenResponse;
-import spring.backend.auth.dto.response.OAuthResourceResponse;
+import spring.backend.auth.presentation.dto.response.OAuthAccessTokenResponse;
+import spring.backend.auth.presentation.dto.response.OAuthResourceResponse;
 
 import java.net.URI;
 

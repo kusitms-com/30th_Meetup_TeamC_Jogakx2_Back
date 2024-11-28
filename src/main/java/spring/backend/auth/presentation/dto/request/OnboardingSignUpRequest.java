@@ -1,4 +1,4 @@
-package spring.backend.auth.dto.request;
+package spring.backend.auth.presentation.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;

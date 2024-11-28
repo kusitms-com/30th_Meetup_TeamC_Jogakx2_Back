@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.backend.auth.application.HandleOAuthLoginService;
-import spring.backend.auth.dto.response.LoginResponse;
+import spring.backend.auth.presentation.dto.response.LoginResponse;
 import spring.backend.core.presentation.RestResponse;
 
 @RestController

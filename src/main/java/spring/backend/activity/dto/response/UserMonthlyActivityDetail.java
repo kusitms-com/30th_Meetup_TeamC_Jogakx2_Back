@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public record UserMonthlyActivityDetail(
 
-        @Schema(description = "활동 카테고리 \n\n SELF_DEVELOPMENT(자기개발), HEALTH(건강), NATURE(자연), CULTURE_ART(문화/예술), ENTERTAINMENT(엔터테인먼트), RELAXATION(휴식), SOCIAL(소셜)",
+        @Schema(description = "활동 카테고리 \n\n SELF_DEVELOPMENT(자기개발), HEALTH(건강), CULTURE_ART(문화/예술), ENTERTAINMENT(엔터테인먼트), RELAXATION(휴식), SOCIAL(소셜)",
                 example = "SELF_DEVELOPMENT")
         Category category,
 

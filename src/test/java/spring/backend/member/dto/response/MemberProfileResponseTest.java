@@ -4,6 +4,7 @@ package spring.backend.member.dto.response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import spring.backend.member.domain.entity.Member;
+import spring.backend.member.presentation.dto.response.MemberProfileResponse;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

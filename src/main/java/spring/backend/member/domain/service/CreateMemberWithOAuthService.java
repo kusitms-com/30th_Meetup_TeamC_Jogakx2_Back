@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.repository.MemberRepository;
-import spring.backend.member.dto.request.CreateMemberWithOAuthRequest;
+import spring.backend.member.presentation.dto.request.CreateMemberWithOAuthRequest;
 import spring.backend.member.exception.MemberErrorCode;
 
 import java.util.List;

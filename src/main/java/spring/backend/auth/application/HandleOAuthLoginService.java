@@ -12,7 +12,7 @@ import spring.backend.auth.infrastructure.OAuthRestClientFactory;
 import spring.backend.member.domain.service.CreateMemberWithOAuthService;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Provider;
-import spring.backend.member.dto.request.CreateMemberWithOAuthRequest;
+import spring.backend.member.presentation.dto.request.CreateMemberWithOAuthRequest;
 import spring.backend.core.application.JwtService;
 
 @Service

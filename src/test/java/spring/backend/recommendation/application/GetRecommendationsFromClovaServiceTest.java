@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.domain.value.Type;
 import spring.backend.core.exception.DomainException;
-import spring.backend.recommendation.dto.request.AIRecommendationRequest;
+import spring.backend.recommendation.presentation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.infrastructure.clova.exception.ClovaErrorCode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

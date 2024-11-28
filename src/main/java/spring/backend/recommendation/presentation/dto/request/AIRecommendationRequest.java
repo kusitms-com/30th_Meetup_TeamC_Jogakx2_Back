@@ -1,4 +1,4 @@
-package spring.backend.recommendation.dto.request;
+package spring.backend.recommendation.presentation.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;

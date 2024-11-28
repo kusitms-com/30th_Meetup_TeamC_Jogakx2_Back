@@ -2,7 +2,7 @@ package spring.backend.recommendation.infrastructure.clova.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
-import spring.backend.recommendation.dto.request.AIRecommendationRequest;
+import spring.backend.recommendation.presentation.dto.request.AIRecommendationRequest;
 import spring.backend.recommendation.infrastructure.dto.Message;
 
 import java.util.ArrayList;

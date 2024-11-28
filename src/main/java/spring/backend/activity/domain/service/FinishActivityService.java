@@ -1,4 +1,4 @@
-package spring.backend.activity.application;
+package spring.backend.activity.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

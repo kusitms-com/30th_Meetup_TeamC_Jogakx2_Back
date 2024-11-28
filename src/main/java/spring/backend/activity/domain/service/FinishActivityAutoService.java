@@ -1,4 +1,4 @@
-package spring.backend.activity.application;
+package spring.backend.activity.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

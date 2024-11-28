@@ -8,7 +8,7 @@ import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
-import spring.backend.member.dto.response.MemberProfileResponse;
+import spring.backend.member.presentation.dto.response.MemberProfileResponse;
 import spring.backend.member.presentation.swagger.ReadMemberProfileSwagger;
 
 @RestController

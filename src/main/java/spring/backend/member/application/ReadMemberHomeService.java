@@ -9,7 +9,7 @@ import spring.backend.activity.dto.response.QuickStartResponse;
 import spring.backend.activity.query.dao.ActivityDao;
 import spring.backend.activity.query.dao.QuickStartDao;
 import spring.backend.member.domain.entity.Member;
-import spring.backend.member.dto.response.HomeMainResponse;
+import spring.backend.member.presentation.dto.response.HomeMainResponse;
 import spring.backend.member.dto.response.HomeMemberInfoResponse;
 
 import java.time.LocalDateTime;

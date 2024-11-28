@@ -1,8 +1,9 @@
-package spring.backend.member.dto.response;
+package spring.backend.member.presentation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
 import spring.backend.activity.dto.response.QuickStartResponse;
+import spring.backend.member.dto.response.HomeMemberInfoResponse;
 
 import java.util.List;
 

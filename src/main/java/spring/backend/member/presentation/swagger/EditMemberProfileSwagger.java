@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.member.domain.entity.Member;
-import spring.backend.member.dto.request.EditMemberProfileRequest;
+import spring.backend.member.presentation.dto.request.EditMemberProfileRequest;
 import spring.backend.member.exception.MemberErrorCode;
 
 @Tag(name = "Member", description = "멤버")

@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import spring.backend.member.application.ValidateNicknameService;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.repository.MemberRepository;
-import spring.backend.member.dto.request.EditMemberProfileRequest;
-import spring.backend.member.exception.MemberErrorCode;
+import spring.backend.member.presentation.dto.request.EditMemberProfileRequest;
 
 @Service
 @RequiredArgsConstructor

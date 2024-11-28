@@ -10,7 +10,7 @@ import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.repository.MemberRepository;
 import spring.backend.member.domain.value.Provider;
 import spring.backend.member.domain.value.Role;
-import spring.backend.member.dto.request.CreateMemberWithOAuthRequest;
+import spring.backend.member.presentation.dto.request.CreateMemberWithOAuthRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

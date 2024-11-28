@@ -1,4 +1,4 @@
-package spring.backend.activity.dto.request;
+package spring.backend.activity.presentation.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

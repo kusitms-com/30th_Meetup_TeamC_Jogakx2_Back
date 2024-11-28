@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import spring.backend.activity.dto.request.ActivitiesByMemberAndKeywordInMonthRequest;
-import spring.backend.activity.dto.response.ActivitiesByMemberAndKeywordInMonthResponse;
+import spring.backend.activity.presentation.dto.request.ActivitiesByMemberAndKeywordInMonthRequest;
+import spring.backend.activity.presentation.dto.response.ActivitiesByMemberAndKeywordInMonthResponse;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
 

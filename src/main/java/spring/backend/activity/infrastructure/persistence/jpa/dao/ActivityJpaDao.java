@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import spring.backend.activity.domain.value.Keyword;
 import spring.backend.activity.dto.response.*;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
-import spring.backend.activity.dto.response.UserMonthlyActivityDetail;
-import spring.backend.activity.dto.response.UserMonthlyActivitySummary;
+import spring.backend.activity.presentation.dto.response.UserMonthlyActivityDetail;
+import spring.backend.activity.presentation.dto.response.UserMonthlyActivitySummary;
 import spring.backend.activity.infrastructure.persistence.jpa.entity.ActivityJpaEntity;
 import spring.backend.activity.query.dao.ActivityDao;
 
@@ -62,7 +62,7 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
 
     @Override
     @Query("""
-        select new spring.backend.activity.dto.response.UserMonthlyActivitySummary(
+        select new spring.backend.activity.presentation.dto.response.UserMonthlyActivitySummary(
             m.createdAt,
             coalesce(sum(a.savedTime), 0),
             count(a)
@@ -79,7 +79,7 @@ public interface ActivityJpaDao extends JpaRepository<ActivityJpaEntity, Long>, 
 
     @Override
     @Query("""
-        select new spring.backend.activity.dto.response.UserMonthlyActivityDetail(
+        select new spring.backend.activity.presentation.dto.response.UserMonthlyActivityDetail(
             a.keyword.category,
             a.title,
             a.savedTime,

@@ -9,7 +9,7 @@ import spring.backend.auth.dto.response.OAuthResourceResponse;
 import spring.backend.auth.exception.AuthenticationErrorCode;
 import spring.backend.auth.infrastructure.OAuthRestClient;
 import spring.backend.auth.infrastructure.OAuthRestClientFactory;
-import spring.backend.member.application.CreateMemberWithOAuthService;
+import spring.backend.member.domain.service.CreateMemberWithOAuthService;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.domain.value.Provider;
 import spring.backend.member.dto.request.CreateMemberWithOAuthRequest;

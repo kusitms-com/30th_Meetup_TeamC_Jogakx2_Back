@@ -2,7 +2,7 @@ package spring.backend.member.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import spring.backend.activity.dto.response.HomeActivityInfoResponse;
-import spring.backend.activity.dto.response.QuickStartResponse;
+import spring.backend.quickstart.dto.response.QuickStartResponse;
 
 import java.util.List;
 

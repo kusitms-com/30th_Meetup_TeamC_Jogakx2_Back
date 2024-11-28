@@ -1,4 +1,4 @@
-package spring.backend.member.dto.request;
+package spring.backend.member.presentation.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

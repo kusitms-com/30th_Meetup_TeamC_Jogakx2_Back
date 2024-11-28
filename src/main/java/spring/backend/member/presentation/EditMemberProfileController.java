@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import spring.backend.member.dto.request.EditMemberProfileRequest;
+import spring.backend.member.presentation.dto.request.EditMemberProfileRequest;
 import spring.backend.core.configuration.argumentresolver.AuthorizedMember;
 import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.member.domain.service.EditMemberProfileService;

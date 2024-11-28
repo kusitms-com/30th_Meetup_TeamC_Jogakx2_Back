@@ -9,7 +9,7 @@ import spring.backend.core.configuration.interceptor.Authorization;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.application.ReadMemberHomeService;
 import spring.backend.member.domain.entity.Member;
-import spring.backend.member.dto.response.HomeMainResponse;
+import spring.backend.member.presentation.dto.response.HomeMainResponse;
 import spring.backend.member.presentation.swagger.ReadMemberHomeSwagger;
 
 @RestController

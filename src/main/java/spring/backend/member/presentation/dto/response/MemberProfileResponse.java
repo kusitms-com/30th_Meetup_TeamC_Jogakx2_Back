@@ -1,4 +1,4 @@
-package spring.backend.member.dto.response;
+package spring.backend.member.presentation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import spring.backend.member.domain.entity.Member;

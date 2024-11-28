@@ -8,7 +8,7 @@ import spring.backend.core.configuration.swagger.ApiErrorCode;
 import spring.backend.core.exception.error.GlobalErrorCode;
 import spring.backend.core.presentation.RestResponse;
 import spring.backend.member.domain.entity.Member;
-import spring.backend.member.dto.response.MemberProfileResponse;
+import spring.backend.member.presentation.dto.response.MemberProfileResponse;
 
 @Tag(name = "Member", description = "멤버")
 public interface ReadMemberProfileSwagger {

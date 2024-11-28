@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spring.backend.activity.domain.value.Keyword;
-import spring.backend.activity.dto.response.ActivitiesByMemberAndKeywordInMonthResponse;
+import spring.backend.activity.presentation.dto.response.ActivitiesByMemberAndKeywordInMonthResponse;
 import spring.backend.activity.dto.response.ActivityWithTitleAndSavedTimeResponse;
 import spring.backend.activity.dto.response.TotalSavedTimeAndActivityCountByKeywordInMonth;
 import spring.backend.activity.query.dao.ActivityDao;

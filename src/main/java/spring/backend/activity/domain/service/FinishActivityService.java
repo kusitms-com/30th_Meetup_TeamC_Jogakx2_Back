@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import spring.backend.activity.domain.entity.Activity;
 import spring.backend.activity.domain.repository.ActivityRepository;
 import spring.backend.activity.dto.response.ActivityInfo;
-import spring.backend.activity.dto.response.FinishActivityResponse;
+import spring.backend.activity.presentation.dto.response.FinishActivityResponse;
 import spring.backend.activity.exception.ActivityErrorCode;
 import spring.backend.member.domain.entity.Member;
 import spring.backend.member.dto.response.HomeMemberInfoResponse;
